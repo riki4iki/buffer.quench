@@ -24,7 +24,7 @@ createConnection({
   database: process.env.pg_database_dev,
   synchronize: true,
   logging: false,
-  entities: ["./src/entity/**/*.ts"]
+  entities: ["./src/models/**/*.ts"]
 })
   .then(() => {
     server.listen(port);

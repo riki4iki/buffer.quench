@@ -1,5 +1,5 @@
 import Router from "koa-router";
-import User from "../../entity/user";
+import User from "../../models/user";
 import { getManager, Repository } from "typeorm";
 import { validate, ValidationError } from "class-validator";
 import { Context, Next } from "koa";
