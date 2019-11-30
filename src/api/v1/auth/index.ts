@@ -1,5 +1,6 @@
 import Router from "koa-router";
 const router = new Router();
+import jwt from "../../../lib/jwt";
 
 const localAuthenticate: Router = require("./localAuth");
 router.use("/localAuth", localAuthenticate.routes());
@@ -9,6 +10,6 @@ router.get("/", async (ctx, next) => {
   await next();
 });
 router.post("/refresh", async (ctx, next) => {
-  ctx.body = { data: "refresh token logic" };
+  const refresh = ctx.request.body.refresh_token;
 });
 export = router;

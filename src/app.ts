@@ -1,4 +1,4 @@
-import Koa from "koa";
+import Koa, { Context } from "koa";
 import Router from "koa-router";
 import bodyparser from "koa-bodyparser";
 import cors from "@koa/cors";
@@ -18,5 +18,11 @@ app
   .use(cors())
   .use(helmet())
   .use(router.routes());
+
+app.on("error", (err: any, ctx: Context) => {
+  console.log(err);
+  ctx.status = err.status || 500;
+  ctx.res.end(err.message);
+});
 
 export = app;

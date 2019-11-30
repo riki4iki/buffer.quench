@@ -2,7 +2,7 @@ import Router from "koa-router";
 import { Context, Next } from "koa";
 import { Repository, getManager } from "typeorm";
 import { HmacSHA1 } from "crypto-js";
-import { ValidationError, validate } from "class-validator";
+import { userLogic } from "../../../service";
 import User from "../../../models/user";
 import jwt from "../../../lib/jwt";
 
@@ -30,38 +30,15 @@ router.post("/sign-in", async (ctx: Context, next: Next) => {
   }
 });
 
-router.post("/sign-up", async (ctx: Context, next: Next) => {
-  //create new user in system
-  const userRepository: Repository<User> = getManager().getRepository(User);
-
-  const targetUser: User = new User(); //create new entity
-
-  targetUser.email = ctx.request.body.email;
-  targetUser.password = ctx.request.body.password;
-
-  const errors: ValidationError[] = await validate(targetUser); //validate
-
-  if (errors.length > 0) {
-    //if error exist
-    ctx.status = 400;
-    ctx.body = errors;
-  } else if (await userRepository.findOne({ email: targetUser.email })) {
-    //if user with email exist (email must be unique)
-    ctx.status = 400;
-    ctx.body = "email already exist";
-  } else {
-    //0 errors, new email
-    //hash password, save in database
-    targetUser.password = HmacSHA1(
-      ctx.request.body.password,
-      process.env.hash_key
-    ).toString();
-    const user = await userRepository.save(targetUser);
+router.post(
+  "/sign-up",
+  userLogic.createNewUserMiddleware,
+  async (ctx: Context) => {
+    const user = ctx.state.user;
     const pair = await jwt.createPair(user.id);
     ctx.status = 201;
     ctx.body = pair;
   }
-  await next();
-});
+);
 
 export = router;
