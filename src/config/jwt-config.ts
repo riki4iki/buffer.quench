@@ -1,6 +1,5 @@
 import dotenv from "dotenv";
 dotenv.config();
-import { SignOptions } from "jsonwebtoken";
 export interface IJwt {
   secret: string;
   accessLife: number;
