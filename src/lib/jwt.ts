@@ -1,7 +1,7 @@
 import jwt from "jsonwebtoken";
 import { jwtConfig } from "../config";
 import { Repository, getManager } from "typeorm";
-import Session from "../models/refresh";
+import { Refresh as Session, User } from "../models";
 
 const generateAccess = async (id: string): Promise<string> => {
   const payload = {

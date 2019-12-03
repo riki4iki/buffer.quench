@@ -11,7 +11,11 @@ export default class RefreshToken {
   @PrimaryGeneratedColumn("uuid")
   id: string;
 
-  @OneToOne(type => User, { onDelete: "CASCADE" })
+  @Column()
+  @OneToOne(
+    type => User,
+    user => user.id
+  )
   @JoinColumn()
   user: string;
 

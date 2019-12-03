@@ -79,8 +79,8 @@ export default class UserService {
       ).toString();
       const user = await userRepository.save(targetUser);
       ctx.state.user = user;
+      await next();
     }
-    await next();
   }
   //middle for routes /user
   /**

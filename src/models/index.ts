@@ -1,4 +1,4 @@
-import user from "./user";
-import refresh from "./refresh";
-
-export { user, refresh };
+import User from "./user";
+import Refresh from "./refresh";
+import FbUser from "./facebookUser";
+export { User, Refresh, FbUser };
