@@ -21,7 +21,7 @@ app
 
 app.on("error", (err: any, ctx: Context) => {
   console.log(err);
-  ctx.status = err.status || 500;
+  ctx.status = err.status || err.statusCode || 500;
   ctx.res.end(err.message);
 });
 
