@@ -1,11 +1,20 @@
 {
+  "engines": {
+    "node": ">=8.0.0 <11.0.0"
+  },
   "name": "without-name",
   "version": "1.0.0",
   "description": "back-end for \" \" ",
   "main": "index.js",
   "scripts": {
     ".": "nodemon  ./src/server.ts",
-    "tslint": "tslint -c tslint.json -p tsconfig.json"
+    "tslint": "tslint -c tslint.json -p tsconfig.json",
+    "build-ts": "tsc",
+    "postinstall": "npm run build-ts",
+    "start": "npm run serve",
+    "serve": "node dist/server.js",
+    "watch-node": "nodemon dist/server.js",
+    "watch-ts": "tsc -w"
   },
   "keywords": [
     "node",
