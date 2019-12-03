@@ -1,4 +1,4 @@
-import { Context } from "Koa";
+import { Context } from "koa";
 import Router from "koa-router";
 import { fbService } from "../../../lib";
 import { FbUser } from "../../../models";
