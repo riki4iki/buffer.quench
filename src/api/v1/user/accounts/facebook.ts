@@ -18,6 +18,8 @@ facebookRouter.post("/", async (ctx: Context) => {
   const fbUserRepository: Repository<FbUser> = getManager().getRepository(
     FbUser
   );
+  const number = 123131213;
+  ctx.body = number * number;
 });
 facebookRouter.delete("/", async (ctx: Context) => {
   ctx.body = "remove facebook account from current user";
