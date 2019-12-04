@@ -1,6 +1,7 @@
 import http from "http";
 import app from "./app";
-import { createConnection, Connection } from "typeorm";
+
+import { dbConnection } from "./config";
 import { parse } from "pg-connection-string";
 import dotenv from "dotenv";
 dotenv.config({ path: ".env" });
@@ -19,19 +20,7 @@ server.on("error", err => {
 });
 const isDev = process.env.NODE_ENV == "development";
 
-createConnection({
-  type: "postgres",
-  host: url.host,
-  username: url.user,
-  password: url.password,
-  database: url.database,
-  synchronize: true,
-  logging: false,
-  entities: [...(isDev ? ["src/models/**/*.ts"] : ["dist/models/**/*.js"])],
-  extra: {
-    ssl: !isDev
-  }
-})
+dbConnection()
   .then(() => {
     server.listen(port);
   })
