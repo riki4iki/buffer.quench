@@ -11,13 +11,12 @@ export default class RefreshToken {
   @PrimaryGeneratedColumn("uuid")
   id: string;
 
-  @Column()
   @OneToOne(
     type => User,
-    user => user.id
+    user => user.refresh
   )
   @JoinColumn()
-  user: string;
+  user: User;
 
   @Column()
   token: string;

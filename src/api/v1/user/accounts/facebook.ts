@@ -2,7 +2,7 @@ import { Context } from "koa";
 import Router from "koa-router";
 const facebookRouter = new Router();
 
-import { FbUser } from "../../../../models";
+import { FacebookUser as FbUser } from "../../../../models";
 import { Repository, getManager } from "typeorm";
 import { fbService } from "../../../../lib";
 

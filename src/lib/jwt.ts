@@ -2,9 +2,14 @@ import jwt from "jsonwebtoken";
 import { jwtConfig } from "../config";
 import { Repository, getManager } from "typeorm";
 import { Refresh as Session, User } from "../models";
+import { IPayload, IJwtPair } from "../Typescript";
 
+/**
+ * Generate token with access token live, get option from config file
+ * @param id - user id argument for access token generate,  id will be written in payload
+ */
 const generateAccess = async (id: string): Promise<string> => {
-  const payload = {
+  const payload: IPayload = {
     id: id,
     jti: jwtConfig.jti,
     iss: jwtConfig.issuer,
@@ -15,8 +20,12 @@ const generateAccess = async (id: string): Promise<string> => {
     expiresIn: jwtConfig.accessLife
   });
 };
+/**
+ * Generate token with refresh token live, options get from config file
+ * @param id - user id argument for refresh token generate, id will be written in payload
+ */
 const generateRefresh = async (id: string): Promise<string> => {
-  const payload = {
+  const payload: IPayload = {
     id: id,
     jti: jwtConfig.jti,
     iss: jwtConfig.issuer,
@@ -27,16 +36,26 @@ const generateRefresh = async (id: string): Promise<string> => {
     expiresIn: jwtConfig.refreshLife
   });
 };
+/**
+ * Expiration value for access token in unix seconds
+ */
 const expireIn = async (): Promise<number> => {
   return Math.round(new Date().getTime() / 1000);
 };
-const createSession = async (refresh: string, userId: string) => {
+/**
+ * Save input refresh token in repository<Refresh>, return Refresh instanse
+ * @param refresh - current user refresh token
+ * @param user - current user
+ */
+const createSession = async (refresh: string, user: User) => {
   const sessionRepository: Repository<Session> = getManager().getRepository(
     Session
   );
-  const old = await sessionRepository.findOne({ where: { user: userId } });
+  const old: Session = await sessionRepository.findOne({
+    where: { user: user }
+  });
   const session = new Session();
-  session.user = userId;
+  session.user = user;
   session.token = refresh;
   if (!old) {
     await sessionRepository.save(session);
@@ -46,13 +65,20 @@ const createSession = async (refresh: string, userId: string) => {
   }
   return session;
 };
+/**
+ * Class for creating jwt pair, getting payload from tokens
+ */
 export default class JwtService {
-  public static async createPair(id: string) {
-    const access = await generateAccess(id); //generate acces token
-    const refresh = await generateRefresh(id); //generate refresh token
+  /**
+   * Generate new jwt pair, save refresh in database, return pair
+   * @param user - incoming user instanse for which will be generated jwt pai
+   */
+  public static async createPair(user: User): Promise<IJwtPair> {
+    const access = await generateAccess(user.id); //generate acces token
+    const refresh = await generateRefresh(user.id); //generate refresh token
     const expiresIn = (await expireIn()) + jwtConfig.accessLife; //get expireIn from access token
 
-    const session = await createSession(refresh, id);
+    const session = await createSession(refresh, user);
 
     return {
       access_token: access,
@@ -60,10 +86,14 @@ export default class JwtService {
       expiresIn: expiresIn
     };
   }
-  public static async payload(token: string): Promise<any> {
+  /**
+   * Decode payload from input token, return IPayload
+   * @param token - incoming token for decoding
+   */
+  public static async payload(token: string): Promise<IPayload> {
     try {
       const payLoad = await jwt.verify(token, jwtConfig.secret);
-      return payLoad;
+      return <IPayload>payLoad;
     } catch (err) {
       return Promise.reject({ ...err, ...{ status: 401 } });
     }

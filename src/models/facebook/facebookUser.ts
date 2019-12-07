@@ -3,9 +3,10 @@ import {
   Column,
   PrimaryGeneratedColumn,
   ManyToOne,
-  Index
+  Index,
+  JoinColumn
 } from "typeorm";
-import User from "./user";
+import User from "../user";
 
 @Entity()
 @Index(["fb_id"], { unique: true })
@@ -28,10 +29,10 @@ export default class FacebookUser {
   @Column()
   fb_token: string;
 
-  @Column()
   @ManyToOne(
     type => User,
-    user => user.id
+    user => user.facebookUser
   )
-  user: string;
+  @JoinColumn()
+  user: User;
 }

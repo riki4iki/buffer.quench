@@ -1,4 +1,5 @@
 import User from "./user";
 import Refresh from "./refresh";
-import FbUser from "./facebookUser";
-export { User, Refresh, FbUser };
+import { FacebookPage, FacebookUser } from "./facebook";
+
+export { User, Refresh, FacebookPage, FacebookUser };

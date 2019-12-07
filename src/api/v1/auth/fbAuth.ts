@@ -1,12 +1,12 @@
 import { Context } from "koa";
 import Router from "koa-router";
 import { fbService } from "../../../lib";
-import { FbUser } from "../../../models";
+import { FacebookUser as FbUser } from "../../../models";
 
 const router = new Router();
 
 router.post("/login", async (ctx: Context) => {
-  const token = ctx.request.body.token;
+  const token: string = ctx.request.body.token;
 
   const fbUser = await fbService
     .getUser(token)
