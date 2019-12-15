@@ -3,26 +3,29 @@ import {
   PrimaryGeneratedColumn,
   Column,
   ManyToOne,
-  JoinColumn
+  JoinColumn,
+  PrimaryColumn
 } from "typeorm";
 import FbUser from "./facebookUser";
 
 @Entity()
 export default class FacebookPage {
-  @PrimaryGeneratedColumn("uuid")
+  @PrimaryColumn()
   id: string;
 
   @Column()
-  page_token: string;
+  accessToken: string;
 
   @Column()
-  page_id: string;
+  name: string;
 
-  @Column()
+  @Column("simple-array")
+  tasks: string[];
+
   @ManyToOne(
     type => FbUser,
-    FbUser => FbUser.id
+    FbUser => FbUser.page
   )
   @JoinColumn()
-  fbUser: string;
+  fbUser: FbUser;
 }

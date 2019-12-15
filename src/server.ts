@@ -14,6 +14,7 @@ server.on("listening", () => {
 });
 server.on("error", err => {
   console.log("server event error, i need handler");
+  console.log(err);
 });
 
 dbConnection()

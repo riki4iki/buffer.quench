@@ -3,10 +3,10 @@ const router = new Router();
 import { userLogic } from "../../../service";
 import AuthService from "../../../lib/auth";
 
-const accounts: Router = require("./accounts");
+const accounts: Router = require("./page");
 
 router.use(
-  "/accounts",
+  "/page",
   AuthService.checkSession,
   userLogic.getCurrentUserMiddleware,
   accounts.routes()

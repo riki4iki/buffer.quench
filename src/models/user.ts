@@ -29,7 +29,7 @@ export default class User {
   )
   refresh: Refresh;
 
-  @OneToMany(
+  @OneToOne(
     type => FacebookUser,
     facebookUser => facebookUser.user
   )

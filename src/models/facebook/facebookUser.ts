@@ -2,37 +2,40 @@ import {
   Entity,
   Column,
   PrimaryGeneratedColumn,
-  ManyToOne,
   Index,
-  JoinColumn
+  JoinColumn,
+  OneToMany,
+  OneToOne,
+  PrimaryColumn
 } from "typeorm";
 import User from "../user";
+import Page from "./facebookPage";
 
 @Entity()
-@Index(["fb_id"], { unique: true })
+@Index(["id"], { unique: true })
 export default class FacebookUser {
-  @PrimaryGeneratedColumn("uuid")
+  @PrimaryColumn()
   id: string;
 
   @Column()
   name: string;
 
   @Column()
-  picture: string;
-
-  @Column()
   email: string;
 
   @Column()
-  fb_id: string;
+  accessToken: string;
 
-  @Column()
-  fb_token: string;
-
-  @ManyToOne(
+  @OneToOne(
     type => User,
     user => user.facebookUser
   )
   @JoinColumn()
   user: User;
+
+  @OneToMany(
+    type => Page,
+    page => page.fbUser
+  )
+  page: Page;
 }
