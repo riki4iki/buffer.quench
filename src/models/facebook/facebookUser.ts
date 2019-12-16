@@ -5,8 +5,10 @@ import {
   Index,
   JoinColumn,
   OneToMany,
-  OneToOne,
-  PrimaryColumn
+  ManyToOne,
+  PrimaryColumn,
+  ManyToMany,
+  JoinTable
 } from "typeorm";
 import User from "../user";
 import Page from "./facebookPage";
@@ -26,12 +28,9 @@ export default class FacebookUser {
   @Column()
   accessToken: string;
 
-  @OneToOne(
-    type => User,
-    user => user.facebookUser
-  )
-  @JoinColumn()
-  user: User;
+  @ManyToMany(type => User)
+  @JoinTable()
+  users: User[];
 
   @OneToMany(
     type => Page,

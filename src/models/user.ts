@@ -4,7 +4,8 @@ import {
   PrimaryGeneratedColumn,
   Index,
   OneToOne,
-  OneToMany
+  OneToMany,
+  ManyToMany
 } from "typeorm";
 import { Length, IsEmail } from "class-validator";
 import Refresh from "./refresh";
@@ -29,9 +30,6 @@ export default class User {
   )
   refresh: Refresh;
 
-  @OneToOne(
-    type => FacebookUser,
-    facebookUser => facebookUser.user
-  )
-  facebookUser: FacebookUser;
+  @ManyToMany(type => FacebookUser)
+  facebookUsers: FacebookUser[];
 }

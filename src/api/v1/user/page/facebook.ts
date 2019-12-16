@@ -1,10 +1,11 @@
 import { Context } from "koa";
 import Router from "koa-router";
 const facebookRouter = new Router();
-
+import { isEqual } from "lodash";
 import {
   FacebookUser as FbUser,
-  FacebookPage as FbPage
+  FacebookPage as FbPage,
+  User as SysUser
 } from "../../../../models";
 import { Repository, getManager } from "typeorm";
 import { fbService as fb } from "../../../../lib";
@@ -26,7 +27,15 @@ facebookRouter.post("/", async (ctx: Context) => {
     // create facebook user repository
     FbUser
   );
-  let localFbUser = await fbUserRepository.findOne(fbUser.id); //find exist facebook user in databes
+  let localFbUser = await fbUserRepository.findOne({
+    where: { id: fbUser.id },
+    relations: ["users"]
+  }); //find exist facebook user in databes
+  console.log(localFbUser.users);
+  console.log(ctx.state.user);
+  console.log(localFbUser.users[0] == ctx.state.user);
+  console.log(localFbUser.users.includes(<SysUser>ctx.state.user));
+  console.log(isEqual(localFbUser.users[0], ctx.state.user));
   if (!localFbUser) {
     // if not exist need to create
     // new user in system, need create a new raw in db
@@ -35,7 +44,7 @@ facebookRouter.post("/", async (ctx: Context) => {
     fbUserModel.email = fbUser.email;
     fbUserModel.name = fbUser.name;
     fbUserModel.accessToken = user_access_token_token_2h;
-    fbUserModel.user = ctx.state.user;
+    fbUserModel.users = [ctx.state.user];
 
     localFbUser = await fbUserRepository.save(fbUserModel);
   }
@@ -56,21 +65,22 @@ facebookRouter.post("/", async (ctx: Context) => {
     FbPage
   );
 
-  const prom = pages.map(async page => {
-    const localPage = await fbPageRepository.findOne(page.id);
-    if (!localPage) {
-      console.log("new page");
-      const pageModel = new FbPage();
-      pageModel.name = page.name;
-      pageModel.id = page.id;
-      pageModel.accessToken = page.access_token;
-      pageModel.tasks = page.tasks;
-      pageModel.fbUser = localFbUser;
+  Promise.all(
+    pages.map(async page => {
+      const localPage = await fbPageRepository.findOne(page.id);
+      if (!localPage) {
+        console.log("new page");
+        const pageModel = new FbPage();
+        pageModel.name = page.name;
+        pageModel.id = page.id;
+        pageModel.accessToken = page.access_token;
+        pageModel.tasks = page.tasks;
+        pageModel.fbUser = localFbUser;
 
-      await fbPageRepository.save(pageModel);
-    }
-  });
-  Promise.all(prom);
+        await fbPageRepository.save(pageModel);
+      }
+    })
+  );
   ctx.body = pages; // return pages for user
 });
 facebookRouter.delete("/", async (ctx: Context) => {
