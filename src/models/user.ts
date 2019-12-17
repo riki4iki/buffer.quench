@@ -30,6 +30,9 @@ export default class User {
   )
   refresh: Refresh;
 
-  @ManyToMany(type => FacebookUser)
-  facebookUsers: FacebookUser[];
+  @OneToMany(
+    type => FacebookUser,
+    facebookUser => facebookUser.user
+  )
+  facebookUser: FacebookUser;
 }

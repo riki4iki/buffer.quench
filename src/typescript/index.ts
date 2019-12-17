@@ -23,6 +23,7 @@ export interface IFacebookPage {
     source: string;
     id: string;
   };
+  category: string;
 }
 
 export interface IFacebookUser {

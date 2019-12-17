@@ -3,15 +3,17 @@ import {
   PrimaryGeneratedColumn,
   Column,
   ManyToOne,
-  JoinColumn,
-  PrimaryColumn
+  JoinColumn
 } from "typeorm";
 import FbUser from "./facebookUser";
 
 @Entity()
 export default class FacebookPage {
-  @PrimaryColumn()
+  @PrimaryGeneratedColumn("uuid")
   id: string;
+
+  @Column()
+  fbId: string;
 
   @Column()
   accessToken: string;

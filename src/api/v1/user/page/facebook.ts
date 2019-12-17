@@ -28,23 +28,16 @@ facebookRouter.post("/", async (ctx: Context) => {
     FbUser
   );
   let localFbUser = await fbUserRepository.findOne({
-    where: { id: fbUser.id },
-    relations: ["users"]
-  }); //find exist facebook user in databes
-  console.log(localFbUser.users);
-  console.log(ctx.state.user);
-  console.log(localFbUser.users[0] == ctx.state.user);
-  console.log(localFbUser.users.includes(<SysUser>ctx.state.user));
-  console.log(isEqual(localFbUser.users[0], ctx.state.user));
+    fbId: fbUser.id,
+    user: <SysUser>ctx.state.user
+  }); //find exist facebook user in database with all system users which links with that facebook user
   if (!localFbUser) {
     // if not exist need to create
     // new user in system, need create a new raw in db
     const fbUserModel = new FbUser();
-    fbUserModel.id = fbUser.id;
-    fbUserModel.email = fbUser.email;
-    fbUserModel.name = fbUser.name;
+    fbUserModel.fbId = fbUser.id;
     fbUserModel.accessToken = user_access_token_token_2h;
-    fbUserModel.users = [ctx.state.user];
+    fbUserModel.user = <SysUser>ctx.state.user;
 
     localFbUser = await fbUserRepository.save(fbUserModel);
   }
@@ -59,7 +52,7 @@ facebookRouter.post("/", async (ctx: Context) => {
   const pages: Array<IFacebookPage> = await fb.longLiveAccounts(
     //get user pages from facebook
     longUserToken.access_token,
-    localFbUser.id
+    localFbUser.fbId
   );
   const fbPageRepository: Repository<FbPage> = getManager().getRepository(
     FbPage
@@ -67,12 +60,14 @@ facebookRouter.post("/", async (ctx: Context) => {
 
   Promise.all(
     pages.map(async page => {
-      const localPage = await fbPageRepository.findOne(page.id);
+      const localPage = await fbPageRepository.findOne({
+        fbId: page.id,
+        fbUser: localFbUser
+      });
       if (!localPage) {
-        console.log("new page");
         const pageModel = new FbPage();
         pageModel.name = page.name;
-        pageModel.id = page.id;
+        pageModel.fbId = page.id;
         pageModel.accessToken = page.access_token;
         pageModel.tasks = page.tasks;
         pageModel.fbUser = localFbUser;

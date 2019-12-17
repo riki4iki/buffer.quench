@@ -7,8 +7,7 @@ import {
   OneToMany,
   ManyToOne,
   PrimaryColumn,
-  ManyToMany,
-  JoinTable
+  ManyToMany
 } from "typeorm";
 import User from "../user";
 import Page from "./facebookPage";
@@ -16,21 +15,21 @@ import Page from "./facebookPage";
 @Entity()
 @Index(["id"], { unique: true })
 export default class FacebookUser {
-  @PrimaryColumn()
+  @PrimaryGeneratedColumn("uuid")
   id: string;
 
   @Column()
-  name: string;
-
-  @Column()
-  email: string;
+  fbId: string;
 
   @Column()
   accessToken: string;
 
-  @ManyToMany(type => User)
-  @JoinTable()
-  users: User[];
+  @ManyToOne(
+    type => User,
+    user => user.facebookUser
+  )
+  @JoinColumn()
+  user: User;
 
   @OneToMany(
     type => Page,
