@@ -6,7 +6,7 @@ import {
 import { getManager, Repository } from "typeorm";
 import { routeServie as api } from "../../../service";
 import { fbService as fb } from "../../../lib";
-import { IFacebookUser, IAuthContext } from "../../../typescript";
+import { IFacebookUser, IAuthContext } from "../../../interfaces";
 import { omit } from "lodash";
 import Router from "koa-router";
 const social = new Router();

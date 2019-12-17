@@ -2,7 +2,7 @@ import jwt from "jsonwebtoken";
 import { jwtConfig } from "../config";
 import { Repository, getManager } from "typeorm";
 import { Refresh as Session, User } from "../models";
-import { IPayload, IJwtPair } from "../Typescript";
+import { IPayload, IJwtPair } from "../interfaces";
 
 /**
  * Generate token with access token live, get option from config file

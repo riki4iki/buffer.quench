@@ -9,7 +9,7 @@ import {
 } from "../../../../models";
 import { Repository, getManager } from "typeorm";
 import { fbService as fb } from "../../../../lib";
-import { IFacebookPage, IFacebookUser } from "../../../../typescript";
+import { IFacebookPage, IFacebookUser } from "../../../../interfaces";
 
 facebookRouter.post("/", async (ctx: Context) => {
   const user_access_token_token_2h: string = ctx.request.body.token; //input facebook user access token with 2 h live

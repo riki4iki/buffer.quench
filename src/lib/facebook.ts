@@ -3,7 +3,7 @@ import {
   IFacebookPage,
   IFacebookUser,
   ILongLiveUserToken
-} from "../typescript";
+} from "../interfaces";
 const version = process.env.FACEBOOK_API_VERSION;
 
 /**
