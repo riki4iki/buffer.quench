@@ -1,15 +1,23 @@
 import Router from "koa-router";
 const router = new Router();
 import { userLogic } from "../../../service";
-import AuthService from "../../../lib/auth";
+import { authServise as AuthService } from "../../../service";
 
 const accounts: Router = require("./page");
+import { social } from "./social";
 
 router.use(
   "/page",
   AuthService.checkSession,
   userLogic.getCurrentUserMiddleware,
   accounts.routes()
+);
+
+router.use(
+  "/social",
+  AuthService.checkSession,
+  userLogic.getCurrentUserMiddleware,
+  social.routes()
 );
 
 router.get(

@@ -4,7 +4,7 @@ const accounts = new Router();
 const facebookAccounts: Router = require("./facebook");
 
 accounts.get("/", async (ctx, next) => {
-  ctx.body = "return all accounts";
+  ctx.body = "return all pages";
 });
 
 accounts.use("/facebook", facebookAccounts.routes());

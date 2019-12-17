@@ -11,14 +11,6 @@ import { Repository, getManager } from "typeorm";
 import { fbService as fb } from "../../../../lib";
 import { IFacebookPage, IFacebookUser } from "../../../../typescript";
 
-facebookRouter.get("/", async (ctx: Context) => {
-  const user_access_token: string = ctx.request.body.user_access_token;
-
-  const pages: Array<IFacebookPage> = await fb.accounts(user_access_token);
-
-  ctx.body = pages;
-});
-
 facebookRouter.post("/", async (ctx: Context) => {
   const user_access_token_token_2h: string = ctx.request.body.token; //input facebook user access token with 2 h live
 
@@ -50,7 +42,7 @@ facebookRouter.post("/", async (ctx: Context) => {
   localFbUser = await fbUserRepository.save(localFbUser); //save new long acess token to database
 
   const pages: Array<IFacebookPage> = await fb.longLiveAccounts(
-    //get user pages from facebook
+    //get user pages from facebook with 60d access token.....
     longUserToken.access_token,
     localFbUser.fbId
   );
@@ -58,6 +50,7 @@ facebookRouter.post("/", async (ctx: Context) => {
     FbPage
   );
 
+  //save pages in database, maybe useless.....
   Promise.all(
     pages.map(async page => {
       const localPage = await fbPageRepository.findOne({

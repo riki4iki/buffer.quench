@@ -5,27 +5,18 @@ import { HmacSHA1 } from "crypto-js";
 import { omit } from "lodash";
 
 import User from "../models/user";
-const validateUUID = async (ctx: Context, next: Next) => {
-  //validation middleware for cheking uuid cause it's can crush server with 500 status...
-  const id: string = ctx.params.id;
-  const uuid = /[0-9a-fA-F]{8}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{12}/.test(
-    //validate by regex
-    id
-  );
-  if (!uuid) {
-    ctx.status = 400;
-    ctx.body = "uuid validation error";
-  } else {
-    await next(); // next endpoint
-  }
-};
+import { IAuthContext } from "src/Typescript";
+
+/**
+ * Controller that works with user entity. Have endpoints, middlewares for user updating, creating, getting, deleting
+ */
 export default class UserService {
   /**
    * Find current user in database and save in ctx.state.user. requered ctx.state.session.Use this if user has been authenticated
    * @param ctx - Koa Context, here must be stored session(in ctx.state) and here will store user(in ctx.state)
    * @param next - Koa Next, use for next chain target
    */
-  public static async getCurrentUserMiddleware(ctx: Context, next: Next) {
+  public static async getCurrentUserMiddleware(ctx: IAuthContext, next: Next) {
     if (!ctx.state.session) {
       ctx.app.emit("error", { status: 401, message: "session is null" }, ctx);
     } else {
@@ -33,7 +24,7 @@ export default class UserService {
       const userRepository: Repository<User> = getManager().getRepository(User);
       const user = await userRepository.findOne(id);
       if (!user) {
-        ctx.app.emit("error", { status: 204 }, ctx);
+        ctx.app.emit("error", { status: 204 }, ctx); // No users with that session
       } else {
         ctx.state.user = user;
         await next();
@@ -41,9 +32,29 @@ export default class UserService {
     }
   }
   //for future, now it's empty cause useless
+  /**
+   * EMPTY. MIDDLEWARE FOR FUTURE!!
+   * @param ctx
+   * @param next
+   */
   public static async getAllUsersMiddleware(ctx: Context, next: Next) {}
+  /**
+   * EMPTY  MIDDLEWARE FOR FUTURE!!
+   * @param ctx
+   * @param next
+   */
   public static async createUserMiddleware(ctx: Context, next: Next) {}
+  /**
+   * EMPTY  MIDDLEWARE FOR FUTURE!!
+   * @param ctx
+   * @param next
+   */
   public static async updateUserMiddleware(ctx: Context, next: Next) {}
+  /**
+   * EMPTY  MIDDLEWARE FOR FUTURE!!
+   * @param ctx
+   * @param next
+   */
   public static async deleteUserMiddleware(ctx: Context, next: Next) {}
 
   /**
@@ -99,6 +110,7 @@ export default class UserService {
    */
   public static async updateCurrnetUserEndPoint(ctx: Context): Promise<void> {
     const prevUser: User = ctx.state.user;
+
     const userRepository: Repository<User> = getManager().getRepository(User);
     const nextUser: User = new User();
     nextUser.id = prevUser.id;

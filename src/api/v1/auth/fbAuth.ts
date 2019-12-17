@@ -1,6 +1,6 @@
 import { Context } from "koa";
 import Router from "koa-router";
-import { FacebookUser as FbUser, User as SystemUser } from "../../../models";
+import { FacebookUser as FbUser } from "../../../models";
 import { jwtService as jwt, fbService as fb } from "../../../lib";
 import { Repository, getManager } from "typeorm";
 import { IFacebookUser } from "../../../typescript";

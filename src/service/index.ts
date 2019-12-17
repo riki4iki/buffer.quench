@@ -1,3 +1,5 @@
 import userLogic from "./userService";
+import routeServie from "./api";
+import authServise from "./auth";
 
-export { userLogic };
+export { userLogic, routeServie, authServise };

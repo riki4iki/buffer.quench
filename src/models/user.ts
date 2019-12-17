@@ -4,8 +4,7 @@ import {
   PrimaryGeneratedColumn,
   Index,
   OneToOne,
-  OneToMany,
-  ManyToMany
+  OneToMany
 } from "typeorm";
 import { Length, IsEmail } from "class-validator";
 import Refresh from "./refresh";
@@ -25,14 +24,16 @@ export default class User {
   password: string;
 
   @OneToOne(
-    type => Refresh,
-    refresh => refresh.user
+    () => Refresh,
+    refresh => refresh.user,
+    { onDelete: "CASCADE" }
   )
   refresh: Refresh;
 
   @OneToMany(
-    type => FacebookUser,
-    facebookUser => facebookUser.user
+    () => FacebookUser,
+    facebookUser => facebookUser.user,
+    { onDelete: "CASCADE" }
   )
   facebookUser: FacebookUser;
 }

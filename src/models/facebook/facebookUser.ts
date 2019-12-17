@@ -25,15 +25,17 @@ export default class FacebookUser {
   accessToken: string;
 
   @ManyToOne(
-    type => User,
-    user => user.facebookUser
+    () => User,
+    user => user.facebookUser,
+    { onDelete: "CASCADE" }
   )
   @JoinColumn()
   user: User;
 
   @OneToMany(
-    type => Page,
-    page => page.fbUser
+    () => Page,
+    page => page.fbUser,
+    { onDelete: "CASCADE" }
   )
   page: Page;
 }

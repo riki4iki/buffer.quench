@@ -1,3 +1,5 @@
+import { Context } from "koa";
+import { User } from "../models";
 export interface IPayload {
   id: string;
   jti: string;
@@ -30,4 +32,25 @@ export interface IFacebookUser {
   id: string;
   name: string;
   email: string;
+  picture: {
+    data: {
+      height: number;
+      width: number;
+      url: string;
+      is_silhouette: boolean;
+    };
+  };
+}
+export interface ILongLiveUserToken {
+  access_token: string;
+  token_type: string;
+}
+export interface IAuthContext extends Context {
+  params: {
+    id?: string;
+  };
+  state: {
+    session: string;
+    user: User;
+  };
 }

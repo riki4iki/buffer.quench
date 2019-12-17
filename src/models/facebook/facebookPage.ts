@@ -25,8 +25,9 @@ export default class FacebookPage {
   tasks: string[];
 
   @ManyToOne(
-    type => FbUser,
-    FbUser => FbUser.page
+    () => FbUser,
+    FbUser => FbUser.page,
+    { onDelete: "CASCADE" }
   )
   @JoinColumn()
   fbUser: FbUser;
