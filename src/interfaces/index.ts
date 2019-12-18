@@ -54,3 +54,10 @@ export interface IAuthContext extends Context {
     user: User;
   };
 }
+export interface IPage {
+  id: string;
+  accessToken: string;
+}
+export enum IPageType {
+  Facebook = "facebook"
+}

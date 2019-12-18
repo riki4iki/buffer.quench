@@ -46,29 +46,7 @@ facebookRouter.post("/", async (ctx: Context) => {
     longUserToken.access_token,
     localFbUser.fbId
   );
-  const fbPageRepository: Repository<FbPage> = getManager().getRepository(
-    FbPage
-  );
 
-  //save pages in database, maybe useless.....
-  Promise.all(
-    pages.map(async page => {
-      const localPage = await fbPageRepository.findOne({
-        fbId: page.id,
-        fbUser: localFbUser
-      });
-      if (!localPage) {
-        const pageModel = new FbPage();
-        pageModel.name = page.name;
-        pageModel.fbId = page.id;
-        pageModel.accessToken = page.access_token;
-        pageModel.tasks = page.tasks;
-        pageModel.fbUser = localFbUser;
-
-        await fbPageRepository.save(pageModel);
-      }
-    })
-  );
   ctx.body = pages; // return pages for user
 });
 facebookRouter.delete("/", async (ctx: Context) => {

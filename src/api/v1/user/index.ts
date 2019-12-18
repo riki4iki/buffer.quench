@@ -5,6 +5,7 @@ import { authServise as AuthService } from "../../../service";
 
 const accounts: Router = require("./page");
 import { social } from "./social";
+import { thread } from "./thread";
 
 router.use(
   "/page",
@@ -18,6 +19,13 @@ router.use(
   AuthService.checkSession,
   userLogic.getCurrentUserMiddleware,
   social.routes()
+);
+
+router.use(
+  "/thread",
+  AuthService.checkSession,
+  userLogic.getCurrentUserMiddleware,
+  thread.routes()
 );
 
 router.get(

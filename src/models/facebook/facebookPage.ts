@@ -1,28 +1,11 @@
-import {
-  Entity,
-  PrimaryGeneratedColumn,
-  Column,
-  ManyToOne,
-  JoinColumn
-} from "typeorm";
+import { Entity, Column, ManyToOne, JoinColumn } from "typeorm";
 import FbUser from "./facebookUser";
+import Page from "../page";
 
 @Entity()
-export default class FacebookPage {
-  @PrimaryGeneratedColumn("uuid")
-  id: string;
-
+export default class FacebookPage extends Page {
   @Column()
   fbId: string;
-
-  @Column()
-  accessToken: string;
-
-  @Column()
-  name: string;
-
-  @Column("simple-array")
-  tasks: string[];
 
   @ManyToOne(
     () => FbUser,

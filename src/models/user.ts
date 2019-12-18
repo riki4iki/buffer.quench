@@ -9,6 +9,8 @@ import {
 import { Length, IsEmail } from "class-validator";
 import Refresh from "./refresh";
 import FacebookUser from "./facebook/facebookUser";
+import Thread from "./thread";
+
 @Entity()
 @Index(["email"], { unique: true })
 export default class User {
@@ -36,4 +38,11 @@ export default class User {
     { onDelete: "CASCADE" }
   )
   facebookUser: FacebookUser;
+
+  @OneToMany(
+    () => Thread,
+    thread => thread.user,
+    { onDelete: "CASCADE" }
+  )
+  thread: Thread;
 }
