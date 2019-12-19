@@ -1,9 +1,19 @@
-import { Entity, Column, ManyToOne, JoinColumn } from "typeorm";
+import {
+  Entity,
+  Column,
+  ManyToOne,
+  JoinColumn,
+  PrimaryGeneratedColumn,
+  OneToOne
+} from "typeorm";
 import FbUser from "./facebookUser";
 import Page from "../page";
 
 @Entity()
-export default class FacebookPage extends Page {
+export default class FacebookPage {
+  @PrimaryGeneratedColumn("uuid")
+  id: string;
+
   @Column()
   fbId: string;
 
@@ -14,4 +24,11 @@ export default class FacebookPage extends Page {
   )
   @JoinColumn()
   fbUser: FbUser;
+
+  @OneToOne(
+    () => Page,
+    page => page.id
+  )
+  @JoinColumn()
+  page: string;
 }

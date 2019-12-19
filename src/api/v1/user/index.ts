@@ -5,7 +5,7 @@ import { authServise as AuthService } from "../../../service";
 
 const accounts: Router = require("./page");
 import { social } from "./social";
-import { thread } from "./thread";
+import { threadRouter as thread } from "./thread";
 
 router.use(
   "/page",

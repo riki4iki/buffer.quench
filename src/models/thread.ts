@@ -6,6 +6,7 @@ import {
   OneToMany,
   JoinColumn
 } from "typeorm";
+import { MinLength, MaxLength, IsString } from "class-validator";
 import User from "./user";
 import Post from "./post";
 @Entity()
@@ -14,6 +15,9 @@ export default class Thread {
   id: string;
 
   @Column()
+  @IsString()
+  @MinLength(6, { message: "Thread name is too short, min size is 6 symbols" })
+  @MaxLength(30, { message: "Thread name is too long, max size is 30 symbols" })
   name: string;
 
   @ManyToOne(

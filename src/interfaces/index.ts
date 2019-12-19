@@ -1,5 +1,5 @@
 import { Context } from "koa";
-import { User } from "../models";
+import { User, Thread } from "../models";
 export interface IPayload {
   id: string;
   jti: string;
@@ -53,6 +53,31 @@ export interface IAuthContext extends Context {
     session: string;
     user: User;
   };
+}
+export interface IPostContext extends IAuthContext {
+  params: {
+    id?: string;
+  };
+  state: {
+    session: string;
+    user: User;
+    thread: Thread;
+  };
+}
+export interface IContext<T> extends Context {
+  params: {
+    id?: string;
+  };
+  state: T;
+}
+export interface IAuthState {
+  session: string;
+  user: User;
+}
+export interface IPostState {
+  session: string;
+  user: User;
+  thread: Thread;
 }
 export interface IPage {
   id: string;

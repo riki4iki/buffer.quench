@@ -1,29 +1,36 @@
 import Router from "koa-router";
-import { IAuthContext } from "src/interfaces";
 import { routeServie } from "../../../../service";
-const thread = new Router();
+import { threadService as controller } from "../../../../service";
 
-thread.get("/", async (ctx: IAuthContext) => {
-  ctx.body = "return all threads";
-});
+import { postRouter } from "./post";
 
-thread.get(
-  "/:id",
+const threadRouter = new Router();
+
+threadRouter.use(
+  "/:id/post",
   routeServie.validateUUIDMiddleware,
-  async (ctx: IAuthContext) => {
-    ctx.body = `return thread with id: ${ctx.params.id}`;
-  }
+  controller.threadMiddleware,
+  postRouter.routes()
 );
 
-thread.del(
+threadRouter.get("/", controller.threadsEndPoint);
+
+threadRouter.get(
   "/:id",
   routeServie.validateUUIDMiddleware,
-  async (ctx: IAuthContext) => {
-    ctx.body = `delete thread with id: ${ctx.params.id}`;
-  }
+  controller.threadEndPoint
 );
-thread.post("/", async (ctx: IAuthContext) => {
-  ctx.body = "create new thread";
-});
 
-export { thread };
+threadRouter.del(
+  "/:id",
+  routeServie.validateUUIDMiddleware,
+  controller.threadDeleteEndPoint
+);
+threadRouter.put(
+  "/:id",
+  routeServie.validateUUIDMiddleware,
+  controller.threadUpdateEndPoint
+);
+threadRouter.post("/", controller.threadCreateEndPoint);
+
+export { threadRouter };
