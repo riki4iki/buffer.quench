@@ -1,12 +1,7 @@
 import { Context } from "koa";
 import Router from "koa-router";
 const facebookRouter = new Router();
-import { isEqual } from "lodash";
-import {
-  FacebookUser as FbUser,
-  FacebookPage as FbPage,
-  User as SysUser
-} from "../../../../models";
+import { FacebookUser as FbUser, User as SysUser } from "../../../../models";
 import { Repository, getManager } from "typeorm";
 import { fbService as fb } from "../../../../lib";
 import { IFacebookPage, IFacebookUser } from "../../../../interfaces";

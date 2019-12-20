@@ -7,17 +7,20 @@ import {
   JoinColumn
 } from "typeorm";
 import Thread from "./thread";
+import { IsDate, IsNotEmpty } from "class-validator";
 
 @Entity()
 export default class Post {
   @PrimaryGeneratedColumn("uuid")
   id: string;
 
+  @IsNotEmpty()
   @Column("text")
-  body: string;
+  context: string;
 
+  @IsDate()
   @Column("timestamptz")
-  expireIn: Date;
+  expireDate: Date;
 
   @ManyToOne(
     () => Thread,

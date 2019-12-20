@@ -3,6 +3,7 @@ import { routeServie } from "../../../../service";
 import { threadService as controller } from "../../../../service";
 
 import { postRouter } from "./post";
+import { pageRouter } from "./page";
 
 const threadRouter = new Router();
 
@@ -11,6 +12,13 @@ threadRouter.use(
   routeServie.validateUUIDMiddleware,
   controller.threadMiddleware,
   postRouter.routes()
+);
+
+threadRouter.use(
+  "/:id/page",
+  routeServie.validateUUIDMiddleware,
+  controller.threadMiddleware,
+  pageRouter.routes()
 );
 
 threadRouter.get("/", controller.threadsEndPoint);

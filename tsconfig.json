@@ -6,10 +6,11 @@
     "sourceMap": true,
     "outDir": "dist",
     "moduleResolution": "node",
-    "baseUrl": ".",
+    "baseUrl": "./src",
     "esModuleInterop": true,
     "experimentalDecorators": true,
-    "emitDecoratorMetadata": true
+    "emitDecoratorMetadata": true,
+    "rootDir": "./src"
   },
   "include": ["src/**/*"]
 }

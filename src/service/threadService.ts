@@ -2,7 +2,7 @@ import { getManager, Repository, Equal, Not } from "typeorm";
 import { Next, Context } from "koa";
 import { Thread } from "../models";
 import { ValidationError, validate } from "class-validator";
-import { IAuthContext, IContext, IPostState } from "../interfaces";
+import { IAuthContext, IContext, IThreadState } from "../interfaces";
 /**
  * Class controller for path /user/thread. public static method for CRUd - GET, POST, UPDATE, DELETe
  */
@@ -64,7 +64,10 @@ export default class threadService {
    * @param ctx Context - Koa Context with IAuthContext type that contain extands state and params
    * @param next Next - Koa next for realize connection mechanics, use for chain methods
    */
-  public static async threadMiddleware(ctx: IContext<IPostState>, next: Next) {
+  public static async threadMiddleware(
+    ctx: IContext<IThreadState>,
+    next: Next
+  ) {
     const id: string = ctx.params.id;
     const threadRepository: Repository<Thread> = getManager().getRepository(
       Thread

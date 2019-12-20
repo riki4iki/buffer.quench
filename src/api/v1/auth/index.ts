@@ -3,7 +3,7 @@ import Router from "koa-router";
 import { jwtService } from "../../../lib";
 import { Refresh, User } from "../../../models";
 import { Repository, getManager, getRepository } from "typeorm";
-import { IPayload } from "src/interfaces";
+import { IPayload } from "interfaces";
 const router = new Router();
 
 const localAuthenticate: Router = require("./localAuth");

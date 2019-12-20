@@ -27,7 +27,8 @@ export default class FacebookPage {
 
   @OneToOne(
     () => Page,
-    page => page.id
+    page => page.id,
+    { onDelete: "CASCADE" }
   )
   @JoinColumn()
   page: string;

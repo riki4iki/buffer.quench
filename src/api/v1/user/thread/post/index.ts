@@ -1,33 +1,21 @@
 import Router from "koa-router";
-import { IContext, IPostState } from "../../../../../interfaces";
-import { routeServie as routes } from "../../../../../service";
+import {
+  postService as controller,
+  routeServie as routes
+} from "../../../../../service";
 const postRouter = new Router();
 
-postRouter.get("/", async (ctx: IContext<IPostState>) => {
-  ctx.body = " all posts current user thread";
-});
-postRouter.get(
-  "/:id",
-  routes.validateUUIDMiddleware,
-  async (ctx: IContext<IPostState>) => {
-    ctx.body = "target post with id: " + ctx.params.id;
-  }
-);
-postRouter.post("/", async (ctx: IContext<IPostState>) => {
-  ctx.body = "create new post";
-});
+postRouter.get("/", controller.postsEndPoint);
+postRouter.get("/:id", routes.validateUUIDMiddleware, controller.postEndPoint);
+postRouter.post("/", controller.postCreateEndPoint);
 postRouter.put(
   "/:id",
   routes.validateUUIDMiddleware,
-  async (ctx: IContext<IPostState>) => {
-    ctx.body = "update target post ";
-  }
+  controller.postUpdateEndPoint
 );
 postRouter.del(
   "/:id",
   routes.validateUUIDMiddleware,
-  async (ctx: IContext<IPostState>) => {
-    ctx.body = "delete target post";
-  }
+  controller.postDeleteEndPoint
 );
 export { postRouter };

@@ -65,20 +65,24 @@ export interface IPostContext extends IAuthContext {
   };
 }
 export interface IContext<T> extends Context {
-  params: {
-    id?: string;
-  };
   state: T;
+}
+export interface IParamContext<T, V> extends IContext<T> {
+  params: V;
 }
 export interface IAuthState {
   session: string;
   user: User;
 }
-export interface IPostState {
+export interface IThreadState {
   session: string;
   user: User;
   thread: Thread;
 }
+export interface IParamIdState {
+  id?: string;
+}
+
 export interface IPage {
   id: string;
   accessToken: string;
