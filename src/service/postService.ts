@@ -7,7 +7,7 @@ import {
 } from "../interfaces";
 import { Post, Thread } from "../models";
 import { ValidationError, validate } from "class-validator";
-
+import { scheduleJob, scheduledJobs } from "node-schedule";
 /**
  * Class-controller for posts CRUD (creating, getting, updating, deleting)
  */
@@ -87,6 +87,14 @@ export default class PostService {
     } else {
       //save post in db
       const savedPost: Post = await postRepository.save(newPost);
+      const cron = scheduleJob(
+        `${savedPost.id}`,
+        "*/5 * * * * * ",
+        function test() {
+          console.log(savedPost.id);
+        }
+      );
+
       ctx.status = 201;
       ctx.body = savedPost;
     }
@@ -158,7 +166,8 @@ export default class PostService {
     try {
       //try to remove
       await postRepository.remove(post);
-      ctx.status = 204;
+      console.log(scheduleJob);
+      ctx.body = scheduledJobs;
     } catch (err) {
       ctx.body = err;
     }

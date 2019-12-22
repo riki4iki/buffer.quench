@@ -6,9 +6,9 @@ import {
   JoinColumn
 } from "typeorm";
 import Thread from "./thread";
-import { IPage, IPageType } from "../interfaces";
+import { PageType } from "../interfaces";
 @Entity()
-export default class Page implements IPage {
+export default class Page {
   @PrimaryGeneratedColumn("uuid")
   id: string;
 
@@ -20,9 +20,9 @@ export default class Page implements IPage {
   @JoinColumn()
   thread: Thread;
 
-  @Column("text")
-  type: IPageType;
+  @Column("enum", { enum: PageType, name: "page_type" })
+  type: string;
 
-  @Column()
-  accessToken: string;
+  @Column("uuid")
+  pageId: string;
 }

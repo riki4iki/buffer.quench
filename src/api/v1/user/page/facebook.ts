@@ -4,9 +4,14 @@ const facebookRouter = new Router();
 import { FacebookUser as FbUser, User as SysUser } from "../../../../models";
 import { Repository, getManager } from "typeorm";
 import { fbService as fb } from "../../../../lib";
-import { IFacebookPage, IFacebookUser } from "../../../../interfaces";
+import {
+  IFacebookPage,
+  IFacebookUser,
+  IContext,
+  IAuthState
+} from "../../../../interfaces";
 
-facebookRouter.post("/", async (ctx: Context) => {
+facebookRouter.post("/", async (ctx: IContext<IAuthState>) => {
   const user_access_token_token_2h: string = ctx.request.body.token; //input facebook user access token with 2 h live
 
   const fbUser: IFacebookUser = await fb.getUser(user_access_token_token_2h); // get user from facebook by access token from client side
@@ -16,7 +21,7 @@ facebookRouter.post("/", async (ctx: Context) => {
   );
   let localFbUser = await fbUserRepository.findOne({
     fbId: fbUser.id,
-    user: <SysUser>ctx.state.user
+    user: ctx.state.user
   }); //find exist facebook user in database with all system users which links with that facebook user
   if (!localFbUser) {
     // if not exist need to create
@@ -24,7 +29,7 @@ facebookRouter.post("/", async (ctx: Context) => {
     const fbUserModel = new FbUser();
     fbUserModel.fbId = fbUser.id;
     fbUserModel.accessToken = user_access_token_token_2h;
-    fbUserModel.user = <SysUser>ctx.state.user;
+    fbUserModel.user = ctx.state.user;
 
     localFbUser = await fbUserRepository.save(fbUserModel);
   }

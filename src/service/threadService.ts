@@ -77,7 +77,8 @@ export default class threadService {
       user: ctx.state.user
     });
     if (!thread) {
-      ctx.status = 204;
+      ctx.status = 400;
+      ctx.body = "thread doesn't exist";
     } else {
       ctx.state.thread = thread;
       await next();

@@ -13,7 +13,8 @@ import { omit } from "lodash";
 import { routeServie as api } from "../../../../service";
 import {
   FacebookUser as FbUserModel,
-  User as SysUserModel
+  User as SysUserModel,
+  FacebookPage
 } from "../../../../models";
 const fbRouter = new Router();
 
@@ -96,11 +97,39 @@ fbRouter.post("/page", async (ctx: IContext<IAuthState>) => {
   localFbUser.accessToken = longUserToken.access_token;
   localFbUser = await fbUserRepository.save(localFbUser); //save new long acess token to database
 
-  const pages: Array<IFacebookPage> = await fb.accounts(
-    longUserToken.access_token
+  const pages: Array<IFacebookPage> = await fb.longLiveAccounts(
+    longUserToken.access_token,
+    localFbUser.fbId
   );
 
-  ctx.body = pages; // return pages for user
+  const pageRepository: Repository<FacebookPage> = getManager().getRepository(
+    FacebookPage
+  );
+
+  const savedPages = await Promise.all(
+    pages.map(async page => {
+      const dbPage = await pageRepository.findOne({
+        fbUser: localFbUser,
+        fbId: page.id
+      });
+      if (!dbPage) {
+        console.log("new page");
+        const pageModel = new FacebookPage();
+        pageModel.fbUser = localFbUser;
+        pageModel.accessToken = page.access_token;
+        pageModel.fbId = page.id;
+        pageModel.source = page.cover.source;
+        pageModel.category = page.category;
+        pageModel.tasks = page.tasks;
+        pageModel.name = page.name;
+
+        return await pageRepository.save(pageModel);
+      } else {
+        return dbPage;
+      }
+    })
+  );
+  ctx.body = savedPages.map(page => omit(page, ["accessToken", "fbUser"])); // return pages for user
 });
 fbRouter.get(
   "/:id",

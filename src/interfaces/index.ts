@@ -1,5 +1,5 @@
 import { Context } from "koa";
-import { User, Thread } from "../models";
+import { User, Thread, FacebookPage } from "../models";
 export interface IPayload {
   id: string;
   jti: string;
@@ -86,7 +86,10 @@ export interface IParamIdState {
 export interface IPage {
   id: string;
   accessToken: string;
+  post: (token) => Promise<void>;
 }
-export enum IPageType {
-  Facebook = "facebook"
+export enum PageType {
+  FacebookPage = "facebook",
+  InstagramPage = "instagram",
+  twitterPage = "twitter"
 }
