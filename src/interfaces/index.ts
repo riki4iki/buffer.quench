@@ -1,5 +1,6 @@
 import { Context } from "koa";
-import { User, Thread, FacebookPage } from "../models";
+import { User, Thread, FacebookPage, Post } from "../models";
+import { BadRequest } from "http-errors";
 export interface IPayload {
   id: string;
   jti: string;
@@ -74,16 +75,17 @@ export interface IAuthState {
   session: string;
   user: User;
 }
-export interface IThreadState {
-  session: string;
-  user: User;
+export interface IThreadState extends IAuthState {
   thread: Thread;
+}
+export interface IPostState extends IThreadState {
+  post: Post;
 }
 export interface IParamIdState {
   id?: string;
 }
 
-export interface IPage {
+export interface ISocialPage {
   id: string;
   accessToken: string;
   post: (token) => Promise<void>;
@@ -92,4 +94,18 @@ export enum PageType {
   FacebookPage = "facebook",
   InstagramPage = "instagram",
   twitterPage = "twitter"
+}
+export interface ICronnable {
+  id: string;
+  expireDate: Date;
+}
+export class NoContent extends Error {
+  status = 204;
+}
+export interface IValidationError {
+  property: string;
+  constraints: Object;
+}
+export class ValidationRequest extends BadRequest {
+  result: Array<IValidationError>;
 }

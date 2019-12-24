@@ -6,10 +6,10 @@ import {
   PrimaryGeneratedColumn
 } from "typeorm";
 import FbUser from "./facebookUser";
-import { IPage } from "interfaces";
+import { ISocialPage } from "interfaces";
 import { IsUrl } from "class-validator";
 @Entity()
-export default class FacebookPage implements IPage {
+export default class FacebookPage implements ISocialPage {
   @PrimaryGeneratedColumn("uuid")
   id: string;
 

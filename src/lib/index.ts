@@ -1,3 +1,4 @@
 import jwtService from "./jwt";
 import fbService from "./facebook";
-export { jwtService, fbService };
+import Cron from "./cron";
+export { jwtService, fbService, Cron };

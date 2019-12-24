@@ -6,7 +6,7 @@ import {
   JoinColumn
 } from "typeorm";
 import Thread from "./thread";
-import { PageType } from "../interfaces";
+import { PageType, ISocialPage } from "../interfaces";
 @Entity()
 export default class Page {
   @PrimaryGeneratedColumn("uuid")
@@ -25,4 +25,8 @@ export default class Page {
 
   @Column("uuid")
   pageId: string;
+
+  async toSocial() {
+    console.log(this);
+  }
 }

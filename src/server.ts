@@ -22,5 +22,5 @@ dbConnection()
     server.listen(port);
   })
   .catch(err => {
-    console.log(err);
+    server.emit("error", err);
   });
