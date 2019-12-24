@@ -9,7 +9,7 @@ import {
   IFacebookUser,
   IContext,
   IAuthState
-} from "../../../../interfaces";
+} from "../../../../types";
 
 facebookRouter.post("/", async (ctx: IContext<IAuthState>) => {
   const user_access_token_token_2h: string = ctx.request.body.token; //input facebook user access token with 2 h live

@@ -1,6 +1,9 @@
 import { Context } from "koa";
 import { User, Thread, FacebookPage, Post } from "../models";
 import { BadRequest } from "http-errors";
+
+export * from "./body";
+
 export interface IPayload {
   id: string;
   jti: string;

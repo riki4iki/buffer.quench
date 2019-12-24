@@ -3,7 +3,7 @@ import Router from "koa-router";
 import { FacebookUser as FbUser } from "../../../models";
 import { jwtService as jwt, fbService as fb } from "../../../lib";
 import { Repository, getManager } from "typeorm";
-import { IFacebookUser } from "../../../interfaces";
+import { IFacebookUser } from "../../../types";
 const router = new Router();
 
 //facebook authenticete by facebook access token

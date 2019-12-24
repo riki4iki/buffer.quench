@@ -1,9 +1,5 @@
 import request from "request-promise";
-import {
-  IFacebookPage,
-  IFacebookUser,
-  ILongLiveUserToken
-} from "../interfaces";
+import { IFacebookPage, IFacebookUser, ILongLiveUserToken } from "../types";
 const version = process.env.FACEBOOK_API_VERSION;
 
 /**

@@ -1,5 +1,5 @@
 import Router from "koa-router";
-import { IContext, IThreadState } from "../../../../../interfaces";
+import { IContext, IThreadState } from "../../../../../types";
 const pageRouter = new Router();
 
 import { pageRouter as facebookRouter } from "./facebook";

@@ -6,7 +6,7 @@ import {
   JoinColumn
 } from "typeorm";
 import Thread from "./thread";
-import { PageType, ISocialPage } from "../interfaces";
+import { PageType, ISocialPage } from "../types";
 @Entity()
 export default class Page {
   @PrimaryGeneratedColumn("uuid")

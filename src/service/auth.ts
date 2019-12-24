@@ -1,6 +1,6 @@
 import { Next, Context } from "koa";
 import jwt from "../lib/jwt";
-import { IAuthContext } from "../interfaces";
+import { IAuthContext } from "../types";
 /**
  * Class with middlewares for authenticate requests, create sessions, permisions e.t.c.
  */

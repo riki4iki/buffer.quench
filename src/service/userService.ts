@@ -5,7 +5,7 @@ import { HmacSHA1 } from "crypto-js";
 import { omit } from "lodash";
 
 import User from "../models/user";
-import { IAuthContext } from "interfaces";
+import { IAuthContext } from "types";
 
 /**
  * Controller that works with user entity. Have endpoints, middlewares for user updating, creating, getting, deleting

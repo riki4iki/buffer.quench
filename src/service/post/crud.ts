@@ -2,11 +2,20 @@ import { getManager, Repository, Not, Equal } from "typeorm";
 import { Post, Thread } from "../../models";
 import { ValidationError, validate } from "class-validator";
 import { BadRequest } from "http-errors";
+/**
+ * Promise that return all posts for input thread from database
+ * @param thread Thread - current thread from earlier route /thread/:id. required for posts finding
+ */
 export async function posts(thread: Thread): Promise<Array<Post>> {
   const postRepository: Repository<Post> = getManager().getRepository(Post);
   const posts: Array<Post> = await postRepository.find({ thread: thread });
   return posts;
 }
+/**
+ * Promise that return target post by current thread and id from database
+ * @param thread Thread - current thread from earlier route /thread/:id. required for posts finding
+ * @param id String - post id. required for post identify
+ */
 export async function post(thread: Thread, id: string): Promise<Post> {
   const postRepository: Repository<Post> = getManager().getRepository(Post);
   const post: Post = await postRepository.findOne({ id: id, thread: thread });
@@ -16,6 +25,13 @@ export async function post(thread: Thread, id: string): Promise<Post> {
     return post;
   }
 }
+/**
+ *Promise. Return new post saved to database
+ * @param thread Thread - current thread from earlier route /thread/:id. required for creating relations
+ * @param body IPostBody - input arguments for post crating:
+ * - expireDate - date for post creating;
+ * - context - post body.
+ */
 export async function create(thread: Thread, body: IPostBody) {
   const postRepository: Repository<Post> = getManager().getRepository(Post);
   const newPost = new Post();
@@ -27,6 +43,7 @@ export async function create(thread: Thread, body: IPostBody) {
   const errors: ValidationError[] = await validate(newPost);
 
   if (errors.length > 0) {
+    console.log("ME");
     const err = new ValidationRequest();
     err.validationArray = errors.map(error => {
       return { property: error.property, constraints: error.constraints };
@@ -46,6 +63,14 @@ export async function create(thread: Thread, body: IPostBody) {
     return savedPost;
   }
 }
+/**
+ * Promise. update and return target post for current thread
+ * @param thread Thread - current thread from earlier route /thread/:id. required for creating relations
+ * @param id String - post id. required for post identify
+ * @param body IPostBody - input arguments for post crating:
+ * - expireDate - date for post creating;
+ * - context - post body.
+ */
 export async function update(thread: Thread, id: string, body: IPostBody) {
   const postRepository: Repository<Post> = getManager().getRepository(Post);
 
@@ -81,6 +106,11 @@ export async function update(thread: Thread, id: string, body: IPostBody) {
     }
   }
 }
+/**
+ * Promise. delete and return target post by id and thread
+ * @param thread Thread - current thread from earlier route /thread/:id. required for creating relations
+ * @param id String - post id. required for post identify
+ */
 export async function del(thread: Thread, id: string) {
   const postRepository: Repository<Post> = getManager().getRepository(Post);
   const post = await postRepository.findOne({ id: id, thread: thread });

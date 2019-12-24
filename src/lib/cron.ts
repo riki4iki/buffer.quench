@@ -2,7 +2,7 @@ import Koa, { DefaultContext, DefaultState } from "koa";
 import { scheduledJobs, scheduleJob, Job, rescheduleJob } from "node-schedule";
 import { Repository, getManager } from "typeorm";
 import { Thread, Page, Post } from "../models/";
-import { ICronnable } from "../interfaces";
+import { ICronnable } from "../types";
 export default class CronService {
   constructor() {}
   addListeners(app: Koa<DefaultState, DefaultContext>) {
@@ -67,6 +67,4 @@ export default class CronService {
     const jobs = scheduledJobs;
     const job = jobs[id];
   }
-  serialize() {}
-  deserialize() {}
 }

@@ -6,7 +6,7 @@ import {
   IParamIdState,
   IPostState,
   NoContent
-} from "../interfaces";
+} from "../types";
 import { Post, Thread } from "../models";
 import { ValidationError, validate } from "class-validator";
 import { Next } from "koa";

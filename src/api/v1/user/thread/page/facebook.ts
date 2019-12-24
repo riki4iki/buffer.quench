@@ -7,7 +7,7 @@ import {
   IParamContext,
   IParamIdState,
   PageType
-} from "../../../../../interfaces";
+} from "../../../../../types";
 import { Repository, getManager } from "typeorm";
 import {
   Page,

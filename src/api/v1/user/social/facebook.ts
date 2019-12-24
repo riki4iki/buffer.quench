@@ -8,7 +8,7 @@ import {
   IParamContext,
   IParamIdState,
   IFacebookPage
-} from "../../../../interfaces";
+} from "../../../../types";
 import { omit } from "lodash";
 import { routeServie as api } from "../../../../service";
 import {

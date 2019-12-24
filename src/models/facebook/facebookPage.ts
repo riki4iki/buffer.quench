@@ -6,7 +6,7 @@ import {
   PrimaryGeneratedColumn
 } from "typeorm";
 import FbUser from "./facebookUser";
-import { ISocialPage } from "interfaces";
+import { ISocialPage } from "types";
 import { IsUrl } from "class-validator";
 @Entity()
 export default class FacebookPage implements ISocialPage {

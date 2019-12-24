@@ -2,7 +2,7 @@ import { getManager, Repository, Equal, Not } from "typeorm";
 import { Next, Context } from "koa";
 import { Thread } from "../models";
 import { ValidationError, validate } from "class-validator";
-import { IAuthContext, IContext, IThreadState } from "../interfaces";
+import { IAuthContext, IContext, IThreadState } from "../types";
 /**
  * Class controller for path /user/thread. public static method for CRUd - GET, POST, UPDATE, DELETe
  */
