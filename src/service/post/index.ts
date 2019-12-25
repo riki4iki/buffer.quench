@@ -147,8 +147,8 @@ export default class postController {
   ) {
     try {
       const post = await create(ctx.state.thread, {
-        context: ctx.request.body.ctx,
-        expireDate: ctx.request.body.expireDate
+        context: ctx.request.body.context,
+        expireDate: new Date(ctx.request.body.expireDate)
       });
       ctx.state.post = post;
       await next();
@@ -171,7 +171,7 @@ export default class postController {
     try {
       const post = await update(ctx.state.thread, ctx.params.id, {
         context: ctx.request.body.context,
-        expireDate: ctx.request.body.expireDate
+        expireDate: new Date(ctx.request.body.expireDate)
       });
       ctx.state.post = post;
       await next();

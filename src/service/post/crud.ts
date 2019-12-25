@@ -43,7 +43,6 @@ export async function create(thread: Thread, body: IPostBody) {
   const errors: ValidationError[] = await validate(newPost);
 
   if (errors.length > 0) {
-    console.log("ME");
     const err = new ValidationRequest();
     err.validationArray = errors.map(error => {
       return { property: error.property, constraints: error.constraints };
@@ -76,7 +75,7 @@ export async function update(thread: Thread, id: string, body: IPostBody) {
 
   const before = await postRepository.findOne({ id: id, thread: thread });
   if (!before) {
-    return null;
+    throw new BadRequest("Post not found");
   } else {
     const newPost = new Post();
     newPost.id = before.id;
@@ -115,7 +114,7 @@ export async function del(thread: Thread, id: string) {
   const postRepository: Repository<Post> = getManager().getRepository(Post);
   const post = await postRepository.findOne({ id: id, thread: thread });
   if (!post) {
-    return null;
+    throw new BadRequest("Post not found");
   } else {
     //try to remove
     const removed = await postRepository.remove(post);

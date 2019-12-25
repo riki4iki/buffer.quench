@@ -3,4 +3,12 @@ import routeServie from "./api";
 import authServise from "./auth";
 import threadService from "./threadService";
 import postService from "./post";
-export { userLogic, routeServie, authServise, threadService, postService };
+import cronService from "./cron";
+export {
+  userLogic,
+  routeServie,
+  authServise,
+  threadService,
+  postService,
+  cronService
+};

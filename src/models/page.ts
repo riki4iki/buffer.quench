@@ -3,10 +3,13 @@ import {
   Column,
   PrimaryGeneratedColumn,
   ManyToOne,
-  JoinColumn
+  JoinColumn,
+  Repository,
+  getManager
 } from "typeorm";
 import Thread from "./thread";
 import { PageType, ISocialPage } from "../types";
+import { FacebookPage } from "./facebook";
 @Entity()
 export default class Page {
   @PrimaryGeneratedColumn("uuid")
@@ -26,7 +29,20 @@ export default class Page {
   @Column("uuid")
   pageId: string;
 
-  async toSocial() {
-    console.log(this);
+  async toSocial(): Promise<ISocialPage> {
+    const page: Page = this;
+    if (page.type === PageType.FacebookPage) {
+      const facebookPageRepository: Repository<FacebookPage> = getManager().getRepository(
+        FacebookPage
+      );
+      const facebookPage = await facebookPageRepository.findOne(page.pageId);
+      if (!facebookPage) {
+        console.log("PAGE IS NULL I NEED LOGGER");
+      } else {
+        return facebookPage;
+      }
+    } else if (page.type === PageType.InstagramPage) {
+    } else if (page.type === PageType.TwitterPage) {
+    }
   }
 }

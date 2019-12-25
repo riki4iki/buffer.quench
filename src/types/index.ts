@@ -1,4 +1,4 @@
-import { Context } from "koa";
+import { Context, ExtendableContext } from "koa";
 import { User, Thread, FacebookPage, Post } from "../models";
 import { BadRequest } from "http-errors";
 
@@ -96,7 +96,7 @@ export interface ISocialPage {
 export enum PageType {
   FacebookPage = "facebook",
   InstagramPage = "instagram",
-  twitterPage = "twitter"
+  TwitterPage = "twitter"
 }
 export interface ICronnable {
   id: string;

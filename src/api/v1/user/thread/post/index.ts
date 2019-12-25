@@ -1,24 +1,25 @@
 import Router from "koa-router";
 import {
   postService as controller,
-  routeServie as routes
+  routeServie as routes,
+  cronService as tasks
 } from "../../../../../service";
 const postRouter = new Router();
-postRouter.get("/qwe", ctx => {
-  ctx.app.emit("cron-update", {});
-});
+
 postRouter.get("/", controller.postsEndPoint);
 postRouter.get("/:id", routes.validateUUIDMiddleware, controller.postEndPoint);
-postRouter.post("/", controller.postCreateEndPoint);
+postRouter.post("/", controller.postCreateMiddleware, tasks.taskCreateEndPoint);
 postRouter.put(
   "/:id",
   routes.validateUUIDMiddleware,
-  controller.postUpdateEndPoint
+  controller.postUpdateMiddleware,
+  tasks.taskUpdateEndPoint
 );
 postRouter.del(
   "/:id",
   routes.validateUUIDMiddleware,
-  controller.postDeleteEndPoint
+  controller.postDeleteMiddleware,
+  tasks.taskDeleteEndPoint
 );
 
 export { postRouter };

@@ -41,6 +41,6 @@ export default class FacebookPage implements ISocialPage {
   name: string;
 
   async post(token) {
-    console.log(token);
+    console.log("I AM FACEBOOK PAGE");
   }
 }

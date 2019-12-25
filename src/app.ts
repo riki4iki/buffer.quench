@@ -33,6 +33,5 @@ app.on("error", (err: any, ctx: Context) => {
     ctx.res.end(err.message);
   }
 });
-console.log(app.eventNames());
 
 export = app;
