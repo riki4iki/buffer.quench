@@ -4,8 +4,15 @@ import { threadService as controller } from "../../../../service";
 
 import { postRouter } from "./post";
 import { pageRouter } from "./page";
-
+import { legendRouter } from "./legend";
 const threadRouter = new Router();
+
+threadRouter.use(
+  "/:id/legend",
+  routeServie.validateUUIDMiddleware,
+  controller.threadMiddleware,
+  legendRouter.routes()
+);
 
 threadRouter.use(
   "/:id/post",

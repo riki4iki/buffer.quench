@@ -57,4 +57,20 @@ export default class FacebookService {
     };
     return request(options).then(data => JSON.parse(data).data);
   }
+  public static async post(id: string, token: string, message: string) {
+    const options = {
+      method: "POST",
+      uri: `https://graph.facebook.com/${version}/${id}/feed`,
+      qs: {
+        message: message,
+        access_token: token
+      }
+    };
+    return request(options)
+      .then(data => JSON.parse(data))
+      .catch(err => {
+        const { message, statusCode } = err;
+        return { err: { message, statusCode } };
+      });
+  }
 }

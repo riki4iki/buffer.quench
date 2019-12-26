@@ -42,7 +42,9 @@ export default class Page {
         return facebookPage;
       }
     } else if (page.type === PageType.InstagramPage) {
+      console.log("no handler for instagram page");
     } else if (page.type === PageType.TwitterPage) {
+      console.log("no handler for instagram page");
     }
   }
 }

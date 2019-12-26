@@ -1,4 +1,5 @@
 import { Context, Next } from "koa";
+import { IValidator, Validator } from "../types";
 /**
  * Class with common/abstract middlewares
  */

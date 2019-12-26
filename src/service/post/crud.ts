@@ -2,6 +2,7 @@ import { getManager, Repository, Not, Equal } from "typeorm";
 import { Post, Thread } from "../../models";
 import { ValidationError, validate } from "class-validator";
 import { BadRequest } from "http-errors";
+import { ValidationRequest, IPostBody } from "../../types";
 /**
  * Promise that return all posts for input thread from database
  * @param thread Thread - current thread from earlier route /thread/:id. required for posts finding
@@ -32,7 +33,7 @@ export async function post(thread: Thread, id: string): Promise<Post> {
  * - expireDate - date for post creating;
  * - context - post body.
  */
-export async function create(thread: Thread, body: IPostBody) {
+export async function create(thread: Thread, body: IPostBody): Promise<Post> {
   const postRepository: Repository<Post> = getManager().getRepository(Post);
   const newPost = new Post();
 
@@ -70,7 +71,11 @@ export async function create(thread: Thread, body: IPostBody) {
  * - expireDate - date for post creating;
  * - context - post body.
  */
-export async function update(thread: Thread, id: string, body: IPostBody) {
+export async function update(
+  thread: Thread,
+  id: string,
+  body: IPostBody
+): Promise<Post> {
   const postRepository: Repository<Post> = getManager().getRepository(Post);
 
   const before = await postRepository.findOne({ id: id, thread: thread });
@@ -110,7 +115,7 @@ export async function update(thread: Thread, id: string, body: IPostBody) {
  * @param thread Thread - current thread from earlier route /thread/:id. required for creating relations
  * @param id String - post id. required for post identify
  */
-export async function del(thread: Thread, id: string) {
+export async function del(thread: Thread, id: string): Promise<Post> {
   const postRepository: Repository<Post> = getManager().getRepository(Post);
   const post = await postRepository.findOne({ id: id, thread: thread });
   if (!post) {
@@ -120,15 +125,4 @@ export async function del(thread: Thread, id: string) {
     const removed = await postRepository.remove(post);
     return removed;
   }
-}
-interface IPostBody {
-  context: string;
-  expireDate: Date;
-}
-interface IValidationError {
-  property: string;
-  constraints: Object;
-}
-class ValidationRequest extends BadRequest {
-  validationArray: Array<IValidationError>;
 }

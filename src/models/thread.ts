@@ -9,6 +9,7 @@ import {
 import { MinLength, MaxLength, IsString } from "class-validator";
 import User from "./user";
 import Post from "./post";
+import Legend from "./legend";
 @Entity()
 export default class Thread {
   @PrimaryGeneratedColumn("uuid")
@@ -34,4 +35,10 @@ export default class Thread {
     { onDelete: "CASCADE" }
   )
   posts: Post[];
+  @OneToMany(
+    () => Legend,
+    history => history.thread,
+    { onDelete: "CASCADE" }
+  )
+  hisotry: Legend;
 }

@@ -1,4 +1,5 @@
 import Router from "koa-router";
+import { PostValidation } from "../../../../../types";
 import {
   postService as controller,
   routeServie as routes,

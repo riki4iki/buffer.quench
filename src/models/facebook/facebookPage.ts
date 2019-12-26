@@ -5,6 +5,7 @@ import {
   JoinColumn,
   PrimaryGeneratedColumn
 } from "typeorm";
+import { fbService as fb } from "../../lib";
 import FbUser from "./facebookUser";
 import { ISocialPage } from "types";
 import { IsUrl } from "class-validator";
@@ -40,7 +41,17 @@ export default class FacebookPage implements ISocialPage {
   @Column()
   name: string;
 
-  async post(token) {
-    console.log("I AM FACEBOOK PAGE");
+  async post(context) {
+    const id: string = this.fbId;
+    const token: string = this.accessToken;
+    const message: string = context;
+    const post = await fb.post(id, token, message);
+    if (post.err) {
+      console.log(post.err);
+      return false;
+    } else {
+      return true;
+    }
+    console.log(post);
   }
 }

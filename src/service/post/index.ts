@@ -6,7 +6,7 @@ import {
   IPostState,
   IParamContext,
   IParamIdState,
-  PostBody
+  IPostBody
 } from "../../types";
 
 /**
@@ -60,12 +60,10 @@ export default class postController {
     ctx: IContext<IThreadState>
   ): Promise<void> {
     try {
-      const body = new PostBody(
-        ctx.request.body.context,
-        new Date(ctx.request.body.expireDate)
-      );
-      await body.validate();
-      const post = await create(ctx.state.thread, body);
+      const post = await create(ctx.state.thread, {
+        context: ctx.request.body.context,
+        expireDate: new Date(ctx.request.body.expireDate)
+      });
       ctx.status = 201;
       ctx.body = post;
     } catch (err) {
@@ -169,7 +167,7 @@ export default class postController {
     next: Next
   ) {
     try {
-      const post = await update(ctx.state.thread, ctx.params.id, {
+      const post = await update(ctx.state.thread, ctx.params.id, <IPostBody>{
         context: ctx.request.body.context,
         expireDate: new Date(ctx.request.body.expireDate)
       });
@@ -198,12 +196,4 @@ export default class postController {
     }
   }
   //#endregion 'Middlewares
-
-  //#region 'AdditionalMiddleware'
-
-  public static async postBodyMiddleware(ctx: IContext<null>, next: Next) {
-    //CHECK FOR inputs context adn date
-  }
-
-  //#endregion 'AdditionalMiddleware'
 }
