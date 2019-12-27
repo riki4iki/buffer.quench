@@ -3,16 +3,8 @@ const router = new Router();
 import { userLogic } from "../../../service";
 import { authServise as AuthService } from "../../../service";
 
-const accounts: Router = require("./page");
 import { social } from "./social";
 import { threadRouter as thread } from "./thread";
-
-router.use(
-  "/page",
-  AuthService.checkSession,
-  userLogic.getCurrentUserMiddleware,
-  accounts.routes()
-);
 
 router.use(
   "/social",
