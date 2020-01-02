@@ -6,8 +6,8 @@ import { Repository, getManager } from "typeorm";
 import { IPayload } from "../../../types";
 const router = new Router();
 
-const localAuthenticate: Router = require("./localAuth");
-const facebookAuthenticate: Router = require("./fbAuth");
+import { router as facebookAuthenticate } from "./fbAuth";
+import { router as localAuthenticate } from "./localAuth";
 
 router.use("/localAuth", localAuthenticate.routes()).use("/fbAuth", facebookAuthenticate.routes());
 
@@ -51,4 +51,4 @@ router.post("/refresh", async (ctx: Context) => {
    }
 });
 
-export = router;
+export { router };

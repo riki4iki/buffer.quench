@@ -10,13 +10,12 @@ const router = new Router();
 router.post("/sign-in", async (ctx: Context, next: Next) => {
    //require email/password for auth, must return jwt object
    const login: string = ctx.request.body.email;
-   const password = HmacSHA1(ctx.request.body.password, process.env.hash_key).toString();
    const userRepository: Repository<User> = getManager().getRepository(User);
    const user: User = await userRepository.findOne({ email: login });
    if (!user) {
       ctx.status = 401;
       ctx.body = "invalid email, user does not exist";
-   } else if (!(user.password === password)) {
+   } else if (!(await user.checkPassword(ctx.request.body.password))) {
       ctx.status = 401;
       ctx.body = "invalid password";
    } else {
@@ -33,4 +32,4 @@ router.post("/sign-up", userLogic.createMiddleware, async (ctx: Context) => {
    ctx.body = pair;
 });
 
-export = router;
+export { router };

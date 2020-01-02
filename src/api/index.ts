@@ -1,14 +1,14 @@
 import Router from "koa-router";
 const router = new Router();
 
-const v1: Router = require("./v1");
+import { router as v1 } from "./v1";
 
 router.use("/v1", v1.routes());
 
 router.all("/", async (ctx, next) => {
-  ctx.status = 306;
+   ctx.status = 306;
 
-  await next();
+   await next();
 });
 
-export = router;
+export { router };

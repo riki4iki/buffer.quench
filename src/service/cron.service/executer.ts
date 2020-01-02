@@ -1,6 +1,6 @@
 import schedule from "./schedule";
 import { getManager, Repository } from "typeorm";
-import { Page, Post, Legend, Thread } from "../../models";
+import { Page, Post, Thread } from "../../models";
 import { ISocialPage } from "../../types";
 import { create as createLegend } from "../legend.service/crud";
 export async function add(post: Post): Promise<void> {

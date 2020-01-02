@@ -15,4 +15,4 @@ router.put("/", AuthService.checkSession, userLogic.currentUserMiddleware, userL
 
 router.delete("/", AuthService.checkSession, userLogic.currentUserMiddleware, userLogic.deleteEndPoint);
 
-export = router;
+export { router };

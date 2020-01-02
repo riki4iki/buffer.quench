@@ -38,4 +38,4 @@ router.post("/sign-in", async (ctx: Context) => {
    }
 });
 
-export = router;
+export { router };

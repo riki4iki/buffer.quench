@@ -48,8 +48,6 @@ export default class User {
    @BeforeInsert()
    @BeforeUpdate()
    private async createHash?() {
-      console.log(this.password);
-
       this.password = HmacSHA1(this.password, process.env.hash_key).toString();
    }
 }
