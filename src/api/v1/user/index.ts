@@ -6,38 +6,13 @@ import { authServise as AuthService } from "../../../service";
 import { social } from "./social";
 import { threadRouter as thread } from "./thread";
 
-router.use(
-  "/social",
-  AuthService.checkSession,
-  userLogic.getCurrentUserMiddleware,
-  social.routes()
-);
+router.use("/social", AuthService.checkSession, userLogic.currentUserMiddleware, social.routes());
 
-router.use(
-  "/thread",
-  AuthService.checkSession,
-  userLogic.getCurrentUserMiddleware,
-  thread.routes()
-);
+router.use("/thread", AuthService.checkSession, userLogic.currentUserMiddleware, thread.routes());
 
-router.get(
-  "/",
-  AuthService.checkSession,
-  userLogic.getCurrentUserMiddleware,
-  userLogic.getCurrentUserEndPoint
-);
-router.put(
-  "/update",
-  AuthService.checkSession,
-  userLogic.getCurrentUserMiddleware,
-  userLogic.updateCurrnetUserEndPoint
-);
+router.get("/", AuthService.checkSession, userLogic.currentUserMiddleware, userLogic.userEndPoint);
+router.put("/", AuthService.checkSession, userLogic.currentUserMiddleware, userLogic.updateEndPoint);
 
-router.delete(
-  "/delete",
-  AuthService.checkSession,
-  userLogic.getCurrentUserMiddleware,
-  userLogic.deleteCurrentUserEndPoint
-);
+router.delete("/", AuthService.checkSession, userLogic.currentUserMiddleware, userLogic.deleteEndPoint);
 
 export = router;
