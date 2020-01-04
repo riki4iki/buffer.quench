@@ -1,6 +1,7 @@
 import { Entity, Column, PrimaryGeneratedColumn, Index, OneToOne, OneToMany, BeforeInsert, BeforeUpdate } from "typeorm";
 import { Length, IsEmail } from "class-validator";
 import { HmacSHA1 } from "crypto-js";
+import { Unauthorized } from "http-errors";
 
 import Refresh from "./refresh.entity";
 import FacebookUser from "./facebook/facebookUser.entity";
@@ -42,7 +43,12 @@ export default class User {
    thread: Thread;
 
    public async checkPassword(target: string): Promise<boolean> {
-      return this.password === HmacSHA1(target, process.env.hash_key).toString();
+      if (!(this.password === HmacSHA1(target, process.env.hash_key).toString())) {
+         const error = new Unauthorized("invalid password");
+         throw error;
+      } else {
+         return true;
+      }
    }
 
    @BeforeInsert()

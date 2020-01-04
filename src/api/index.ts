@@ -7,8 +7,6 @@ router.use("/v1", v1.routes());
 
 router.all("/", async (ctx, next) => {
    ctx.status = 306;
-
-   await next();
 });
 
 export { router };

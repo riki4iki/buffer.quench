@@ -1,17 +1,18 @@
 import { Next } from "koa";
-import jwt from "../lib/jwt";
-import { IAuthContext } from "../types";
+import { IContext, IAuthState } from "../../types";
+import { jwtService as jwt } from "../../lib";
 /**
- * Class with middlewares for authenticate requests, create sessions, permisions e.t.c.
+ * Class controller implement logic creating session
  */
-export default class AuthService {
+export default class SessionService {
    /**
     * Middleware for checking input access token, decode this, save to Context.state.session.
     * Important for detect current user
+    * identify loged user by jsonwebtoken access token in headers
     * @param ctx IAuthContext - modernized context for current api, that have state with user: <User> and session: string
     * @param next Next - koa Next function wich reliazed connection mechanics
     */
-   public static async checkSession(ctx: IAuthContext, next: Next) {
+   public static async checkSession(ctx: IContext<IAuthState>, next: Next) {
       const access: string = ctx.headers.access_token;
       try {
          const payload = await jwt.payload(access);

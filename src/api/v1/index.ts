@@ -8,7 +8,6 @@ router.use("/user", user.routes()).use("/auth", auth.routes());
 
 router.all("/", async (ctx, next) => {
    ctx.status = 306;
-   await next();
 });
 
 export { router };
