@@ -82,6 +82,8 @@ export default class User {
          const socialRepository: Repository<Social> = getManager().getRepository(Social);
          const socials = await socialRepository.find({ user: this });
          this.social = socials.map(social => <Social>omit(social, "id"));
+      } else {
+         this.social = this.social.map(social => <Social>omit(social, "id"));
       }
       return <User>omit(<User>this, "password");
    }
