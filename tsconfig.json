@@ -1,20 +1,17 @@
 {
-  "compilerOptions": {
-    "target": "es2017",
-    "module": "commonjs",
-    "lib": ["es6"],
-    "sourceMap": true,
-    "outDir": "dist",
-    "moduleResolution": "node",
+   "compilerOptions": {
+      "target": "es2017",
+      "module": "commonjs",
+      "lib": ["es6"],
+      "sourceMap": true,
+      "outDir": "dist",
+      "moduleResolution": "node",
 
-    "esModuleInterop": true,
-    "experimentalDecorators": true,
-    "emitDecoratorMetadata": true,
-    "rootDir": ".",
-    "baseUrl": ".",
-    "paths": {
-      "@models/*": ["src/models/*"]
-    }
-  },
-  "include": ["src/**/*"]
+      "esModuleInterop": true,
+      "experimentalDecorators": true,
+      "emitDecoratorMetadata": true,
+      "rootDir": ".",
+      "baseUrl": "."
+   },
+   "include": ["src/**/*"]
 }

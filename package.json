@@ -5,7 +5,7 @@
    "name": "buffer.quench",
    "version": "1.0.0",
    "description": "back-end for buffer.quench ",
-   "main": "./src/server.ts",
+   "main": "./server.js",
    "scripts": {
       ".": "nodemon  ./src/server.ts",
       "tslint": "tslint -c tslint.json -p tsconfig.json",
