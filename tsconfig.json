@@ -10,7 +10,7 @@
       "esModuleInterop": true,
       "experimentalDecorators": true,
       "emitDecoratorMetadata": true,
-      "rootDir": ".",
+      "rootDir": "./src",
       "baseUrl": "."
    },
    "include": ["src/**/*"]
