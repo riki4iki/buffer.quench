@@ -1,7 +1,6 @@
 import Router from "koa-router";
-import { authServise } from "../../../service";
+import { facebookAuthService as controller } from "../../../service";
 
-const controller = authServise.facebookAuthService;
 const router = new Router();
 
 //facebook authenticete by facebook access token

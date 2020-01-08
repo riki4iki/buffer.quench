@@ -16,17 +16,24 @@ export interface IJwtPair {
    refresh_token: string;
    expiresIn: number;
 }
+export interface ISocial {
+   id: string;
+   accessToken: string;
+   create?: () => Promise<void>;
+   del?: () => Promise<void>;
+}
 
 export interface ISocialPage {
    id: string;
    accessToken: string;
    post: (token) => Promise<boolean>;
 }
-export enum PageType {
-   FacebookPage = "facebook",
-   InstagramPage = "instagram",
-   TwitterPage = "twitter"
+export enum SocialType {
+   Facebook = "facebook",
+   Instagram = "instagram",
+   Twitter = "twitter",
 }
+
 export interface ICronnable {
    id: string;
    expireDate: Date;

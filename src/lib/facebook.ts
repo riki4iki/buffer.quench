@@ -1,7 +1,5 @@
 import request from "request-promise";
-import { StatusCodeError } from "request-promise/errors";
 import { IFacebookPage, IFacebookUser, ILongLiveUserToken } from "../types";
-import { FacebookError } from "../types";
 const version = process.env.FACEBOOK_API_VERSION;
 
 /**
@@ -14,8 +12,19 @@ export default class FacebookService {
          uri: `https://graph.facebook.com/${version}/me`,
          qs: {
             access_token: token,
-            fields: "id,name,email,picture"
-         }
+            fields: "id,name,email,picture",
+         },
+      };
+      return request(options).then(data => JSON.parse(data));
+   }
+   public static async userById(id: string, token: string): Promise<IFacebookUser> {
+      const options = {
+         method: "GET",
+         uri: `https://graph.facebook.com/${version}/${id}`,
+         qs: {
+            access_token: token,
+            fields: "id,name,email,picture",
+         },
       };
       return request(options).then(data => JSON.parse(data));
    }
@@ -27,8 +36,8 @@ export default class FacebookService {
             grant_type: "fb_exchange_token",
             client_id: process.env.FACEBOOK_APP_ID,
             client_secret: process.env.FACEBOOK_APP_SECRET,
-            fb_exchange_token: token
-         }
+            fb_exchange_token: token,
+         },
       };
       return request(options).then(data => JSON.parse(data));
    }
@@ -38,8 +47,8 @@ export default class FacebookService {
          uri: `https://graph.facebook.com/${version}/${userId}/accounts`,
          qs: {
             access_token: longUserToken,
-            fields: "id,name,access_token, tasks, cover, category"
-         }
+            fields: "id,name,access_token, picture, category",
+         },
       };
       return request(options).then(data => JSON.parse(data).data);
    }
@@ -49,8 +58,8 @@ export default class FacebookService {
          uri: `https://graph.facebook.com/${version}/me/accounts`,
          qs: {
             access_token: token,
-            fields: "id,name,access_token, tasks, cover, category"
-         }
+            fields: "id,access_token, tasks, category,picture,name",
+         },
       };
       return request(options).then(data => JSON.parse(data).data);
    }
@@ -60,8 +69,8 @@ export default class FacebookService {
          uri: `https://graph.facebook.com/${version}/${id}/feed`,
          qs: {
             message: message,
-            access_token: token
-         }
+            access_token: token,
+         },
       };
       return request(options)
          .then(data => JSON.parse(data))
@@ -70,11 +79,15 @@ export default class FacebookService {
             return { err: { message, statusCode } };
          });
    }
-}
-class facebookError extends Error {
-   constructor() {
-      super();
+   public static async accountById(id: string, token: string): Promise<IFacebookPage> {
+      const options = {
+         method: "GET",
+         uri: `https://graph.facebook.com/${version}/${id}`,
+         qs: {
+            access_token: token,
+            fields: "id,category,picture,name",
+         },
+      };
+      return request(options).then(data => JSON.parse(data));
    }
-   statusCode: 400;
-   me;
 }

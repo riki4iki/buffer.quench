@@ -2,8 +2,7 @@ import { Context } from "koa";
 import Router from "koa-router";
 const router = new Router();
 
-import { authServise } from "../../../service";
-const refreshController = authServise.tokenService;
+import { tokenService as refreshController } from "../../../service";
 
 import { router as facebookAuthenticate } from "./fbAuth";
 import { router as localAuthenticate } from "./localAuth";

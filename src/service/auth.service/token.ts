@@ -20,11 +20,11 @@ export default class tokenService {
 
          const refreshRepository: Repository<Refresh> = getManager().getRepository(
             // get reresh tokens repository
-            Refresh
+            Refresh,
          );
          const db = await refreshRepository.findOne({
             // find session in db
-            where: { user: inputPayload.id }
+            where: { user: inputPayload.id },
          });
          if (!db) {
             //There is no token in database, so user didn't log-in in system

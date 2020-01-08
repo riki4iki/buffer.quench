@@ -11,9 +11,9 @@ export default class UserService {
     * @param ctx Context - Koa Context with state IAuthState that contain current user and session
     */
    public static async userEndPoint(ctx: IContext<IAuthState>) {
-      const user = omit(ctx.state.user, "password");
+      const user = ctx.state.user;
       ctx.status = 200;
-      ctx.body = user;
+      ctx.body = await user.withSocials();
    }
    /**
     * EndPoint - Create new user in system and save in database. Return created user without password

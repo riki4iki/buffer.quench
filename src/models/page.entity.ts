@@ -1,7 +1,7 @@
 import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, JoinColumn, Repository, getManager } from "typeorm";
 import Thread from "./thread.entity";
-import { PageType, ISocialPage } from "../types";
-import { FacebookPage } from "./facebook";
+import { SocialType, ISocialPage } from "../types";
+import FacebookPage from "./facebook/facebookPage.entity";
 @Entity()
 export default class Page {
    @PrimaryGeneratedColumn("uuid")
@@ -10,12 +10,12 @@ export default class Page {
    @ManyToOne(
       () => Thread,
       thread => thread.posts,
-      { onDelete: "CASCADE" }
+      { onDelete: "CASCADE" },
    )
    @JoinColumn()
    thread: Thread;
 
-   @Column("enum", { enum: PageType, name: "page_type" })
+   @Column("enum", { enum: SocialType, name: "page_type" })
    type: string;
 
    @Column("uuid")
@@ -23,7 +23,7 @@ export default class Page {
 
    async toSocial(): Promise<ISocialPage> {
       const page: Page = this;
-      if (page.type === PageType.FacebookPage) {
+      if (page.type === SocialType.Facebook) {
          const facebookPageRepository: Repository<FacebookPage> = getManager().getRepository(FacebookPage);
          const facebookPage = await facebookPageRepository.findOne(page.pageId);
          if (!facebookPage) {
@@ -31,9 +31,9 @@ export default class Page {
          } else {
             return facebookPage;
          }
-      } else if (page.type === PageType.InstagramPage) {
+      } else if (page.type === SocialType.Instagram) {
          console.log("no handler for instagram page");
-      } else if (page.type === PageType.TwitterPage) {
+      } else if (page.type === SocialType.Twitter) {
          console.log("no handler for instagram page");
       }
    }

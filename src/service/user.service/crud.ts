@@ -17,7 +17,7 @@ export async function all(): Promise<Array<User>> {
  */
 export async function get(id: string): Promise<User> {
    const userRepository: Repository<User> = getManager().getRepository(User);
-   const user = await userRepository.findOne({ id: id });
+   const user = await userRepository.findOne({ where: { id: id } });
    if (!user) {
       //user doesn't exist in database
       const err = new BadRequest("User doesn't exist with input session");

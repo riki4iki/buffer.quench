@@ -1,7 +1,6 @@
 import Router from "koa-router";
-import { userLogic, authServise } from "../../../service";
+import { userLogic, localAuthService as controller } from "../../../service";
 const router = new Router();
-const controller = authServise.localAuthService;
 
 router.post("/sign-in", controller.sign_in);
 

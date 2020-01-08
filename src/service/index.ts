@@ -5,6 +5,7 @@ import postService from "./post.service";
 import cronService from "./cron.service";
 import legendService from "./legend.service";
 
-import authServise from "./auth.service";
+export * from "./auth.service";
+export * from "./social.service";
 
-export { userLogic, routeServie, authServise, threadService, postService, cronService, legendService };
+export { userLogic, routeServie, threadService, postService, cronService, legendService };

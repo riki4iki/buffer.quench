@@ -4,6 +4,7 @@ import bodyparser from "koa-bodyparser";
 import cors from "@koa/cors";
 import helmet from "koa-helmet";
 import logger from "koa-logger";
+import { setHeaders } from "./lib";
 
 import { Cron } from "./lib";
 
@@ -21,6 +22,7 @@ app.use(logger())
    .use(bodyparser())
    .use(cors())
    .use(helmet())
+   .use(setHeaders)
    .use(router.routes());
 
 app.on("error", (err: any, ctx: Context) => {

@@ -2,10 +2,10 @@
    "engines": {
       "node": ">=8.0.0 <11.0.0"
    },
-   "name": "without-name",
+   "name": "buffer.quench",
    "version": "1.0.0",
-   "description": "back-end for \" \" ",
-   "main": "index.js",
+   "description": "back-end for buffer.quench ",
+   "main": "./src/server.ts",
    "scripts": {
       ".": "nodemon  ./src/server.ts",
       "tslint": "tslint -c tslint.json -p tsconfig.json",

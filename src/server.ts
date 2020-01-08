@@ -10,17 +10,17 @@ const port = process.env.PORT || 3000;
 const server = http.createServer(app.callback());
 
 server.on("listening", () => {
-  console.log(`http server start listen on port: ${port}, pid: ${process.pid}`);
+   console.info(`http server listen on port: ${port}, pid: ${process.pid}`);
 });
 server.on("error", err => {
-  console.log("server event error, i need handler");
-  console.log(err);
+   console.log("server event error, i need handler");
+   console.log(err);
 });
 
 dbConnection()
-  .then(() => {
-    server.listen(port);
-  })
-  .catch(err => {
-    server.emit("error", err);
-  });
+   .then(() => {
+      server.listen(port);
+   })
+   .catch(err => {
+      server.emit("error", err);
+   });

@@ -23,7 +23,7 @@ export default class FacebookAuthService {
          //create pair by system user
          const pair = await jwt.createPair(systemUser);
          ctx.status = 200;
-         ctx.body = pair;
+         ctx.body = { jwt: pair, ...(await systemUser.withSocials()) };
       } catch (err) {
          ctx.app.emit("error", err, ctx);
       }

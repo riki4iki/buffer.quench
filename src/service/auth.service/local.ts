@@ -27,7 +27,7 @@ export default class LocalAuthService {
             //if password is valid create jwt pair ad return
             const pair = await jwt.createPair(systemUser);
             ctx.status = 200;
-            ctx.body = pair;
+            ctx.body = { jwt: pair, ...(await systemUser.withSocials()) };
          }
       } catch (err) {
          ctx.app.emit("error", err, ctx);
@@ -40,8 +40,11 @@ export default class LocalAuthService {
     */
    public static async sign_up(ctx: IContext<IAuthState>) {
       const created = ctx.state.user;
-      const pair = await jwt.createPair(created);
-      ctx.status = 200;
-      ctx.body = pair;
+      if (!created) {
+         ctx.status = 401;
+      } else {
+         ctx.status = 201;
+         ctx.body = "success";
+      }
    }
 }

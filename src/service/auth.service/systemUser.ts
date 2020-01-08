@@ -9,7 +9,7 @@ import { Unauthorized } from "http-errors";
 export async function userByEmail(email: string): Promise<User> {
    const userRepository: Repository<User> = getManager().getRepository(User);
 
-   const user = await userRepository.findOne({ email: email });
+   const user = await userRepository.findOne({ where: { email: email }, relations: ["social"] });
    if (!user) {
       //user with email doesn't exist in system, return 401
       const err = new Unauthorized("invalid email, user does not exist");
@@ -26,7 +26,7 @@ export async function facebookUser(id: string): Promise<fbUser> {
    const facebookUserRepository: Repository<fbUser> = getManager().getRepository(fbUser);
    const facebookUser = await facebookUserRepository.find({
       where: { fbId: id },
-      relations: ["user"] //find with system user reference will return user object in facebookUser.User
+      relations: ["user"], //find with system user reference will return user object in facebookUser.User
    });
    if (facebookUser.length < 1) {
       const err = new Unauthorized("No accounts in system with that facebook user");
