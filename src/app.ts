@@ -29,9 +29,13 @@ app.on("error", (err: any, ctx: Context) => {
    console.log(err);
    ctx.status = err.status || err.statusCode || 500;
    if (err.validationArray) {
+      //throw error mean class-validator exception to target resource, error.status = 400
       ctx.body = err.validationArray;
    } else {
-      ctx.res.end(err.message);
+      const isDev = process.env.NODE_ENV === "development";
+      const isInternalServer = err.status === 500;
+
+      ctx.res.end((isInternalServer && !isDev && "Internal server error") || err.message);
    }
 });
 

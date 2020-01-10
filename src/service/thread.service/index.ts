@@ -1,11 +1,12 @@
 import { IContext, IThreadState, IAuthState, IParamContext, IParamIdState } from "../../types";
 import { all, create, get, update, del } from "./crud";
 import { Next } from "koa";
+export * from "./page.thread";
 
 /**
  * Class controller for path /user/thread. public static method for CRUD - GET, POST, UPDATE, DELETE
  */
-export default class ThreadService {
+export class ThreadService {
    //#region endpoints
    /**
     * EndPoint - return target thread by id. use for GET method

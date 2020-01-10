@@ -1,10 +1,5 @@
 import Router from "koa-router";
-import { Repository, getManager } from "typeorm";
-import { fbService as fb } from "../../../../lib";
-import { IContext, IAuthState, IFacebookUser, IParamContext, IParamIdState, IFacebookPage } from "../../../../types";
-import { omit } from "lodash";
 import { routeServie as api, facebookSocialService as controller } from "../../../../service";
-import { FacebookUser as FbUserModel, User as SysUserModel, FacebookPage } from "../../../../models";
 const fbRouter = new Router();
 
 fbRouter.get("/", controller.facebookUsersEndPoint);

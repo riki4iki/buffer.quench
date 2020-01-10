@@ -1,4 +1,5 @@
-import { Context, Next } from "koa";
+import { DefaultState, Next } from "koa";
+import { IParamContext, IParamIdState } from "../types";
 /**
  * Class with common/abstract middlewares
  */
@@ -8,8 +9,9 @@ export default class apiService {
     * @param ctx Context - Koa context that has request and response types
     * @param next - Next - Koa next that reliazed connection mechanics
     */
-   public static async validateUUIDMiddleware(ctx: Context, next: Next) {
+   public static async validateUUIDMiddleware(ctx: IParamContext<DefaultState, IParamIdState>, next: Next) {
       const id: string = ctx.params.id;
+
       const uuid = /[0-9a-fA-F]{8}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{12}/.test(
          //validate by regex
          id,

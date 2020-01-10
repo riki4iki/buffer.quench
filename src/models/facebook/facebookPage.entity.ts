@@ -4,7 +4,7 @@ import FbUser from "./facebookUser.entity";
 import ThreadPage from "../page.entity";
 import { ISocialPage, IFacebookPicture } from "../../types";
 import { omit } from "lodash";
-
+import { InternalServerError } from "http-errors";
 @Entity()
 export default class FacebookPage implements ISocialPage {
    @PrimaryGeneratedColumn("uuid")
@@ -56,21 +56,6 @@ export default class FacebookPage implements ISocialPage {
       }
    }
 
-   /*@AfterLoad()
-   private async apiCall?() {
-      try {
-         const facebookPage = await fb.accountById(this.fbId, this.accessToken);
-         this.name = facebookPage.name;
-         this.category = facebookPage.category;
-         this.picture = facebookPage.picture;
-      } catch (err) {
-         console.log(`Error with api call in @AfterLoad Facebook Page ${err.message}`);
-         this.name = "undefined";
-         this.category = "undefined";
-         this.picture = null;
-      }
-   }*/
-
    public async toResponse?(): Promise<FacebookPage> {
       try {
          const apiPage = await fb.accountById(this.fbId, this.accessToken);
@@ -80,6 +65,8 @@ export default class FacebookPage implements ISocialPage {
          return <FacebookPage>omit(<FacebookPage>this, ["accessToken", "fbUser"]);
       } catch (err) {
          console.log(`Error with api call in toResponse method Facebook Page ${err.message}`);
+         const serverErr = new InternalServerError("Error with facebook api call");
+         throw serverErr;
       }
    }
 }

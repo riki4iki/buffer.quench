@@ -6,6 +6,10 @@ import { Next } from "koa";
  * Class Controller for facebook soical routers. Getting all connected socials, target by id, add new disconnect
  */
 export default class FacebookSocialService {
+   /**
+    * EndPoint - return all connected facebook social for current user in route /user/social/facebook - GET
+    * @param ctx Context - koa context with IAuthState that contains current user and current session, decoded from jwt access token in headers
+    */
    public static async facebookUsersEndPoint(ctx: IContext<IAuthState>) {
       try {
          const connectedFacebookSocials = await all(ctx.state.user);
@@ -15,6 +19,12 @@ export default class FacebookSocialService {
          ctx.app.emit("error", err, ctx);
       }
    }
+   /**
+    *EndPint - return target connected facebook social from database
+    * @param ctx Context - koa context with ctx.state:
+    * - IAuthState that contains current user and current session, decoded from jwt access token in headers
+    * - IParamIdState contains param.id from URL string /facebook/:id
+    */
    public static async facebookUserByIdEndPoint(ctx: IParamContext<IAuthState, IParamIdState>) {
       try {
          const targetSocial = await get(ctx.state.user, ctx.params.id);
@@ -24,6 +34,10 @@ export default class FacebookSocialService {
          ctx.app.emit("error", err, ctx);
       }
    }
+   /**
+    *EndPoint - Connect facebook social account to current system user by input short access token, return created facebook social
+    * @param ctx Context - koa context with IAuthState that contains current user and current session, decoded from jwt access token in headers
+    */
    public static async facebookUserConnectEndPoint(ctx: IContext<IAuthState>) {
       const user_access_token_2h = ctx.request.body.token;
       try {
@@ -34,6 +48,12 @@ export default class FacebookSocialService {
          ctx.app.emit("error", err, ctx);
       }
    }
+   /**
+    *EndPoint - Delete facebook social from database to current user
+    * @param ctx Context - koa context with ctx.state:
+    * - IAuthState that contains current user and current session, decoded from jwt access token in headers
+    * - IParamIdState contains param.id from URL string /facebook/:id
+    */
    public static async facebookUserDisconnectEndPoint(ctx: IParamContext<IAuthState, IParamIdState>) {
       try {
          await del(ctx.state.user, ctx.params.id);
@@ -43,6 +63,13 @@ export default class FacebookSocialService {
       }
    }
 
+   /**
+    *Middleware. Getting connected facebook social from database for current user and save in ctx.state.social
+    * @param ctx Context - koa context with ctx.state:
+    * - IAuthState that contains current user and current session, decoded from jwt access token in headers
+    * - IParamIdState contains param.id from URL string /facebook/:id
+    * @param next Next - connect mechanism for next middleware chain
+    */
    public static async facebookUserByIdMiddleware(ctx: IParamContext<IFaceBookState, IParamIdState>, next: Next) {
       try {
          const facebookUser = await get(ctx.state.user, ctx.params.id);
@@ -52,8 +79,12 @@ export default class FacebookSocialService {
          ctx.app.emit("error", err, ctx);
       }
    }
-
-   public static async facebookPageGettingEndPoint(ctx: IParamContext<IFaceBookState, IParamIdState>) {
+   /**
+    *EndPoint. Getting all facebook pages/accounts from facebook api -> generate long accesstoken -> save in database -> return to response
+    * @param ctx Context - koa context with IFacebookState with facebook User instanse in ctx.state.social for gettibg
+    * facebook pages/account
+    */
+   public static async facebookPageGettingEndPoint(ctx: IContext<IFaceBookState>) {
       try {
          const pages = await insertPagesfromApi(ctx.state.social);
          ctx.status = 200;

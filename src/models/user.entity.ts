@@ -1,4 +1,17 @@
-import { Entity, Column, PrimaryGeneratedColumn, Index, OneToOne, OneToMany, BeforeInsert, BeforeUpdate, AfterLoad, Repository, getManager, getRepository } from "typeorm";
+import {
+   Entity,
+   Column,
+   PrimaryGeneratedColumn,
+   Index,
+   OneToOne,
+   OneToMany,
+   BeforeInsert,
+   BeforeUpdate,
+   AfterLoad,
+   Repository,
+   getManager,
+   getRepository,
+} from "typeorm";
 import { Length, IsEmail } from "class-validator";
 import { HmacSHA1 } from "crypto-js";
 import { Unauthorized } from "http-errors";
@@ -35,14 +48,14 @@ export default class User {
       facebookUser => facebookUser.user,
       { onDelete: "CASCADE" },
    )
-   facebookUser: FacebookUser;
+   facebookUser: FacebookUser[];
 
    @OneToMany(
       () => Thread,
       thread => thread.user,
       { onDelete: "CASCADE" },
    )
-   thread: Thread;
+   thread: Thread[];
 
    @OneToMany(
       () => Social,
@@ -71,12 +84,6 @@ export default class User {
       this.password = HmacSHA1(this.password, process.env.hash_key).toString();
    }
 
-   /*@AfterLoad()
-   private async socials?() {
-      const socialRepository: Repository<Social> = getManager().getRepository(Social);
-      const socials = await socialRepository.find({ user: this });
-      this.social = socials.map(social => <Social>omit(social, "id"));
-   }*/
    public async withSocials(): Promise<User> {
       if (!this.social) {
          const socialRepository: Repository<Social> = getManager().getRepository(Social);

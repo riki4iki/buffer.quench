@@ -1,6 +1,5 @@
 import Router from "koa-router";
-import { routeServie } from "../../../../service";
-import { threadService as controller } from "../../../../service";
+import { threadService as controller, routeServie } from "../../../../service";
 
 import { postRouter } from "./post";
 import { pageRouter } from "./page";

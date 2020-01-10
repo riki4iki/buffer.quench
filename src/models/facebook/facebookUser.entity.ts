@@ -1,10 +1,24 @@
-import { Entity, Column, PrimaryGeneratedColumn, Index, JoinColumn, OneToMany, ManyToOne, AfterLoad, AfterInsert, BeforeRemove, getManager, Repository } from "typeorm";
+import {
+   Entity,
+   Column,
+   PrimaryGeneratedColumn,
+   Index,
+   JoinColumn,
+   OneToMany,
+   ManyToOne,
+   AfterLoad,
+   AfterInsert,
+   BeforeRemove,
+   getManager,
+   Repository,
+} from "typeorm";
 import User from "../user.entity";
 import Page from "./facebookPage.entity";
 import { fbService as fb } from "../../lib";
 import { IFacebookPicture } from "../../types";
 import Social from "../social.entity";
 import { omit } from "lodash";
+import { InternalServerError } from "http-errors";
 
 @Entity()
 @Index(["id"], { unique: true })
@@ -37,20 +51,6 @@ export default class FacebookUser {
    picture?: IFacebookPicture;
    email: string;
 
-   /*@AfterLoad()
-   private async apiCall?() {
-      try {
-         const facebookUser = await fb.userById(this.fbId, this.accessToken);
-         this.name = facebookUser.name;
-         this.picture = facebookUser.picture;
-         this.email = facebookUser.email;
-      } catch (err) {
-         console.log(`Error with facebook api call in @AfterLoad FacebookUser ${err.message}`);
-         this.name = "";
-         this.picture = null;
-         this.email = "";
-      }
-   }*/
    @AfterInsert()
    private async create?() {
       const socialRepository = getManager().getRepository(Social);
@@ -72,6 +72,8 @@ export default class FacebookUser {
          return <FacebookUser>omit(<FacebookUser>this, "accessToken");
       } catch (err) {
          console.log(`Error in FacebookUser toResponse ${err.message}`);
+         const serverErr = new InternalServerError("Error with facebook api call");
+         throw serverErr;
       }
    }
    @BeforeRemove()

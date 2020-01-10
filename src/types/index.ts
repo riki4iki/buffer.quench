@@ -1,6 +1,5 @@
 export * from "./facebook";
 export * from "./body";
-export * from "./validator";
 export * from "./koa";
 export * from "./error";
 
