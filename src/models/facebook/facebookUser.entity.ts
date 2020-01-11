@@ -65,12 +65,13 @@ export default class FacebookUser {
 
    public async toResponse(): Promise<FacebookUser> {
       try {
-         const apiUser = await fb.userById(this.fbId, this.accessToken);
+         const apiUser = await fb.getUser(this.accessToken);
          this.name = apiUser.name;
          this.picture = apiUser.picture;
          this.email = apiUser.email;
          return <FacebookUser>omit(<FacebookUser>this, "accessToken");
       } catch (err) {
+         console.log(err);
          console.log(`Error in FacebookUser toResponse ${err.message}`);
          const serverErr = new InternalServerError("Error with facebook api call");
          throw serverErr;

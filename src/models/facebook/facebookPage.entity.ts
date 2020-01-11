@@ -64,6 +64,7 @@ export default class FacebookPage implements ISocialPage {
          this.picture = apiPage.picture;
          return <FacebookPage>omit(<FacebookPage>this, ["accessToken", "fbUser"]);
       } catch (err) {
+         console.log(err);
          console.log(`Error with api call in toResponse method Facebook Page ${err.message}`);
          const serverErr = new InternalServerError("Error with facebook api call");
          throw serverErr;

@@ -14,7 +14,8 @@
       "start": "npm run serve",
       "serve": "node dist/server.js",
       "watch-node": "nodemon dist/server.js",
-      "watch-ts": "tsc -w"
+      "watch-ts": "tsc -w",
+      "test": "jest"
    },
    "keywords": [
       "node",
@@ -50,6 +51,7 @@
       "@types/crypto-js": "^3.1.43",
       "@types/dotenv": "^8.2.0",
       "@types/http-errors": "^1.6.3",
+      "@types/jest": "^24.0.25",
       "@types/jsonwebtoken": "^8.3.5",
       "@types/koa": "^2.0.52",
       "@types/koa-bodyparser": "^4.3.0",
@@ -63,9 +65,49 @@
       "@types/redis": "^2.8.14",
       "@types/request": "^2.48.3",
       "@types/request-promise": "^4.1.45",
+      "jest": "^24.9.0",
       "nodemon": "^2.0.1",
+      "supertest": "^4.0.2",
+      "ts-jest": "^24.3.0",
       "ts-node": "^8.5.2",
       "tslint": "^5.20.1",
       "typescript": "^3.7.2"
+   },
+   "jest": {
+      "moduleFileExtensions": [
+         "js",
+         "jsx",
+         "json",
+         "ts",
+         "tsx"
+      ],
+      "collectCoverage": true,
+      "collectCoverageFrom": [
+         "**/*.{ts,js}",
+         "!**/node_modules/**",
+         "!**/build/**",
+         "!**/coverage/**"
+      ],
+      "transform": {
+         "^.+\\.(ts|tsx)$": "ts-jest"
+      },
+      "coverageThreshold": {
+         "global": {
+            "branches": 80,
+            "functions": 80,
+            "lines": 80,
+            "statements": 80
+         }
+      },
+      "coverageReporters": [
+         "text",
+         "text-summary"
+      ],
+      "testRegex": "(/__tests__/.*|(\\.|/)(test|spec))\\.(js|ts)x?$",
+      "testPathIgnorePatterns": [
+         "/node_modules/",
+         "/build/",
+         "/coverage/"
+      ]
    }
 }

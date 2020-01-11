@@ -6,3 +6,4 @@ logs
 dist/**/*
 .env
 .key
+__snapshots__

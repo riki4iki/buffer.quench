@@ -9,11 +9,6 @@ import { router as localAuthenticate } from "./localAuth";
 
 router.use("/localAuth", localAuthenticate.routes()).use("/fbAuth", facebookAuthenticate.routes());
 
-router.get("/", async (ctx: Context) => {
-   //unused route
-   ctx.status = 306;
-});
-
 router.post("/refresh", refreshController.refresh);
 
 export { router };

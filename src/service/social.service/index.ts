@@ -7,7 +7,8 @@ import { Repository, getManager } from "typeorm";
  */
 class SocialService {
    /**
-    * EndPoint. Return all socials id's and type for current user. Route important cause api works with several social network, and need know type of social
+    * EndPoint. Return all socials id's and type for current user. Route important cause api works with several social network,
+    * and need know type of social
     * @param ctx Context - koa context with authenticated user with user instatnce
     */
    public static async socialsEndPoint(ctx: IContext<IAuthState>) {

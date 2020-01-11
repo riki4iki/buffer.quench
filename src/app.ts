@@ -6,17 +6,12 @@ import helmet from "koa-helmet";
 import logger from "koa-logger";
 import { setHeaders } from "./lib";
 
-import { Cron } from "./lib";
-
 const app = new Koa();
 const router = new Router();
 
 import { router as api } from "./api";
 
 router.use("/api", api.routes(), api.allowedMethods());
-
-const cron = new Cron();
-cron.addListeners(app);
 
 app.use(logger())
    .use(bodyparser())
