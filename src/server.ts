@@ -1,5 +1,5 @@
 import http from "http";
-import app from "./app";
+import { app } from "./app";
 import { dbConnection } from "./config";
 
 import dotenv from "dotenv";

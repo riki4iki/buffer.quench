@@ -34,4 +34,4 @@ app.on("error", (err: any, ctx: Context) => {
    }
 });
 
-export = app;
+export { app };

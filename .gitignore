@@ -1,9 +1,16 @@
 node_modules
+
 logs
 .logs
 *.log
 .log
+
 dist/**/*
+
 .env
+
 .key
+
+
 __snapshots__
+coverage

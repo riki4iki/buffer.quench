@@ -90,4 +90,15 @@ export default class FacebookService {
       };
       return request(options).then(data => JSON.parse(data));
    }
+   public static async accountByToken(token: string): Promise<IFacebookPage> {
+      const options = {
+         method: "GET",
+         uri: `https://graph.facebook.com/${version}/me`,
+         qs: {
+            access_token: token,
+            fields: "id,category,picture,name",
+         },
+      };
+      return request(options).then(data => JSON.parse(data));
+   }
 }

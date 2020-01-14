@@ -39,12 +39,8 @@ export default class LocalAuthService {
     * @param ctx Context - Koa Context with state IAuthState that important for getting user from ctx.state created into before middleware
     */
    public static async sign_up(ctx: IContext<IAuthState>) {
-      const created = ctx.state.user;
-      if (!created) {
-         ctx.status = 401;
-      } else {
-         ctx.status = 201;
-         ctx.body = "success";
-      }
+      //in middlewares chain before that method has method with user creating in service/user/service
+      ctx.status = 201;
+      ctx.body = "success";
    }
 }

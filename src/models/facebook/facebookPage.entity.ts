@@ -58,7 +58,7 @@ export default class FacebookPage implements ISocialPage {
 
    public async toResponse?(): Promise<FacebookPage> {
       try {
-         const apiPage = await fb.accountById(this.fbId, this.accessToken);
+         const apiPage = await fb.accountByToken(this.accessToken);
          this.name = apiPage.name;
          this.category = apiPage.category;
          this.picture = apiPage.picture;
