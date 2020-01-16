@@ -27,13 +27,10 @@ const testOptions: ConnectionOptions = {
    dropSchema: true,
    logging: false,
    entities: ["src/models/**/*.ts"],
-   extra: { ssl: false },
 };
 
 const connect = async (): Promise<Connection> => {
    const opt = process.env.NODE_ENV == "test" ? testOptions : options;
-   console.log(`connect to database with options:`);
-   console.log(opt);
 
    return createConnection(opt);
 };

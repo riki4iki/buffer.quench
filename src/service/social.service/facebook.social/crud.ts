@@ -48,6 +48,7 @@ export async function add(sysUser: SystemUserModel, token: string): Promise<Face
       //update long live access token for page from database
       const toUpdate = new FacebookUserModel();
       toUpdate.id = dbFacebookUser.id;
+      toUpdate.fbId = dbFacebookUser.fbId;
       toUpdate.accessToken = longToken.access_token;
 
       const updated = await facebookUserRepository.save(toUpdate);

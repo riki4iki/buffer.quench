@@ -15,10 +15,10 @@ const generateAccess = async (id: string): Promise<string> => {
       jti: jwtConfig.jti,
       iss: jwtConfig.issuer,
       sub: jwtConfig.subject,
-      alg: jwtConfig.alg
+      alg: jwtConfig.alg,
    };
    return jwt.sign(payload, jwtConfig.secret, {
-      expiresIn: jwtConfig.accessLife
+      expiresIn: jwtConfig.accessLife,
    });
 };
 /**
@@ -31,10 +31,10 @@ const generateRefresh = async (id: string): Promise<string> => {
       jti: jwtConfig.jti,
       iss: jwtConfig.issuer,
       sub: jwtConfig.subject,
-      alg: jwtConfig.alg
+      alg: jwtConfig.alg,
    };
    return jwt.sign(payload, jwtConfig.secret, {
-      expiresIn: jwtConfig.refreshLife
+      expiresIn: jwtConfig.refreshLife,
    });
 };
 /**
@@ -51,7 +51,7 @@ const expireIn = async (): Promise<number> => {
 const createSession = async (refresh: string, user: User) => {
    const sessionRepository: Repository<Session> = getManager().getRepository(Session);
    const old: Session = await sessionRepository.findOne({
-      where: { user: user }
+      where: { user: user },
    });
    const session = new Session();
    session.user = user;
@@ -82,7 +82,7 @@ export default class JwtService {
       return {
          access_token: access,
          refresh_token: refresh,
-         expiresIn: expiresIn
+         expiresIn: expiresIn,
       };
    }
    /**
@@ -94,7 +94,7 @@ export default class JwtService {
          const payLoad = await jwt.verify(token, jwtConfig.secret);
          return <IPayload>payLoad;
       } catch (error) {
-         const err = new Unauthorized("Payload token exception");
+         const err = new Unauthorized(error.message);
          throw err;
       }
    }

@@ -1,18 +1,14 @@
 import request from "supertest";
 import { app } from "../../src/app";
 import { dbConnection } from "../../src/config";
-import { getConnection } from "typeorm";
+import { getConnection, createConnection } from "typeorm";
 
 const endpoints = {
    sign_up: "/api/v1/auth/localAuth/sign-up",
    sign_in: "/api/v1/auth/localAuth/sign-in",
 };
-
 beforeAll(async () => {
    await dbConnection();
-});
-afterAll(async () => {
-   await getConnection().close();
 });
 
 describe("test auth endpoints", () => {

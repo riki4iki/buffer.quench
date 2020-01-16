@@ -43,7 +43,9 @@ export default class FacebookSocialService {
       try {
          const social = await add(ctx.state.user, user_access_token_2h);
          ctx.status = 201;
-         ctx.body = await social.toResponse();
+         const toSocial = await social.toResponse();
+         console.log(toSocial);
+         ctx.body = toSocial;
       } catch (err) {
          ctx.app.emit("error", err, ctx);
       }
