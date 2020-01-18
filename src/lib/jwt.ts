@@ -48,8 +48,9 @@ const expireIn = async (): Promise<number> => {
  * @param refresh - current user refresh token
  * @param user - current user
  */
-const createSession = async (refresh: string, user: User) => {
+const createSession = async (refresh: string, user: User): Promise<Session> => {
    const sessionRepository: Repository<Session> = getManager().getRepository(Session);
+
    const old: Session = await sessionRepository.findOne({
       where: { user: user },
    });
@@ -70,12 +71,12 @@ const createSession = async (refresh: string, user: User) => {
 export default class JwtService {
    /**
     * Generate new jwt pair, save refresh in database, return pair
-    * @param user - incoming user instanse for which will be generated jwt pai
+    * @param user - incoming user instanse for which will be generated jwt pair
     */
    public static async createPair(user: User): Promise<IJwtPair> {
       const access = await generateAccess(user.id); //generate acces token
       const refresh = await generateRefresh(user.id); //generate refresh token
-      const expiresIn = (await expireIn()) + jwtConfig.accessLife; //get expireIn from access token
+      const expiresIn = (await expireIn()) + jwtConfig.accessLife; //get expireIn for access token
 
       const session = await createSession(refresh, user);
 
@@ -98,5 +99,4 @@ export default class JwtService {
          throw err;
       }
    }
-   public static async verify(token: string) {}
 }

@@ -1,6 +1,7 @@
-import { all, get, create, del, update } from "./crud";
-import { dbConnection } from "../../config";
-import { User } from "../../models";
+import { all, get, create, del, update } from "../../src/service/user.service/crud";
+import { invalid_uuid } from "../config/const";
+import { dbConnection } from "../../src/config";
+import { User } from "../../src/models";
 import { BadRequest } from "http-errors";
 import { getConnection } from "typeorm";
 
@@ -145,7 +146,7 @@ describe("user crud unit test", () => {
             email: "nextEmail@gmail.com",
             password: "longlongpassword",
          };
-         const updated = update("887eae4e-af80-4192-b40b-3e0f06e71de1", body);
+         const updated = update(invalid_uuid, body);
          expect(updated).rejects.toEqual(new BadRequest("user doesn't exist"));
       });
    });
@@ -170,11 +171,11 @@ describe("user crud unit test", () => {
          expect(user).rejects.toThrow();
       });
       test("getting user with invaid idetifier", async () => {
-         const user = get("887eae4e-af80-4192-b40b-3e0f06e71de1");
+         const user = get(invalid_uuid);
          expect(user).rejects.toEqual(new BadRequest("User doesn't exist with input session"));
       });
       test("delete user with invalid id", async () => {
-         const removed = del("887eae4e-af80-4192-b40b-3e0f06e71de1");
+         const removed = del(invalid_uuid);
          expect(removed).rejects.toEqual(new BadRequest("user doesn't exist"));
       });
       test("delete user with valid id", async () => {

@@ -10,13 +10,13 @@ let jwt = {
    expiresIn: 0,
 };
 
-beforeAll(async () => {
-   await dbConnection();
-});
-afterAll(async () => {
-   await getConnection().close();
-});
 describe("test jwt endpoints/middlewares", () => {
+   beforeAll(async () => {
+      await dbConnection();
+   });
+   afterAll(async () => {
+      await getConnection(process.env.CONNECTION).close();
+   });
    describe("test jsonwebtoken access to user", () => {
       test("create new account for future tests", async done => {
          request(app.callback())
@@ -91,6 +91,7 @@ describe("test jwt endpoints/middlewares", () => {
    describe("test refresh endpoint", () => {
       test("getting new refresh, should return new jwt pair", async done => {
          setTimeout(() => {
+            // create delay cause without return same token with same date
             request(app.callback())
                .post("/api/v1/auth/refresh")
                .set({ refresh_token: jwt.refresh_token })

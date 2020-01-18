@@ -15,8 +15,9 @@
       "serve": "node dist/server.js",
       "watch-node": "nodemon dist/server.js",
       "watch-ts": "tsc -w",
-      "test-server": "NODE_ENV=test ts-node src/server.ts",
-      "test": "jest"
+      "test": "jest --runInBand",
+      "test-e2e": "jest ./test/integration --runInBand",
+      "test-unit": "jest ./test/unit --runInBand"
    },
    "keywords": [
       "node",

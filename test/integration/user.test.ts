@@ -1,6 +1,6 @@
 import request from "supertest";
 import { dbConnection } from "../../src/config";
-import { getConnection, createConnection } from "typeorm";
+import { getConnection } from "typeorm";
 import { app } from "../../src/app";
 import { IJwtPair } from "../../src/types";
 
@@ -19,13 +19,13 @@ const jwt: IJwtPair = {
    expiresIn: 0,
 };
 
-beforeAll(async () => {
-   await dbConnection();
-});
-afterAll(async () => {
-   getConnection().close();
-});
 describe("test /user endpoints", () => {
+   beforeAll(async () => {
+      await dbConnection();
+   });
+   afterAll(async () => {
+      await getConnection().close();
+   });
    test("create new account for future tests", async done => {
       request(app.callback())
          .post(endpoints.sign_up)

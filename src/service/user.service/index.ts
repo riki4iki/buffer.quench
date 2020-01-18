@@ -89,6 +89,7 @@ export default class UserService {
       try {
          if (!ctx.state.session) {
             const err = new Unauthorized("session doesn't exist");
+            throw err;
          } else {
             const user = await get(ctx.state.session);
             ctx.state.user = user;

@@ -25,7 +25,7 @@ export async function get(sysUser: SystemUserModel, id: string): Promise<Faceboo
 
    const facebookUser = await facebookUserRepository.findOne({ id: id, user: sysUser });
    if (!facebookUser) {
-      const err = new BadRequest("Social not fount by input id");
+      const err = new BadRequest("social not found");
       throw err;
    } else {
       return facebookUser;
@@ -52,6 +52,7 @@ export async function add(sysUser: SystemUserModel, token: string): Promise<Face
       toUpdate.accessToken = longToken.access_token;
 
       const updated = await facebookUserRepository.save(toUpdate);
+
       return updated;
    } else {
       const newFacebookUser = new FacebookUserModel();
@@ -60,6 +61,7 @@ export async function add(sysUser: SystemUserModel, token: string): Promise<Face
       newFacebookUser.user = sysUser;
 
       const saved = await facebookUserRepository.save(newFacebookUser);
+
       return saved;
    }
 }

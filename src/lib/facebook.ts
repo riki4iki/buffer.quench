@@ -17,17 +17,7 @@ export default class FacebookService {
       };
       return request(options).then(data => JSON.parse(data));
    }
-   public static async userById(id: string, token: string): Promise<IFacebookUser> {
-      const options = {
-         method: "GET",
-         uri: `https://graph.facebook.com/${version}/${id}`,
-         qs: {
-            access_token: token,
-            fields: "id,name,email,picture",
-         },
-      };
-      return request(options).then(data => JSON.parse(data));
-   }
+
    public static async longLiveUserAccessToken(token: string): Promise<ILongLiveUserToken> {
       const options = {
          method: "GET",
@@ -79,17 +69,7 @@ export default class FacebookService {
             return { err: { message, statusCode } };
          });
    }
-   public static async accountById(id: string, token: string): Promise<IFacebookPage> {
-      const options = {
-         method: "GET",
-         uri: `https://graph.facebook.com/${version}/${id}`,
-         qs: {
-            access_token: token,
-            fields: "id,category,picture,name",
-         },
-      };
-      return request(options).then(data => JSON.parse(data));
-   }
+
    public static async accountByToken(token: string): Promise<IFacebookPage> {
       const options = {
          method: "GET",

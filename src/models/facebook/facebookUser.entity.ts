@@ -69,7 +69,7 @@ export default class FacebookUser {
          this.name = apiUser.name;
          this.picture = apiUser.picture;
          this.email = apiUser.email;
-         return <FacebookUser>omit(<FacebookUser>this, "accessToken");
+         return <FacebookUser>omit(<FacebookUser>this, ["accessToken", "user"]);
       } catch (err) {
          console.log(err);
          console.log(`Error in FacebookUser toResponse ${err.message}`);

@@ -10,12 +10,12 @@ export interface IJwt {
    alg: string;
 }
 const generateJTI = (range: string): string => {
-   let jti = "";
-   let possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-   for (let i = 0; i < parseInt(range); i++) {
-      jti += possible.charAt(Math.floor(Math.random() * possible.length));
+   try {
+      const parsed = parseInt(range);
+      return [...Array(parsed)].map(i => (~~(Math.random() * 36)).toString(36)).join("");
+   } catch (err) {
+      throw err;
    }
-   return jti;
 };
 const isDev = process.env.NODE_ENV === "development";
 const ONE_DAY_SECCONDS: number = 84600;
