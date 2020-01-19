@@ -11,13 +11,9 @@ export default class FacebookSocialService {
     * @param ctx Context - koa context with IAuthState that contains current user and current session, decoded from jwt access token in headers
     */
    public static async facebookUsersEndPoint(ctx: IContext<IAuthState>) {
-      try {
-         const connectedFacebookSocials = await all(ctx.state.user);
-         ctx.status = 200;
-         ctx.body = connectedFacebookSocials;
-      } catch (err) {
-         ctx.app.emit("error", err, ctx);
-      }
+      const connectedFacebookSocials = await all(ctx.state.user);
+      ctx.status = 200;
+      ctx.body = connectedFacebookSocials;
    }
    /**
     *EndPint - return target connected facebook social from database

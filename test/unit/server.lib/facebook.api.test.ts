@@ -7,7 +7,7 @@ let pages: Array<facebookTypes.IFacebookPage>;
 describe("facebook api unit test", () => {
    test("get facebook user", async () => {
       const user = await fbService.getUser(facebook_test_user.access_token);
-      expect(user).toMatchSnapshot({
+      expect(user).toMatchObject({
          name: facebook_test_user.name,
          email: facebook_test_user.email,
          id: facebook_test_user.id,

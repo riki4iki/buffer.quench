@@ -14,14 +14,13 @@ const jwt = {
    refresh_token: "",
    expiresIn: 0,
 };
-
+beforeAll(async () => {
+   await dbConnection();
+});
+afterAll(async () => {
+   await getConnection().close();
+});
 describe("test social routers....", () => {
-   beforeAll(async () => {
-      await dbConnection();
-   });
-   afterAll(async () => {
-      await getConnection().close();
-   });
    describe("create account for future tests", () => {
       const account = {
          email: "social_test@gmail.com",
@@ -102,6 +101,22 @@ describe("test social routers....", () => {
                return done();
             });
       });
+      test("add facebook soical again, should update social in database and return 201", async done => {
+         request(app.callback())
+            .post(endpoints.facebook)
+            .set({ access_token: jwt.access_token })
+            .send({ token: facebook_test_user.access_token })
+            .expect(201)
+            .end((err, res) => {
+               if (err) return done(err);
+               expect(res.body).toMatchObject({
+                  email: facebook_test_user.email,
+                  fbId: facebook_test_user.id,
+                  name: facebook_test_user.name,
+               });
+               return done();
+            });
+      });
       test("check connected socials after post method, array shouldn't be empty", async done => {
          request(app.callback())
             .get(endpoints.social)
@@ -152,35 +167,87 @@ describe("test social routers....", () => {
                return done();
             });
       });
-      test("test facebook pages getting, should return array with facebook_accounts information", async done => {
+      test("test target facebook soical with invalid uuid", async done => {
          request(app.callback())
-            .get(`${endpoints.facebook}/${social_id}/page`)
+            .get(`${endpoints.facebook}/${invalid_uuid}`)
             .set({ access_token: jwt.access_token })
-            .expect(200)
+            .expect(400, "social not found")
             .end((err, res) => {
                if (err) return done(err);
-               const pages = res.body;
-               expect(pages).toBeInstanceOf(Array);
-               pages.forEach(page => {
-                  expect(page).toMatchSnapshot({
-                     id: expect.any(String),
-                     name: expect.any(String),
-                     category: expect.any(String),
-                     fbId: expect.any(String),
-                     picture: {
-                        data: {
-                           height: expect.any(Number),
-                           is_silhouette: expect.any(Boolean),
-                           url: expect.any(String),
-                        },
-                     },
-                  });
-                  expect(page).not.toHaveProperty("accessToken");
-                  expect(page).not.toHaveProperty("fbUser");
-               });
                return done();
             });
       });
+      describe("pages geting test", () => {
+         test("test facebook pages getting, should return array with facebook_accounts information", async done => {
+            request(app.callback())
+               .get(`${endpoints.facebook}/${social_id}/page`)
+               .set({ access_token: jwt.access_token })
+               .expect(200)
+               .end((err, res) => {
+                  if (err) return done(err);
+                  const pages = res.body;
+                  expect(pages).toBeInstanceOf(Array);
+                  pages.forEach(page => {
+                     expect(page).toMatchSnapshot({
+                        id: expect.any(String),
+                        name: expect.any(String),
+                        category: expect.any(String),
+                        fbId: expect.any(String),
+                        picture: {
+                           data: {
+                              height: expect.any(Number),
+                              is_silhouette: expect.any(Boolean),
+                              url: expect.any(String),
+                           },
+                        },
+                     });
+                     expect(page).not.toHaveProperty("accessToken");
+                     expect(page).not.toHaveProperty("fbUser");
+                  });
+                  return done();
+               });
+         });
+         test("test get added facebook pages to db, should return array with facebook_accounts information from database", async done => {
+            request(app.callback())
+               .get(`${endpoints.facebook}/${social_id}/page`)
+               .set({ access_token: jwt.access_token })
+               .expect(200)
+               .end((err, res) => {
+                  if (err) return done(err);
+                  const pages = res.body;
+                  expect(pages).toBeInstanceOf(Array);
+                  pages.forEach(page => {
+                     expect(page).toMatchSnapshot({
+                        id: expect.any(String),
+                        name: expect.any(String),
+                        category: expect.any(String),
+                        fbId: expect.any(String),
+                        picture: {
+                           data: {
+                              height: expect.any(Number),
+                              is_silhouette: expect.any(Boolean),
+                              url: expect.any(String),
+                           },
+                        },
+                     });
+                     expect(page).not.toHaveProperty("accessToken");
+                     expect(page).not.toHaveProperty("fbUser");
+                  });
+                  return done();
+               });
+         });
+         test("try getting pages from facebook social with invalid uuid", async done => {
+            request(app.callback())
+               .get(`${endpoints.facebook}/${invalid_uuid}/page`)
+               .set({ access_token: jwt.access_token })
+               .expect(400, "social not found")
+               .end((err, res) => {
+                  if (err) return done(err);
+                  return done();
+               });
+         });
+      });
+
       test("test social disconnecting from current user, should return 204", async done => {
          request(app.callback())
             .del(`${endpoints.facebook}/${social_id}`)

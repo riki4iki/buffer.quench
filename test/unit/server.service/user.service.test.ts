@@ -1,7 +1,7 @@
-import { all, get, create, del, update } from "../../src/service/user.service/crud";
-import { invalid_uuid } from "../config/const";
-import { dbConnection } from "../../src/config";
-import { User } from "../../src/models";
+import { all, get, create, del, update } from "../../../src/service/user.service/crud";
+import { invalid_uuid } from "../../config/const";
+import { dbConnection } from "../../../src/config";
+import { User } from "../../../src/models";
 import { BadRequest } from "http-errors";
 import { getConnection } from "typeorm";
 

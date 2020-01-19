@@ -74,7 +74,7 @@ export async function del(sysUser: SystemUserModel, id: string): Promise<Faceboo
    const facebookUserRepository: Repository<FacebookUserModel> = getManager().getRepository(FacebookUserModel);
    const facebookUser: FacebookUserModel = await facebookUserRepository.findOne({ where: { id: id, user: sysUser }, relations: ["user"] });
    if (!facebookUser) {
-      const err = new BadRequest("Social not found");
+      const err = new BadRequest("social not found");
       throw err;
    } else {
       const removed = await facebookUserRepository.remove(facebookUser);

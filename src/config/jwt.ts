@@ -1,5 +1,6 @@
 import dotenv from "dotenv";
 dotenv.config();
+
 export interface IJwt {
    secret: string;
    accessLife: number;
@@ -9,13 +10,10 @@ export interface IJwt {
    jti: string;
    alg: string;
 }
+
 const generateJTI = (range: string): string => {
-   try {
-      const parsed = parseInt(range);
-      return [...Array(parsed)].map(i => (~~(Math.random() * 36)).toString(36)).join("");
-   } catch (err) {
-      throw err;
-   }
+   const parsed = parseInt(range);
+   return [...Array(parsed)].map(i => (~~(Math.random() * 36)).toString(36)).join("");
 };
 const isDev = process.env.NODE_ENV === "development";
 const ONE_DAY_SECCONDS: number = 84600;

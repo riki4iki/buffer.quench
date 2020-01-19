@@ -12,16 +12,11 @@ class SocialService {
     * @param ctx Context - koa context with authenticated user with user instatnce
     */
    public static async socialsEndPoint(ctx: IContext<IAuthState>) {
-      if (ctx.state.user.social) {
-         ctx.status = 200;
-         ctx.body = ctx.state.user.social;
-      } else {
-         const socialRepository: Repository<Social> = getManager().getRepository(Social);
-         const socials = await socialRepository.find({ user: ctx.state.user });
+      const socialRepository: Repository<Social> = getManager().getRepository(Social);
+      const socials = await socialRepository.find({ user: ctx.state.user });
 
-         ctx.status = 200;
-         ctx.body = socials;
-      }
+      ctx.status = 200;
+      ctx.body = socials;
    }
 }
 

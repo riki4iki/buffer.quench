@@ -4,7 +4,9 @@ import { config } from "dotenv";
 config();
 
 const dbString = parse(process.env.DATABASE_URL);
-const isDev = process.env.NODE_ENV == "development";
+const isDev = () => {
+   return process.env.NODE_ENV == "development";
+};
 
 const options: ConnectionOptions = {
    type: "postgres",
@@ -14,8 +16,8 @@ const options: ConnectionOptions = {
    database: dbString.database,
    synchronize: true,
    logging: false,
-   entities: [...(isDev ? ["src/models/**/*.ts"] : ["dist/models/**/*.js"])],
-   extra: { ssl: !isDev },
+   entities: [...(isDev() ? ["src/models/**/*.ts"] : ["dist/models/**/*.js"])],
+   //extra: { ssl: !isDev() },
 };
 const testOptions: ConnectionOptions = {
    type: "postgres",
@@ -32,6 +34,6 @@ const testOptions: ConnectionOptions = {
 const connect = async (): Promise<Connection> => {
    const opt = process.env.NODE_ENV == "test" ? testOptions : options;
 
-   return createConnection(opt);
+   return await createConnection(opt);
 };
 export { connect };

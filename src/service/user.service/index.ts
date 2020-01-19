@@ -19,7 +19,8 @@ export default class UserService {
     * EndPoint - Create new user in system and save in database. Return created user without password
     * @param ctx Context - Koa Context with state IAuthState that contain current user and session
     */
-   public static async createEndPoint(ctx: IContext<IAuthState>) {
+   //UNUSED NOW, nedd only middleware with authorization
+   /* public static async createEndPoint(ctx: IContext<IAuthState>) {
       try {
          const created = await create({ email: ctx.request.body.email, password: ctx.request.body.password });
          ctx.status = 201;
@@ -27,21 +28,16 @@ export default class UserService {
       } catch (err) {
          ctx.app.emit("error", err, ctx);
       }
-   }
+   }*/
    /**
     * EndPoints - update current user by access token from headers
     * @param ctx Context - Koa Context with state IAuthState that contain current user and session
     */
    public static async updateEndPoint(ctx: IContext<IAuthState>) {
       try {
-         if (!ctx.state.session) {
-            const err = new Unauthorized("session doesn't exist");
-            throw err;
-         } else {
-            const updated = await update(ctx.state.session, { email: ctx.request.body.email, password: ctx.request.body.password });
-            ctx.status = 200;
-            ctx.body = omit(updated, "password");
-         }
+         const updated = await update(ctx.state.session, { email: ctx.request.body.email, password: ctx.request.body.password });
+         ctx.status = 200;
+         ctx.body = omit(updated, "password");
       } catch (err) {
          ctx.app.emit("error", err, ctx);
       }
@@ -52,13 +48,8 @@ export default class UserService {
     */
    public static async deleteEndPoint(ctx: IContext<IAuthState>) {
       try {
-         if (!ctx.state.session) {
-            const err = new Unauthorized("session doesn't exist");
-            throw err;
-         } else {
-            await del(ctx.state.session);
-            ctx.status = 204;
-         }
+         await del(ctx.state.session);
+         ctx.status = 204;
       } catch (err) {
          ctx.app.emit("error", err, ctx);
       }
@@ -87,14 +78,9 @@ export default class UserService {
     */
    public static async currentUserMiddleware(ctx: IContext<IAuthState>, next: Next) {
       try {
-         if (!ctx.state.session) {
-            const err = new Unauthorized("session doesn't exist");
-            throw err;
-         } else {
-            const user = await get(ctx.state.session);
-            ctx.state.user = user;
-            await next();
-         }
+         const user = await get(ctx.state.session);
+         ctx.state.user = user;
+         await next();
       } catch (err) {
          ctx.app.emit("error", err, ctx);
       }

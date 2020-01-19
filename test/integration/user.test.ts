@@ -158,5 +158,15 @@ describe("test /user endpoints", () => {
                return done();
             });
       });
+      test("try get user after deleting, should return 400 bad request", async done => {
+         request(app.callback())
+            .get(endpoints.user)
+            .set({ access_token: jwt.access_token })
+            .expect(400, "User doesn't exist with input session")
+            .end((err, res) => {
+               if (err) return done(err);
+               return done();
+            });
+      });
    });
 });
