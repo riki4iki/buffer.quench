@@ -1,9 +1,9 @@
 import userLogic from "./user.service";
 import routeServie from "./api";
 
-import postService from "./post.service";
-import cronService from "./cron.service";
-import legendService from "./legend.service";
+import postService from "./thread.service/post.service";
+import cronService from "./thread.service/cron.service";
+import legendService from "./thread.service/legend.service";
 import { ThreadService as threadService, FacebookPageService, PageService } from "./thread.service";
 
 export * from "./auth.service";

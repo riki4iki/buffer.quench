@@ -13,7 +13,8 @@ export async function all(sysUser: SystemUserModel): Promise<Array<FacebookUserM
 
    const connectedFacebookSocials: Array<FacebookUserModel> = await facebookUserRepository.find({ user: sysUser });
 
-   return connectedFacebookSocials.map(social => <FacebookUserModel>omit(social, "accessToken"));
+   const socials = await Promise.all(connectedFacebookSocials.map(async social => await social.toResponse()));
+   return socials;
 }
 /**
  * Promise. return target facebook socials from database by current user and id

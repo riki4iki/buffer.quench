@@ -1,4 +1,4 @@
-import { IContext, IPostState, IParamContext, IParamIdState } from "../../types";
+import { IContext, IPostState, IParamContext, IParamIdState } from "../../../types";
 import { add, update, del } from "./executer";
 
 /**

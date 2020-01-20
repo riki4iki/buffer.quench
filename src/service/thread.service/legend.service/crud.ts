@@ -1,4 +1,4 @@
-import { Thread, Legend, Post } from "../../models";
+import { Thread, Legend, Post } from "../../../models";
 import { validate, ValidationError } from "class-validator";
 import { Repository, getManager } from "typeorm";
 import { BadRequest } from "http-errors";

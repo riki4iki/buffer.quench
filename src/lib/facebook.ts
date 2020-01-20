@@ -1,4 +1,4 @@
-import request from "request-promise";
+import request, { Options } from "request-promise";
 import { IFacebookPage, IFacebookUser, ILongLiveUserToken } from "../types";
 const version = process.env.FACEBOOK_API_VERSION;
 
@@ -7,7 +7,7 @@ const version = process.env.FACEBOOK_API_VERSION;
  */
 export default class FacebookService {
    public static async getUser(token: string): Promise<IFacebookUser> {
-      const options = {
+      const options: Options = {
          method: "GET",
          uri: `https://graph.facebook.com/${version}/me`,
          qs: {
@@ -19,7 +19,7 @@ export default class FacebookService {
    }
 
    public static async longLiveUserAccessToken(token: string): Promise<ILongLiveUserToken> {
-      const options = {
+      const options: Options = {
          method: "GET",
          uri: `https://graph.facebook.com/${version}/oauth/access_token`,
          qs: {
@@ -32,7 +32,7 @@ export default class FacebookService {
       return request(options).then(data => JSON.parse(data));
    }
    public static async longLiveAccounts(longUserToken: string, userId: string): Promise<Array<IFacebookPage>> {
-      const options = {
+      const options: Options = {
          method: "GET",
          uri: `https://graph.facebook.com/${version}/${userId}/accounts`,
          qs: {
@@ -43,7 +43,7 @@ export default class FacebookService {
       return request(options).then(data => JSON.parse(data).data);
    }
    public static async accounts(token: string): Promise<Array<IFacebookPage>> {
-      const options = {
+      const options: Options = {
          method: "GET",
          uri: `https://graph.facebook.com/${version}/me/accounts`,
          qs: {
@@ -54,7 +54,7 @@ export default class FacebookService {
       return request(options).then(data => JSON.parse(data).data);
    }
    public static async post(id: string, token: string, message: string) {
-      const options = {
+      const options: Options = {
          method: "POST",
          uri: `https://graph.facebook.com/${version}/${id}/feed`,
          qs: {
@@ -71,7 +71,7 @@ export default class FacebookService {
    }
 
    public static async accountByToken(token: string): Promise<IFacebookPage> {
-      const options = {
+      const options: Options = {
          method: "GET",
          uri: `https://graph.facebook.com/${version}/me`,
          qs: {

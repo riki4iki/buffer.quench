@@ -1,6 +1,6 @@
 import { post as target, posts as all, create, update, del } from "./crud";
 import { Next } from "koa";
-import { IContext, IThreadState, IPostState, IParamContext, IParamIdState, IPostBody } from "../../types";
+import { IContext, IThreadState, IPostState, IParamContext, IParamIdState, IPostBody } from "../../../types";
 
 /**
  * Class controller for post routes(/user/thread/(:threadid)/post)
@@ -49,7 +49,7 @@ export default class postController {
       try {
          const post = await create(ctx.state.thread, {
             context: ctx.request.body.context,
-            expireDate: new Date(ctx.request.body.expireDate)
+            expireDate: new Date(ctx.request.body.expireDate),
          });
          ctx.status = 201;
          ctx.body = post;
@@ -70,7 +70,7 @@ export default class postController {
       try {
          const post = await update(ctx.state.thread, ctx.params.id, {
             context: ctx.request.body.context,
-            expireDate: new Date(ctx.request.body.expireDate)
+            expireDate: new Date(ctx.request.body.expireDate),
          });
          ctx.status = 200;
          ctx.body = post;
@@ -123,7 +123,7 @@ export default class postController {
       try {
          const post = await create(ctx.state.thread, {
             context: ctx.request.body.context,
-            expireDate: new Date(ctx.request.body.expireDate)
+            expireDate: new Date(ctx.request.body.expireDate),
          });
          ctx.state.post = post;
          await next();
@@ -143,7 +143,7 @@ export default class postController {
       try {
          const post = await update(ctx.state.thread, ctx.params.id, <IPostBody>{
             context: ctx.request.body.context,
-            expireDate: new Date(ctx.request.body.expireDate)
+            expireDate: new Date(ctx.request.body.expireDate),
          });
          ctx.state.post = post;
          await next();

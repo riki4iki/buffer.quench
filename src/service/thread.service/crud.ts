@@ -23,7 +23,7 @@ export async function create(user: User, body: IThreadBody): Promise<Thread> {
       throw validationErrors;
    } else if (await threadRepository.findOne({ user: user, name: newThread.name })) {
       //in database already thread with input name alredy exist
-      const err = new BadRequest(`Thread with name '${newThread.name}' already exist`);
+      const err = new BadRequest(`thread with name '${newThread.name}' already exist`);
       throw err;
    } else {
       //save in database
@@ -45,7 +45,7 @@ export async function get(user: User, id: string): Promise<Thread> {
    });
    if (!thread) {
       //if thread undefined throw error bad request
-      const err = new BadRequest("thread does not exist");
+      const err = new BadRequest("thread not found");
       throw err;
    } else {
       return thread;
@@ -92,7 +92,7 @@ export async function update(user: User, id: string, body: IThreadBody): Promise
          throw validationErrors;
       } else if (await threadRepository.findOne({ id: Not(Equal(before.id)), name: body.name, user: user })) {
          //check for thread with new name in database, name must be unique value
-         const err = new BadRequest(`thread with name: ${body.name} already exist`);
+         const err = new BadRequest(`thread with name: '${body.name}' already exist`);
          throw err;
       } else {
          //resave thread and return
@@ -110,7 +110,7 @@ export async function del(user: User, id: string): Promise<Thread> {
    const threadRepository: Repository<Thread> = getManager().getRepository(Thread);
    const thread = await threadRepository.findOne({ id: id, user: user });
    if (!thread) {
-      const err = new BadRequest("thread doesn't exist");
+      const err = new BadRequest("thread not found");
       throw err;
    } else {
       const removed = await threadRepository.remove(thread);

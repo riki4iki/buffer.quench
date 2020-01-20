@@ -1,6 +1,6 @@
 import { scheduledJobs, scheduleJob, Job, rescheduleJob } from "node-schedule";
-import { ICronnable } from "../../types";
-import { Thread } from "../../models";
+import { ICronnable } from "../../../types";
+import { Thread } from "../../../models";
 import { Dictionary } from "lodash";
 
 export default class Schedule {
@@ -12,11 +12,13 @@ export default class Schedule {
     * Get tasks by thread
     * @param thread Thread - input thread for wich search is being performed
     */
-   public static async allByThread(thread: Thread): Promise<Dictionary<Job>> {
+
+   /* public static async allByThread(thread: Thread): Promise<Dictionary<Job>> {
       const allJobs = await Schedule.all();
       //must filt allJobs, find task with post that create for input thread
       return;
-   }
+   }*/
+
    /**
     * Create new task in server
     * @param context input body for new task:

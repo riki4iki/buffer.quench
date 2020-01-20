@@ -1,8 +1,8 @@
 import { getManager, Repository, Not, Equal } from "typeorm";
-import { Post, Thread } from "../../models";
+import { Post, Thread } from "../../../models";
 import { ValidationError, validate } from "class-validator";
 import { BadRequest } from "http-errors";
-import { ValidationRequest, IPostBody } from "../../types";
+import { ValidationRequest, IPostBody } from "../../../types";
 /**
  * Promise that return all posts for input thread from database
  * @param thread Thread - current thread from earlier route /thread/:id. required for posts finding
@@ -21,7 +21,7 @@ export async function post(thread: Thread, id: string): Promise<Post> {
    const postRepository: Repository<Post> = getManager().getRepository(Post);
    const post: Post = await postRepository.findOne({ id: id, thread: thread });
    if (!post) {
-      throw new BadRequest("Post not found");
+      throw new BadRequest("post not found");
    } else {
       return post;
    }
@@ -48,10 +48,10 @@ export async function create(thread: Thread, body: IPostBody): Promise<Post> {
 
       throw err;
    } else if (
-      //check post with input date and context. must be unique
+      //check post with input date  must be unique
       await postRepository.findOne({
          expireDate: newPost.expireDate,
-         thread: thread
+         thread: thread,
       })
    ) {
       throw new BadRequest("target time already used for current thread");
@@ -74,7 +74,7 @@ export async function update(thread: Thread, id: string, body: IPostBody): Promi
 
    const before = await postRepository.findOne({ id: id, thread: thread });
    if (!before) {
-      throw new BadRequest("Post not found");
+      throw new BadRequest("post not found");
    } else {
       const newPost = new Post();
       newPost.id = before.id;
@@ -91,9 +91,16 @@ export async function update(thread: Thread, id: string, body: IPostBody): Promi
          await postRepository.findOne({
             id: Not(Equal(id)),
             thread: thread,
-            expireDate: newPost.expireDate
+            expireDate: newPost.expireDate,
          })
       ) {
+         console.log(
+            await postRepository.findOne({
+               id: Not(Equal(id)),
+               thread: thread,
+               expireDate: newPost.expireDate,
+            }),
+         );
          throw new BadRequest("target time already used for current thread");
       } else {
          //save updated
@@ -111,7 +118,7 @@ export async function del(thread: Thread, id: string): Promise<Post> {
    const postRepository: Repository<Post> = getManager().getRepository(Post);
    const post = await postRepository.findOne({ id: id, thread: thread });
    if (!post) {
-      throw new BadRequest("Post not found");
+      throw new BadRequest("post not found");
    } else {
       //try to remove
       const removed = await postRepository.remove(post);

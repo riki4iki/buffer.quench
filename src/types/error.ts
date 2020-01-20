@@ -18,6 +18,7 @@ export class ValidationRequest extends BadRequest {
 export class NoContent extends Error {
    status = 204;
 }
+
 export class FacebookError extends Error {
    constructor(err: StatusCodeError) {
       super();

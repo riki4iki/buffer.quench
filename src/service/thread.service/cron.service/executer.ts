@@ -1,7 +1,7 @@
 import schedule from "./schedule";
 import { getManager, Repository } from "typeorm";
-import { Page, Post, Thread } from "../../models";
-import { ISocialPage } from "../../types";
+import { Page, Post, Thread } from "../../../models";
+import { ISocialPage } from "../../../types";
 import { create as createLegend } from "../legend.service/crud";
 export async function add(post: Post): Promise<void> {
    //need to create new task with name which contains post_id
@@ -11,7 +11,7 @@ export async function add(post: Post): Promise<void> {
       const job = await schedule.create({
          id: post.id,
          expireDate: post.expireDate,
-         cb: executer
+         cb: executer,
       });
       //save to redis!!!!
    } catch (err) {
@@ -26,7 +26,7 @@ export async function update(post: Post): Promise<void> {
       const updated = await schedule.update({
          id: post.id,
          expireDate: post.expireDate,
-         cb: null
+         cb: null,
       });
       //update in redis
    } catch (err) {
@@ -52,12 +52,12 @@ async function executer(): Promise<void> {
    //find target post by job.name with thread
    const post: Post = await postRepository.findOne({
       where: { id: this.name },
-      relations: ["thread"]
+      relations: ["thread"],
    });
    const thread: Thread = post.thread;
    //find all pages by thread
    const pages: Array<Page> = await pageRepository.find({
-      where: { thread: thread }
+      where: { thread: thread },
    });
 
    //simple console logger. need rewrite
@@ -73,7 +73,7 @@ async function executer(): Promise<void> {
             //now. page.post return boolean type for saving in legend table
             const result = await page.post(post.context);
             return result;
-         })
+         }),
       );
       const reducer = results.reduce((value, reducer) => reducer && value);
       const legend = await createLegend(post, reducer);

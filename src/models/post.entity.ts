@@ -9,7 +9,7 @@ class IsNow implements ValidatorConstraintInterface {
       return date > now;
    }
    defaultMessage() {
-      return "Imposible set date before current";
+      return "impossible set date in past time";
    }
 }
 @Entity()
@@ -29,7 +29,7 @@ export default class Post {
    @ManyToOne(
       () => Thread,
       thread => thread.posts,
-      { onDelete: "CASCADE" }
+      { onDelete: "CASCADE" },
    )
    @JoinColumn()
    thread: Thread;
