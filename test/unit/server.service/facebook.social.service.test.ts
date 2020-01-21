@@ -102,11 +102,8 @@ describe("unit test facebook soicial crud", () => {
       test("try get pages with invalid access token", async () => {
          const facebookUser = await get(user, socialId);
          facebookUser.accessToken = "_";
-         try {
-            const pages = await insertPagesfromApi(facebookUser);
-         } catch (err) {
-            expect(err).toEqual(new BadRequest("waiting for handler in facebook api file"));
-         }
+
+         expect(insertPagesfromApi(facebookUser)).rejects.toThrow();
       });
    });
    describe("test delting", () => {

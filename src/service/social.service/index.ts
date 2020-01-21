@@ -14,9 +14,10 @@ class SocialService {
    public static async socialsEndPoint(ctx: IContext<IAuthState>) {
       const socialRepository: Repository<Social> = getManager().getRepository(Social);
       const socials = await socialRepository.find({ user: ctx.state.user });
+      const toResponse = Promise.all(socials.map(async social => await social.toResponse()));
 
       ctx.status = 200;
-      ctx.body = socials;
+      ctx.body = await toResponse;
    }
 }
 

@@ -15,14 +15,14 @@ import {
 import User from "../user.entity";
 import Page from "./facebookPage.entity";
 import { fbService as fb } from "../../lib";
-import { IFacebookPicture } from "../../types";
+import { IFacebookPicture, IResponsable, IAfterInserter, IBeforeRemover } from "../../types";
 import Social from "../social.entity";
 import { omit } from "lodash";
 import { InternalServerError } from "http-errors";
 
 @Entity()
 @Index(["id"], { unique: true })
-export default class FacebookUser {
+export default class FacebookUser implements IResponsable<FacebookUser>, IAfterInserter, IBeforeRemover {
    @PrimaryGeneratedColumn("uuid")
    id: string;
 
@@ -44,25 +44,14 @@ export default class FacebookUser {
       () => Page,
       page => page.fbUser,
    )
-   page: Page;
+   page: Page[];
 
-   //Call from Facebook API using afterLoad decorator
+   //from facebook api after toResponse method call
    name?: string;
    picture?: IFacebookPicture;
-   email: string;
+   email?: string;
 
-   @AfterInsert()
-   private async create?() {
-      const socialRepository = getManager().getRepository(Social);
-      const newSocial = new Social();
-      newSocial.type = "facebook";
-      newSocial.user = this.user;
-      newSocial.socialId = this.id;
-
-      const saved = await socialRepository.save(newSocial);
-      console.log(`new social for user ${this.user.id} with type ${saved.type}`);
-   }
-
+   //#region IResponsable
    public async toResponse(): Promise<FacebookUser> {
       try {
          const apiUser = await fb.getUser(this.accessToken);
@@ -77,8 +66,22 @@ export default class FacebookUser {
          throw serverErr;
       }
    }
+   //#endregion IResposable
+   //#region typeorm events
+   @AfterInsert()
+   async _create?() {
+      const socialRepository = getManager().getRepository(Social);
+      const newSocial = new Social();
+      newSocial.type = "facebook";
+      newSocial.user = this.user;
+      newSocial.socialId = this.id;
+
+      const saved = await socialRepository.save(newSocial);
+      console.log(`new social for user ${this.user.id} with type ${saved.type}`);
+   }
+
    @BeforeRemove()
-   private async del?() {
+   async _delete?() {
       const socialRepository = getManager().getRepository(Social);
       const social = await socialRepository.findOne({ socialId: this.id, user: this.user });
       if (!social) {
@@ -89,7 +92,10 @@ export default class FacebookUser {
          const removed = await socialRepository.remove(social);
       }
    }
-
+   //#endregion typeorm events
+   /**
+    * Before disconnect facebook-social delete all pages with dat social. {onDeleting: "CASCADE"} - doesn't work
+    */
    @BeforeRemove()
    private async delPages?() {
       const pageRepository: Repository<Page> = getManager().getRepository(Page);
@@ -97,6 +103,7 @@ export default class FacebookUser {
       try {
          const removed = await pageRepository.remove(pages);
       } catch (err) {
+         //Need logger or catch???
          console.log(`Error in @BeforeRemove Facebook user with pages removing`);
          console.log(err);
       }

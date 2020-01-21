@@ -1,22 +1,10 @@
-import {
-   Entity,
-   Column,
-   PrimaryGeneratedColumn,
-   Index,
-   OneToOne,
-   OneToMany,
-   BeforeInsert,
-   BeforeUpdate,
-   AfterLoad,
-   Repository,
-   getManager,
-   getRepository,
-} from "typeorm";
+import { Entity, Column, PrimaryGeneratedColumn, Index, OneToOne, OneToMany, BeforeInsert, BeforeUpdate, Repository, getManager } from "typeorm";
 import { Length, IsEmail } from "class-validator";
 import { HmacSHA1 } from "crypto-js";
 import { Unauthorized } from "http-errors";
 import { omit } from "lodash";
 
+import { IResponsable } from "../types/";
 import Refresh from "./refresh.entity";
 import FacebookUser from "./facebook/facebookUser.entity";
 import Thread from "./thread.entity";
@@ -24,7 +12,7 @@ import Social from "./social.entity";
 
 @Entity()
 @Index(["email"], { unique: true })
-export default class User {
+export default class User implements IResponsable<User> {
    @PrimaryGeneratedColumn("uuid")
    id: string;
 
@@ -64,7 +52,7 @@ export default class User {
    )
    social: Social[];
 
-   public async removePassword(): Promise<User> {
+   public async toResponse(): Promise<User> {
       const cutted = omit(<User>this, "password");
       return <User>cutted;
    }
@@ -78,12 +66,6 @@ export default class User {
       }
    }
 
-   @BeforeInsert()
-   @BeforeUpdate()
-   private async createHash?() {
-      this.password = HmacSHA1(this.password, process.env.hash_key).toString();
-   }
-
    public async withSocials(): Promise<User> {
       if (!this.social) {
          const socialRepository: Repository<Social> = getManager().getRepository(Social);
@@ -92,6 +74,15 @@ export default class User {
       } else {
          this.social = this.social.map(social => <Social>omit(social, "id"));
       }
-      return <User>omit(<User>this, "password");
+      return await this.toResponse();
    }
+
+   //#region typeorm events
+   @BeforeInsert()
+   @BeforeUpdate()
+   private async createHash?() {
+      this.password = HmacSHA1(this.password, process.env.hash_key).toString();
+   }
+
+   //#endregion typeorm events
 }

@@ -27,7 +27,7 @@ export default class Page {
          const facebookPageRepository: Repository<FacebookPage> = getManager().getRepository(FacebookPage);
          const facebookPage = await facebookPageRepository.findOne(page.pageId);
          if (!facebookPage) {
-            console.log("PAGE IS NULL I NEED LOGGER");
+            console.log(`error with converting to social page type: ${page.type}, id in social table should be ${page.pageId}`);
          } else {
             return facebookPage;
          }

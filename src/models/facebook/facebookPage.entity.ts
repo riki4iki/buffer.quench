@@ -2,11 +2,11 @@ import { Entity, Column, ManyToOne, JoinColumn, PrimaryGeneratedColumn, BeforeRe
 import { fbService as fb } from "../../lib";
 import FbUser from "./facebookUser.entity";
 import ThreadPage from "../page.entity";
-import { ISocialPage, IFacebookPicture } from "../../types";
+import { ISocialPage, IFacebookPicture, IResponsable, IBeforeRemover } from "../../types";
 import { omit } from "lodash";
 import { InternalServerError } from "http-errors";
 @Entity()
-export default class FacebookPage implements ISocialPage {
+export default class FacebookPage implements ISocialPage, IResponsable<FacebookPage>, IBeforeRemover {
    @PrimaryGeneratedColumn("uuid")
    id: string;
 
@@ -29,19 +29,20 @@ export default class FacebookPage implements ISocialPage {
    category?: string;
 
    async post(context) {
-      const id: string = this.fbId;
-      const token: string = this.accessToken;
-      const message: string = context;
-      const post = await fb.post(id, token, message);
+      const post = await fb.post(this.id, this.accessToken, context);
       if (post.err) {
+         console.log(`Error api post with page: ${this.id}, facebook_id: ${this.fbId}`);
          console.log(post.err);
+         //Error with post to facebook by page
          return false;
       } else {
          return true;
       }
    }
+
+   //#region typeorm events
    @BeforeRemove()
-   private async disconnectFromThreads?() {
+   async _delete?() {
       //need find all threads where deleted page connected and delete page from Page table
       console.log(`page with ${this.id} must be disconnected from thread`);
       const pageRepository: Repository<ThreadPage> = getManager().getRepository(ThreadPage);
@@ -55,8 +56,9 @@ export default class FacebookPage implements ISocialPage {
          console.log(`@BeforeRemove in facabook page error`);
       }
    }
-
-   public async toResponse?(): Promise<FacebookPage> {
+   //#endregion typeorm events
+   //#region IResponsable
+   public async toResponse(): Promise<FacebookPage> {
       try {
          const apiPage = await fb.accountByToken(this.accessToken);
          this.name = apiPage.name;
@@ -70,4 +72,5 @@ export default class FacebookPage implements ISocialPage {
          throw serverErr;
       }
    }
+   //#endregion IResponsable
 }

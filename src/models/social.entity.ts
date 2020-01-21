@@ -1,9 +1,11 @@
 import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, getManager, Repository } from "typeorm";
-import { ISocial, SocialType } from "../types";
+
+import { omit } from "lodash";
+import { SocialType, IResponsable } from "../types";
 import SystemUser from "./user.entity";
 
 @Entity()
-export default class Social {
+export default class Social implements IResponsable<Social> {
    @PrimaryGeneratedColumn("uuid")
    id: string;
 
@@ -19,4 +21,9 @@ export default class Social {
 
    @Column("uuid")
    socialId: string;
+
+   public async toResponse(): Promise<Social> {
+      const cutted = omit(<Social>this, "id");
+      return <Social>cutted;
+   }
 }

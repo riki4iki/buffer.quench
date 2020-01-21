@@ -188,11 +188,10 @@ describe("test social routers....", () => {
                   const pages = res.body;
                   expect(pages).toBeInstanceOf(Array);
                   pages.forEach(page => {
-                     expect(page).toMatchSnapshot({
+                     expect(page).toMatchObject({
                         id: expect.any(String),
                         name: expect.any(String),
                         category: expect.any(String),
-                        fbId: expect.any(String),
                         picture: {
                            data: {
                               height: expect.any(Number),
@@ -217,11 +216,10 @@ describe("test social routers....", () => {
                   const pages = res.body;
                   expect(pages).toBeInstanceOf(Array);
                   pages.forEach(page => {
-                     expect(page).toMatchSnapshot({
+                     expect(page).toMatchObject({
                         id: expect.any(String),
                         name: expect.any(String),
                         category: expect.any(String),
-                        fbId: expect.any(String),
                         picture: {
                            data: {
                               height: expect.any(Number),

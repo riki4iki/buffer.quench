@@ -56,6 +56,7 @@ export async function connect(user: User, thread: Thread, pages: Array<string>):
             if (connected) {
                //page already connected to target thread
                return connected; //return databasse instance
+               //maybe update access token
             } else {
                //create new connection
                const newPage = new Page();

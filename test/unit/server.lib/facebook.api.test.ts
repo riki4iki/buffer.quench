@@ -40,11 +40,10 @@ describe("facebook api unit test", () => {
       });
    });
    test("getting account with short tokens", async () => {
-      const pages = await fbService.accounts(facebook_test_user.access_token);
-      pages.forEach(page => {
+      const long = await fbService.accounts(facebook_test_user.access_token);
+      long.forEach(page => {
          expect(page).toMatchObject({
             id: expect.any(String),
-            access_token: expect.any(String),
             name: expect.any(String),
             category: expect.any(String),
             picture: {

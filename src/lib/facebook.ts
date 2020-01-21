@@ -1,5 +1,5 @@
 import request, { Options } from "request-promise";
-import { IFacebookPage, IFacebookUser, ILongLiveUserToken } from "../types";
+import { IFacebookPage, IFacebookUser, ILongLivedUserToken } from "../types/facebook";
 const version = process.env.FACEBOOK_API_VERSION;
 
 /**
@@ -18,7 +18,7 @@ export default class FacebookService {
       return request(options).then(data => JSON.parse(data));
    }
 
-   public static async longLiveUserAccessToken(token: string): Promise<ILongLiveUserToken> {
+   public static async longLiveUserAccessToken(token: string): Promise<ILongLivedUserToken> {
       const options: Options = {
          method: "GET",
          uri: `https://graph.facebook.com/${version}/oauth/access_token`,
@@ -42,13 +42,17 @@ export default class FacebookService {
       };
       return request(options).then(data => JSON.parse(data).data);
    }
+   /**
+    * Call facebook api and return facebook accounts(pages)
+    * @param token String - Usee access token (no difference long or short)
+    */
    public static async accounts(token: string): Promise<Array<IFacebookPage>> {
       const options: Options = {
          method: "GET",
          uri: `https://graph.facebook.com/${version}/me/accounts`,
          qs: {
             access_token: token,
-            fields: "id,access_token, tasks, category,picture,name",
+            fields: "id,category,picture,name",
          },
       };
       return request(options).then(data => JSON.parse(data).data);
