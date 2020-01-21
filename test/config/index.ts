@@ -1,10 +1,16 @@
 export * from "./const";
 export * from "./endpoints";
 export * from "./facebook";
-export * from "./create-user";
+export * from "./before";
 
 export const nextMinutes = (minutes: number): Date => {
    const now = new Date();
    const next = now.setMinutes(now.getMinutes() + minutes);
+   return new Date(next);
+};
+
+export const nextSecond = (seconds: number): Date => {
+   const now = new Date();
+   const next = now.setSeconds(now.getSeconds() + seconds);
    return new Date(next);
 };

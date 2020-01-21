@@ -58,7 +58,7 @@ export async function del(thread: Thread, id: string): Promise<Legend> {
    const legendRepository: Repository<Legend> = getManager().getRepository(Legend);
    const legend = await legendRepository.findOne({ id: id, thread: thread });
    if (!legend) {
-      const err = new Error("legend doesn't exist");
+      const err = new Error("legend not found");
       throw err;
    } else {
       const removed = await legendRepository.remove(legend);

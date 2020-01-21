@@ -1,10 +1,10 @@
 import { getConnection } from "typeorm";
 import { all, create, del, get, update } from "../../../src/service/thread.service/crud";
-import { invalid_uuid, connectAndCreateUser } from "../../config";
+import { invalid_uuid, user as createUser } from "../../config";
 import { BadRequest } from "http-errors";
 let user;
 beforeAll(async () => {
-   user = await connectAndCreateUser("thread_unit");
+   user = await createUser({ email: "thread_unit_test@gmail.test", password: "123321" });
 });
 afterAll(async () => {
    await getConnection().close();

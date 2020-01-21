@@ -1,11 +1,11 @@
-import { connectCreateUserThread, nextMinutes, invalid_uuid } from "../../config";
+import { nextMinutes, invalid_uuid, thread as createThread } from "../../config";
 import { create, del, post, posts, update } from "../../../src/service/thread.service/post.service/crud";
 import { getConnection } from "typeorm";
 import { BadRequest } from "http-errors";
 
 let thread;
 beforeAll(async () => {
-   thread = await connectCreateUserThread("post_unit");
+   thread = await createThread({ email: "post_unit_test@test.com", password: "123321" }, { name: "post_test_thread" });
 });
 afterAll(async () => {
    await getConnection().close();
@@ -49,7 +49,7 @@ describe("unit test post crud", () => {
          } catch (err) {
             expect(err).toMatchObject({
                message: "Bad Request",
-               validationArray: [{ property: "expireDate", constraints: { isNow: "impossible set date in past time" } }],
+               validationArray: [{ property: "expireDate", constraints: { isFuture: "impossible set date in past time" } }],
             });
          }
       });
@@ -102,7 +102,7 @@ describe("unit test post crud", () => {
          } catch (err) {
             expect(err).toMatchObject({
                message: "Bad Request",
-               validationArray: [{ property: "expireDate", constraints: { isNow: "impossible set date in past time" } }],
+               validationArray: [{ property: "expireDate", constraints: { isFuture: "impossible set date in past time" } }],
             });
          }
       });

@@ -1,6 +1,18 @@
 import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from "typeorm";
-import { IsDate, IsNotEmpty, IsBoolean } from "class-validator";
+import { IsDate, IsNotEmpty, IsBoolean, ValidatorConstraint, ValidatorConstraintInterface, Validate } from "class-validator";
 import Thread from "./thread.entity";
+
+@ValidatorConstraint({ name: "isPast", async: false })
+class IsPast implements ValidatorConstraintInterface {
+   validate(date: Date) {
+      const now = new Date();
+      console.log(`${new Date()} < ${now}`);
+      return date < now;
+   }
+   defaultMessage() {
+      return "impossible set date in past time";
+   }
+}
 
 @Entity()
 export default class Legend {
@@ -12,6 +24,7 @@ export default class Legend {
    context: string;
 
    @IsDate()
+   @Validate(IsPast)
    @Column("timestamptz")
    expireDate: Date;
 
@@ -22,7 +35,7 @@ export default class Legend {
    @ManyToOne(
       () => Thread,
       thread => thread.hisotry,
-      { onDelete: "CASCADE" }
+      { onDelete: "CASCADE" },
    )
    thread: Thread;
 

@@ -2,8 +2,8 @@ import { Entity, Column, ManyToOne, PrimaryGeneratedColumn, JoinColumn } from "t
 import Thread from "./thread.entity";
 
 import { IsDate, IsNotEmpty, ValidatorConstraint, ValidatorConstraintInterface, Validate } from "class-validator";
-@ValidatorConstraint({ name: "isNow", async: false })
-class IsNow implements ValidatorConstraintInterface {
+@ValidatorConstraint({ name: "isFuture", async: false })
+class IsFuture implements ValidatorConstraintInterface {
    validate(date: Date) {
       const now = new Date();
       return date > now;
@@ -22,7 +22,7 @@ export default class Post {
    context: string;
 
    @IsDate()
-   @Validate(IsNow)
+   @Validate(IsFuture)
    @Column("timestamptz")
    expireDate: Date;
 
