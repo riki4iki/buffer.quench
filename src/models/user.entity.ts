@@ -13,6 +13,7 @@ import Social from "./social.entity";
 @Entity()
 @Index(["email"], { unique: true })
 export default class User implements IResponsable<User> {
+   //#region Body
    @PrimaryGeneratedColumn("uuid")
    id: string;
 
@@ -24,27 +25,16 @@ export default class User implements IResponsable<User> {
    @Length(5, 30)
    password: string;
 
+   //#endregion Body
+
+   //#region Relations
    @OneToOne(
       () => Refresh,
       refresh => refresh.user,
       { onDelete: "CASCADE" },
    )
    refresh: Refresh;
-
-   @OneToMany(
-      () => FacebookUser,
-      facebookUser => facebookUser.user,
-      { onDelete: "CASCADE" },
-   )
-   facebookUser: FacebookUser[];
-
-   @OneToMany(
-      () => Thread,
-      thread => thread.user,
-      { onDelete: "CASCADE" },
-   )
-   thread: Thread[];
-
+   //#region  socials
    @OneToMany(
       () => Social,
       social => social.user,
@@ -52,6 +42,23 @@ export default class User implements IResponsable<User> {
    )
    social: Social[];
 
+   @OneToMany(
+      () => FacebookUser,
+      facebookUser => facebookUser.user,
+      { onDelete: "CASCADE" },
+   )
+   facebookUser: FacebookUser[];
+   //#endregion socials
+   @OneToMany(
+      () => Thread,
+      thread => thread.user,
+      { onDelete: "CASCADE" },
+   )
+   thread: Thread[];
+
+   //#endregion Relations
+
+   //#region Methods
    public async toResponse(): Promise<User> {
       const cutted = omit(<User>this, "password");
       return <User>cutted;
@@ -85,4 +92,6 @@ export default class User implements IResponsable<User> {
    }
 
    //#endregion typeorm events
+
+   //#endregion Methods
 }

@@ -3,6 +3,7 @@ import { MinLength, MaxLength, IsString } from "class-validator";
 import User from "./user.entity";
 import Post from "./post.entity";
 import Legend from "./legend.entity";
+import { Page, FacebookPage } from ".";
 @Entity()
 export default class Thread {
    @PrimaryGeneratedColumn("uuid")
@@ -17,21 +18,36 @@ export default class Thread {
    @ManyToOne(
       () => User,
       user => user.thread,
-      { onDelete: "CASCADE" }
+      { onDelete: "CASCADE" },
    )
    @JoinColumn()
    user: User;
 
+   //#region pages
+   @OneToMany(
+      () => Page,
+      page => page.thread,
+      { onDelete: "CASCADE" },
+   )
+   page: Page[];
+
+   @OneToMany(
+      () => FacebookPage,
+      page => page.thread,
+      { onDelete: "CASCADE" },
+   )
+   facebookPage: FacebookPage[];
+   //#endregion pages
    @OneToMany(
       () => Post,
       post => post.thread,
-      { onDelete: "CASCADE" }
+      { onDelete: "CASCADE" },
    )
    posts: Post[];
    @OneToMany(
       () => Legend,
       history => history.thread,
-      { onDelete: "CASCADE" }
+      { onDelete: "CASCADE" },
    )
    hisotry: Legend;
 }

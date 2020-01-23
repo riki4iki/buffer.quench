@@ -1,15 +1,15 @@
 import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, JoinColumn, Repository, getManager } from "typeorm";
 import Thread from "./thread.entity";
-import { SocialType, ISocialPage } from "../types";
-import FacebookPage from "./facebook/facebookPage.entity";
+import { SocialType, ISocialPage, IResponsable, PageGetterFactory } from "../types";
+import { omit } from "lodash";
 @Entity()
-export default class Page {
+export default class Page implements IResponsable<Page> {
    @PrimaryGeneratedColumn("uuid")
    id: string;
 
    @ManyToOne(
       () => Thread,
-      thread => thread.posts,
+      thread => thread.page,
       { onDelete: "CASCADE" },
    )
    @JoinColumn()
@@ -22,19 +22,16 @@ export default class Page {
    pageId: string;
 
    async toSocial(): Promise<ISocialPage> {
-      const page: Page = this;
-      if (page.type === SocialType.Facebook) {
-         const facebookPageRepository: Repository<FacebookPage> = getManager().getRepository(FacebookPage);
-         const facebookPage = await facebookPageRepository.findOne(page.pageId);
-         if (!facebookPage) {
-            console.log(`error with converting to social page type: ${page.type}, id in social table should be ${page.pageId}`);
-         } else {
-            return facebookPage;
-         }
-      } else if (page.type === SocialType.Instagram) {
-         console.log("no handler for instagram page");
-      } else if (page.type === SocialType.Twitter) {
-         console.log("no handler for instagram page");
-      }
+      const getter = await PageGetterFactory.createGetter(this.type);
+      console.log(this.thread);
+      console.log(`${this.pageId}`);
+      const social = await getter(this.thread, this.pageId);
+      console.log(social);
+      return social;
+   }
+
+   public async toResponse(): Promise<Page> {
+      const response = omit(<Page>this, "id");
+      return <Page>response;
    }
 }

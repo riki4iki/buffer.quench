@@ -9,3 +9,5 @@ import Legend from "./legend.entity";
 import Social from "./social.entity";
 
 export { User, Refresh, FacebookPage, FacebookUser, Thread, Page, Post, Legend, Social };
+
+console.log(User);

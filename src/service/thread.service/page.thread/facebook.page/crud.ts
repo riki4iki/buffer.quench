@@ -1,16 +1,20 @@
 import { getManager, Repository } from "typeorm";
-import { SocialType } from "../../../../types";
-import { Page, FacebookPage, Thread, FacebookUser, User } from "../../../../models";
 import { BadRequest } from "http-errors";
+
+import { IFacebookPage } from "../../../../types";
+import { FacebookPage, Thread, FacebookUser, User } from "../../../../models";
+import { get as facebookUser } from "../../../social.service/facebook.social/crud";
+import fb from "../../../../lib/facebook";
 
 /**
  * Promise. Return all connected facebook pages to thread converted to Facebook Model
  * @param thread Thread - current thread taken by id
  */
-export async function all(thread: Thread): Promise<Array<Page>> {
-   const pageRepository: Repository<Page> = getManager().getRepository(Page);
-   const pages = await pageRepository.find({ thread: thread, type: SocialType.Facebook });
-   return pages;
+export async function all(thread: Thread): Promise<Array<FacebookPage>> {
+   const facebookPagesRepository: Repository<FacebookPage> = getManager().getRepository(FacebookPage);
+   const facebookPages = await facebookPagesRepository.find({ thread });
+   const buildFacebookPages = async () => await Promise.all(facebookPages.map(async facebookPage => await facebookPage.toResponse()));
+   return await buildFacebookPages();
 }
 /**
  * Promise. Return target connected facebook page converted to Facebook model
@@ -18,73 +22,93 @@ export async function all(thread: Thread): Promise<Array<Page>> {
  * @param id String - uuid for identify page
  */
 export async function target(thread: Thread, id: string): Promise<FacebookPage> {
-   const pageRepository: Repository<Page> = getManager().getRepository(Page);
-   const page = await pageRepository.findOne({ id: id, thread: thread, type: SocialType.Facebook });
-   if (!page) {
-      const err = new BadRequest("page not found");
+   const facebookPageRepository: Repository<FacebookPage> = getManager().getRepository(FacebookPage);
+   const facebookPage = await facebookPageRepository.findOne({ id, thread });
+   if (!facebookPage) {
+      const err = new BadRequest("facebook page not found");
       throw err;
    } else {
-      const social = await page.toSocial();
-      return await (<FacebookPage>social).toResponse();
+      const response = await facebookPage.toResponse();
+      return response;
    }
 }
-export async function connect(user: User, thread: Thread, pages: Array<string>): Promise<Array<Page>> {
-   const pageRepository: Repository<Page> = getManager().getRepository(Page);
+/**
+ *  Promise - Connect facebook pages to thread by current user and facebook social page
+ * @param user User - current user from ctx.state decoded from jwt access_token
+ * @param thread Thread - thread for which facebook pages will be conected
+ * @param facebookUserId String - socialId. Facebook user who owns input pages
+ * @param facebookPages String[] - input facebook pages to be connect for thread
+ */
+export async function connectArrayPages(user: User, thread: Thread, facebookUserId: string, facebookPages: Array<string>) {
+   //Ned find facebook social by input string
+   const facebookUserModel = await facebookUser(user, facebookUserId);
+   //need call facebook api to take long_lived access_token for pages and make sure that connected pages are owned by facebook social
+   const pagesByFacebookSocial = await filterPagesByFacebookUser(facebookUserModel, facebookPages);
+
+   //connect validated pages to thread
+   const connectedPaged = await connectPages(thread, facebookUserModel, pagesByFacebookSocial);
+   return connectedPaged;
+}
+/**
+ * Promise - Connect facebook pages to input thread
+ * @param thread Thread - thread for which pages will be connected
+ * @param facebookUser FacebookUser - facebook social instance who owns this pages
+ * @param pages IFacebookPage[] - pages for connection
+ */
+async function connectPages(thread: Thread, facebookUser: FacebookUser, pages: IFacebookPage[]) {
    const facebookPageRepository: Repository<FacebookPage> = getManager().getRepository(FacebookPage);
-
-   //Getting pages in array so need process that in parallel
-   const connection = Promise.all(
-      pages.map(async requestPage => {
-         const databasePage = await facebookPageRepository.findOne({ where: { id: requestPage }, relations: ["fbUser"] });
-         if (!databasePage) {
-            //input id doesn't match with facebook pages in database
-            const err = new BadRequest(`page (${requestPage}) not found`);
-            throw err;
-         }
-         const facebookUser = databasePage.fbUser;
-         //Need check is dat page is page of connected facebook socials to system user
-         const socials = (await user.withSocials()).social.filter(
-            social => social.type === SocialType.Facebook && social.socialId === facebookUser.id,
-         );
-         if (!socials) {
-            //page is not a page of connected facebook socials
-            const err = new BadRequest(`page(${requestPage}) from social ${facebookUser.id} doesn't connected to user`);
-            throw err;
+   return Promise.all(
+      pages.map(async page => {
+         const pageFromDatabase = await facebookPageRepository.findOne({ fbId: page.id, thread: thread, fbUser: facebookUser });
+         if (pageFromDatabase) {
+            //page with id already connected to thread
+            //here we can update page.access_token
+            const toResponse = await pageFromDatabase.toResponse();
+            return toResponse;
          } else {
-            //social is connected, find page in database maybe it's already connected
-            const connected = await pageRepository.findOne({ thread: thread, pageId: requestPage });
-            if (connected) {
-               //page already connected to target thread
-               return connected; //return databasse instance
-               //maybe update access token
-            } else {
-               //create new connection
-               const newPage = new Page();
-               newPage.thread = thread;
-               newPage.pageId = requestPage;
-               newPage.type = SocialType.Facebook;
-
-               const saved = await pageRepository.save(newPage);
-               return saved;
-            }
+            const newPage = new FacebookPage();
+            newPage.accessToken = page.access_token;
+            (newPage.fbId = page.id), (newPage.thread = thread);
+            newPage.fbUser = facebookUser;
+            const saved = await facebookPageRepository.save(newPage);
+            const toResponse = await saved.toResponse();
+            return toResponse;
          }
       }),
    );
-   return await connection;
 }
+/**
+ * Promise - call facebook api to take long access_token and filter input pages for make sure that they owned that facebook social user
+ * @param facebookUser FacebookUser - facebook social instance which pages will be connected
+ * @param pages String[] - facebook pages to be filtered and called to api for long_lived access_token
+ */
+async function filterPagesByFacebookUser(facebookUser: FacebookUser, pages: Array<string>) {
+   const apiPages = await fb.longLiveAccounts(facebookUser.accessToken, facebookUser.fbId);
+   const ids = apiPages.map(page => page.id);
+   const check = pages.every(page => ids.indexOf(page) > -1);
+   if (check) {
+      const toConnectPages = apiPages.filter(page => pages.includes(page.id));
+      return toConnectPages;
+   } else {
+      const failed = pages.filter(page => !ids.includes(page));
+      const err = new BadRequest(`input pages: [${failed}] are not accounts for user: ${facebookUser.id}`);
+      throw err;
+   }
+}
+
 /**
  * Promise. Delete raw from mediator Page that connect thread and facebook page
  * @param thread Thread - currnet thread taken by id from before middleware
  * @param id String - uuid resource for identify target connected page
  */
-export async function disconnect(thread: Thread, id: string): Promise<Page> {
-   const pageRepository: Repository<Page> = getManager().getRepository(Page);
-   const page = await pageRepository.findOne({ thread: thread, id: id });
-   if (!page) {
-      const err = new BadRequest("page not found");
+export async function disconnect(thread: Thread, id: string): Promise<FacebookPage> {
+   const facebookPageRepository: Repository<FacebookPage> = getManager().getRepository(FacebookPage);
+   const facebookPage = await facebookPageRepository.findOne({ where: { thread, id }, relations: ["thread"] });
+   if (!facebookPage) {
+      const err = new BadRequest("facebook page not found");
       throw err;
    } else {
-      const removed = await pageRepository.remove(page);
+      const removed = await facebookPageRepository.remove(facebookPage);
       return removed;
    }
 }

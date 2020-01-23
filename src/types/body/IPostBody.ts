@@ -1,4 +1,4 @@
 export interface IPostBody {
-   context: string;
-   expireDate: Date;
+   readonly context: string;
+   readonly expireDate: Date;
 }

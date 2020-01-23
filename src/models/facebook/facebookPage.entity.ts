@@ -1,12 +1,25 @@
-import { Entity, Column, ManyToOne, JoinColumn, PrimaryGeneratedColumn, BeforeRemove, AfterLoad, AfterRemove, getManager, Repository } from "typeorm";
+import {
+   Entity,
+   Column,
+   ManyToOne,
+   JoinColumn,
+   PrimaryGeneratedColumn,
+   BeforeRemove,
+   AfterLoad,
+   AfterRemove,
+   getManager,
+   Repository,
+   AfterInsert,
+} from "typeorm";
 import { fbService as fb } from "../../lib";
 import FbUser from "./facebookUser.entity";
-import ThreadPage from "../page.entity";
-import { ISocialPage, IFacebookPicture, IResponsable, IBeforeRemover } from "../../types";
+import Page from "../page.entity";
+import { ISocialPage, IFacebookPicture, IResponsable, IBeforeRemover, IAfterInserter, SocialType } from "../../types";
 import { omit } from "lodash";
 import { InternalServerError } from "http-errors";
+import { Thread } from "..";
 @Entity()
-export default class FacebookPage implements ISocialPage, IResponsable<FacebookPage>, IBeforeRemover {
+export default class FacebookPage implements ISocialPage, IResponsable<FacebookPage>, IBeforeRemover, IAfterInserter {
    @PrimaryGeneratedColumn("uuid")
    id: string;
 
@@ -20,6 +33,14 @@ export default class FacebookPage implements ISocialPage, IResponsable<FacebookP
    )
    @JoinColumn()
    fbUser: FbUser;
+
+   @ManyToOne(
+      () => Thread,
+      thread => thread.facebookPage,
+      { onDelete: "CASCADE" },
+   )
+   @JoinColumn()
+   thread: Thread;
 
    @Column()
    accessToken: string;
@@ -43,18 +64,26 @@ export default class FacebookPage implements ISocialPage, IResponsable<FacebookP
    //#region typeorm events
    @BeforeRemove()
    async _delete?() {
-      //need find all threads where deleted page connected and delete page from Page table
-      console.log(`page with ${this.id} must be disconnected from thread`);
-      const pageRepository: Repository<ThreadPage> = getManager().getRepository(ThreadPage);
-      const mediators: Array<ThreadPage> = await pageRepository.find({ where: { pageId: this.id }, relations: ["thread"] });
-      console.log(mediators);
-      const threads = mediators.map(item => item.thread.id);
-      try {
-         console.log(`remove facebook_page with ${this.id} from threads: ${threads}`);
-         await pageRepository.remove(mediators);
-      } catch (err) {
-         console.log(`@BeforeRemove in facabook page error`);
+      console.log(this.thread);
+      const pageRepository: Repository<Page> = getManager().getRepository(Page);
+      const masterPage = await pageRepository.findOne({ where: { pageId: this.id, thread: this.thread }, relations: ["thread"] });
+      if (!masterPage) {
+         console.log(`master page not found to facebook page: ${this.id}`);
+         console.log(this);
+      } else {
+         const removed = await pageRepository.remove(masterPage);
+         console.log(`from thread: {${removed.thread.id}} disconnected ${removed.type} page: {${removed.pageId}}`);
       }
+   }
+   @AfterInsert()
+   async _create?() {
+      const pageRepository: Repository<Page> = getManager().getRepository(Page);
+      const masterPage = new Page();
+      masterPage.thread = this.thread;
+      masterPage.type = SocialType.Facebook;
+      masterPage.pageId = this.id;
+      const saved = await pageRepository.save(masterPage);
+      console.log(`to thread: {${saved.thread.id}} connected ${saved.type} page: {${saved.id}}`);
    }
    //#endregion typeorm events
    //#region IResponsable

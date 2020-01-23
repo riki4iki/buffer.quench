@@ -1,3 +1,3 @@
 export interface IThreadBody {
-   name: string;
+   readonly name: string;
 }

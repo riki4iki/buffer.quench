@@ -58,6 +58,7 @@ async function executer(): Promise<void> {
    //find all pages by thread
    const pages: Array<Page> = await pageRepository.find({
       where: { thread: thread },
+      relations: ["thread"],
    });
 
    //simple console logger. need rewrite

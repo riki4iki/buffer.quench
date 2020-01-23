@@ -1,5 +1,5 @@
 import { IContext, IThreadState, IParamContext, IParamIdState } from "../../../../types";
-import { all, target, connect, disconnect } from "./crud";
+import { all, target, disconnect, connectArrayPages } from "./crud";
 import { BadRequest } from "http-errors";
 /**
  * Controller that work with getting, connectinm disonnecting facebook pages to threads by id
@@ -38,7 +38,7 @@ export class FacebookPageService {
    public static async facebookPageConnectEndPoint(ctx: IContext<IThreadState>) {
       try {
          const array = await bodyToArray(ctx.request.body.pages);
-         const connected = await connect(ctx.state.user, ctx.state.thread, array);
+         const connected = await connectArrayPages(ctx.state.user, ctx.state.thread, ctx.request.body.socialId, array);
          ctx.status = 201;
          ctx.body = connected;
       } catch (err) {

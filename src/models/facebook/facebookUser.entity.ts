@@ -77,7 +77,7 @@ export default class FacebookUser implements IResponsable<FacebookUser>, IAfterI
       newSocial.socialId = this.id;
 
       const saved = await socialRepository.save(newSocial);
-      console.log(`new social for user ${this.user.id} with type ${saved.type}`);
+      console.log(`to user {${saved.user.id}} connected new social {${saved.socialId}} with type ${saved.type}`);
    }
 
    @BeforeRemove()
@@ -86,10 +86,11 @@ export default class FacebookUser implements IResponsable<FacebookUser>, IAfterI
       const social = await socialRepository.findOne({ socialId: this.id, user: this.user });
       if (!social) {
          console.log(`throw error with beforeRemove in facebook social`);
+         console.log(this);
       } else {
          console.log(social);
-         console.log(`facebook social with facebook_id: ${this.fbId} for user ${this.user.id} has been removed`);
          const removed = await socialRepository.remove(social);
+         console.log(`from user {${removed.user.id}} disconnected social {${removed.socialId}} with type ${removed.type}`);
       }
    }
    //#endregion typeorm events

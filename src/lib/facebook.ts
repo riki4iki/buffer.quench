@@ -37,7 +37,7 @@ export default class FacebookService {
          uri: `https://graph.facebook.com/${version}/${userId}/accounts`,
          qs: {
             access_token: longUserToken,
-            fields: "id,name,access_token, picture, category",
+            fields: "id,access_token",
          },
       };
       return request(options).then(data => JSON.parse(data).data);

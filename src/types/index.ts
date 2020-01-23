@@ -17,9 +17,3 @@ export interface IJwtPair {
    refresh_token: string;
    expiresIn: number;
 }
-
-export interface ICronnable {
-   id: string;
-   expireDate: Date;
-   cb: () => Promise<void>;
-}
