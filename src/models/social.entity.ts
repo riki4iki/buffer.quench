@@ -1,9 +1,9 @@
 import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, getManager, Repository } from "typeorm";
 
 import { omit } from "lodash";
-import { SocialType, IResponsable } from "../types";
+import { IResponsable } from "../types";
+import { SocialType } from "../types/architecture/SocialTypes";
 import SystemUser from "./user.entity";
-
 @Entity()
 export default class Social implements IResponsable<Social> {
    @PrimaryGeneratedColumn("uuid")
@@ -16,7 +16,7 @@ export default class Social implements IResponsable<Social> {
    )
    user: SystemUser;
 
-   @Column("enum", { enum: SocialType, name: "page_type" })
+   @Column("enum", { enum: SocialType })
    type: string;
 
    @Column("uuid")

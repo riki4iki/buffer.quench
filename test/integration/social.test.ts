@@ -268,9 +268,9 @@ describe("test social routers....", () => {
       });
       test("test social getting with malfored uuid, should return 400", async done => {
          request(app.callback())
-            .get(`${endpoints.facebook}/'malfored uuid`)
+            .get(`${endpoints.facebook}/___`)
             .set({ access_token: jwt.access_token })
-            .expect(400, "uuid validation error")
+            .expect(400, "uuid validation error at facebook")
             .end((err, res) => {
                if (err) return done(err);
                return done();

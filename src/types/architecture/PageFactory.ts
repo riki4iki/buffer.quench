@@ -2,7 +2,7 @@ import { Thread, FacebookPage } from "../../models/";
 
 import { getManager, Repository } from "typeorm";
 import { ISocialPage } from "./ISocialPage";
-import { SocialType } from "./SocialTypeEnum";
+import { SocialType } from "./SocialTypes";
 //import oters types
 
 export class PageGetterFactory {

@@ -3,7 +3,8 @@ import { MinLength, MaxLength, IsString } from "class-validator";
 import User from "./user.entity";
 import Post from "./post.entity";
 import Legend from "./legend.entity";
-import { Page, FacebookPage } from ".";
+import Page from "./page.entity";
+import FacebookPage from "./facebook/facebookPage.entity";
 @Entity()
 export default class Thread {
    @PrimaryGeneratedColumn("uuid")

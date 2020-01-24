@@ -2,10 +2,13 @@ import { Entity, Column, ManyToOne, JoinColumn, PrimaryGeneratedColumn, BeforeRe
 import { fbService as fb } from "../../lib";
 import FbUser from "./facebookUser.entity";
 import Page from "../page.entity";
-import { ISocialPage, IFacebookPicture, IResponsable, IBeforeRemover, IAfterInserter, SocialType } from "../../types";
+import { ISocialPage, IFacebookPicture, IResponsable, IBeforeRemover, IAfterInserter } from "../../types";
+import { SocialType } from "../../types/architecture/SocialTypes"; // import directly cause of error export enums....
 import { omit } from "lodash";
 import { InternalServerError } from "http-errors";
-import { Thread, Post } from "..";
+import Thread from "../thread.entity";
+import Post from "../post.entity";
+
 @Entity()
 export default class FacebookPage implements ISocialPage, IResponsable<FacebookPage>, IBeforeRemover, IAfterInserter {
    @PrimaryGeneratedColumn("uuid")

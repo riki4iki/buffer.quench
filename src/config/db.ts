@@ -33,7 +33,7 @@ const testOptions: ConnectionOptions = {
 
 const connect = async (): Promise<Connection> => {
    const opt = process.env.NODE_ENV == "test" ? testOptions : options;
-
+   console.log(opt);
    return await createConnection(opt);
 };
 export { connect };
