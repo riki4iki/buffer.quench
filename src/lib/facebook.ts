@@ -37,7 +37,7 @@ export default class FacebookService {
          uri: `https://graph.facebook.com/${version}/${userId}/accounts`,
          qs: {
             access_token: longUserToken,
-            fields: "id,access_token",
+            fields: "id,category,picture,name, access_token",
          },
       };
       return request(options).then(data => JSON.parse(data).data);
@@ -52,7 +52,7 @@ export default class FacebookService {
          uri: `https://graph.facebook.com/${version}/me/accounts`,
          qs: {
             access_token: token,
-            fields: "id,category,picture,name",
+            fields: "id,category,picture,name, access_token",
          },
       };
       return request(options).then(data => JSON.parse(data).data);
@@ -80,7 +80,7 @@ export default class FacebookService {
          uri: `https://graph.facebook.com/${version}/me`,
          qs: {
             access_token: token,
-            fields: "id,category,picture,name",
+            fields: "id,category,picture,name, access_token",
          },
       };
       return request(options).then(data => JSON.parse(data));

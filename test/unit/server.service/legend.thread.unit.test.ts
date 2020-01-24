@@ -4,15 +4,17 @@ import { invalid_uuid, post as postCreate, nextSecond, nextMinutes } from "../..
 import { BadRequest } from "http-errors";
 let post;
 const SECONDS = 2;
-beforeAll(async () => {
+beforeAll(async done => {
    post = await postCreate(
       { email: "legend_unit_tester@test.com", password: "123312" },
       { name: "legend_thread_test" },
       { context: "legend", expireDate: nextSecond(SECONDS) },
    );
+   return done();
 });
-afterAll(async () => {
+afterAll(async done => {
    await getConnection().close();
+   return done();
 });
 
 //legend can be created only with past input date

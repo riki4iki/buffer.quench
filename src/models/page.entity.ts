@@ -23,10 +23,7 @@ export default class Page implements IResponsable<Page> {
 
    async toSocial(): Promise<ISocialPage> {
       const getter = await PageGetterFactory.createGetter(this.type);
-      console.log(this.thread);
-      console.log(`${this.pageId}`);
       const social = await getter(this.thread, this.pageId);
-      console.log(social);
       return social;
    }
 

@@ -83,7 +83,7 @@ export default class FacebookUser implements IResponsable<FacebookUser>, IAfterI
    @BeforeRemove()
    async _delete?() {
       const socialRepository = getManager().getRepository(Social);
-      const social = await socialRepository.findOne({ socialId: this.id, user: this.user });
+      const social = await socialRepository.findOne({ where: { socialId: this.id, user: this.user }, relations: ["user"] });
       if (!social) {
          console.log(`throw error with beforeRemove in facebook social`);
          console.log(this);

@@ -1,5 +1,6 @@
 import { IContext, IThreadState, IParamContext, IParamIdState } from "../../../../types";
 import { all, target, disconnect, connectArrayPages } from "./crud";
+import apiValidator from "../../../api";
 import { BadRequest } from "http-errors";
 /**
  * Controller that work with getting, connectinm disonnecting facebook pages to threads by id
@@ -37,8 +38,10 @@ export class FacebookPageService {
     */
    public static async facebookPageConnectEndPoint(ctx: IContext<IThreadState>) {
       try {
-         const array = await bodyToArray(ctx.request.body.pages);
-         const connected = await connectArrayPages(ctx.state.user, ctx.state.thread, ctx.request.body.socialId, array);
+         //need validate input array and social id...
+         const array = await apiValidator.StringToArray(ctx.request.body.pages);
+         const socialId = await apiValidator.validateUUID(ctx.request.body.socialId, "socialId");
+         const connected = await connectArrayPages(ctx.state.user, ctx.state.thread, socialId, array);
          ctx.status = 201;
          ctx.body = connected;
       } catch (err) {
@@ -56,20 +59,5 @@ export class FacebookPageService {
       } catch (err) {
          ctx.app.emit("error", err, ctx);
       }
-   }
-}
-
-/**
- *Promise - return parsed array with page id's
- * @param str String - input string from ctx.request.body.pages that present page array for connection to thread from precious middleware
- */
-async function bodyToArray(str: string): Promise<Array<string>> {
-   try {
-      const pagesString: string = str.replace(/'/g, '"');
-      const pagesIdArray: Array<string> = JSON.parse(pagesString);
-      return pagesIdArray;
-   } catch (err) {
-      const badRequest = new BadRequest(`input pages array exception: ${err.message}`);
-      throw badRequest;
    }
 }

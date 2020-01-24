@@ -17,8 +17,6 @@ export class PageGetterFactory {
             }
             return facebookPage;
          };
-      } else if (type === SocialType.Instagram) {
-      } else if (type === SocialType.Twitter) {
       } else {
          //trhow error cause of input SocialType
          const err = new Error("Incorrect social page type in factory");

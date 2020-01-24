@@ -1,5 +1,7 @@
+import { Post } from "../../models";
+
 export interface ISocialPage {
    id: string;
    accessToken: string;
-   post: (token) => Promise<boolean>;
+   post: (post: Post) => Promise<boolean>;
 }

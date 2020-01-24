@@ -1,15 +1,17 @@
 import { all, get, create, del, update } from "../../../src/service/user.service/crud";
-import { invalid_uuid } from "../../config/const";
+import { invalid_uuid, connect } from "../../config";
 import { dbConnection } from "../../../src/config";
 import { User } from "../../../src/models";
 import { BadRequest } from "http-errors";
 import { getConnection } from "typeorm";
 
-beforeAll(async () => {
-   await dbConnection();
+beforeAll(async done => {
+   const connection = await connect();
+   return done();
 });
-afterAll(async () => {
+afterAll(async done => {
    await getConnection().close();
+   return done();
 });
 
 describe("user crud unit test", () => {
@@ -23,11 +25,6 @@ describe("user crud unit test", () => {
          email: "nextEmail@gmail.com",
          password: "88005553535",
       };
-      test("basic CRUD getting all users from array, must empty array", async () => {
-         const users: Array<User> = await all();
-         expect(users).toBeInstanceOf(Array);
-         expect(users).toStrictEqual([]);
-      });
 
       test("basic CRUD creating new user", async () => {
          const user = await create(firstBody);

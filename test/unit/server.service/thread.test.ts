@@ -3,11 +3,13 @@ import { all, create, del, get, update } from "../../../src/service/thread.servi
 import { invalid_uuid, user as createUser } from "../../config";
 import { BadRequest } from "http-errors";
 let user;
-beforeAll(async () => {
+beforeAll(async done => {
    user = await createUser({ email: "thread_unit_test@gmail.test", password: "123321" });
+   return done();
 });
-afterAll(async () => {
+afterAll(async done => {
    await getConnection().close();
+   return done();
 });
 
 describe("unit test thread cruds", () => {

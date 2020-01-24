@@ -8,12 +8,14 @@ import { BadRequest } from "http-errors";
 
 import { getConnection } from "typeorm";
 let user;
-beforeAll(async () => {
+beforeAll(async done => {
    await dbConnection();
    user = await create({ email: "facebook_social_unit_test_user@gmail.com", password: "123321" });
+   return done();
 });
-afterAll(async () => {
+afterAll(async done => {
    await getConnection().close();
+   return done();
 });
 
 describe("unit test facebook soicial crud", () => {

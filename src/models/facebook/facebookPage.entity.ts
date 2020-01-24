@@ -1,23 +1,11 @@
-import {
-   Entity,
-   Column,
-   ManyToOne,
-   JoinColumn,
-   PrimaryGeneratedColumn,
-   BeforeRemove,
-   AfterLoad,
-   AfterRemove,
-   getManager,
-   Repository,
-   AfterInsert,
-} from "typeorm";
+import { Entity, Column, ManyToOne, JoinColumn, PrimaryGeneratedColumn, BeforeRemove, getManager, Repository, AfterInsert } from "typeorm";
 import { fbService as fb } from "../../lib";
 import FbUser from "./facebookUser.entity";
 import Page from "../page.entity";
 import { ISocialPage, IFacebookPicture, IResponsable, IBeforeRemover, IAfterInserter, SocialType } from "../../types";
 import { omit } from "lodash";
 import { InternalServerError } from "http-errors";
-import { Thread } from "..";
+import { Thread, Post } from "..";
 @Entity()
 export default class FacebookPage implements ISocialPage, IResponsable<FacebookPage>, IBeforeRemover, IAfterInserter {
    @PrimaryGeneratedColumn("uuid")
@@ -49,8 +37,8 @@ export default class FacebookPage implements ISocialPage, IResponsable<FacebookP
    name?: string;
    category?: string;
 
-   async post(context) {
-      const post = await fb.post(this.id, this.accessToken, context);
+   async post(postInstace: Post) {
+      const post = await fb.post(this.fbId, this.accessToken, postInstace.context);
       if (post.err) {
          console.log(`Error api post with page: ${this.id}, facebook_id: ${this.fbId}`);
          console.log(post.err);

@@ -1,12 +1,11 @@
 import { IContext, IPostState, IParamContext, IParamIdState } from "../../../types";
-import { add, update, del } from "./executer";
+import { NodeScheduleExecuter } from "./node-shedule/executer";
 
+const executer = new NodeScheduleExecuter();
 /**
  * Controller work with iterior state
  */
 export default class cronController {
-   public static async tasksEndPoint(ctx: IContext<IPostState>) {}
-   public static async taskEndPoint(ctx: IParamContext<IPostState, IParamIdState>) {}
    /**
     * EndPoint. Add to cron tasks new task for new post from ctx.state.post, return post to response
     * @param ctx Context - Koa context with IPostState that contain post instanse from previos middleware
@@ -14,7 +13,7 @@ export default class cronController {
    public static async taskCreateEndPoint(ctx: IContext<IPostState>) {
       try {
          //create new task
-         const task = await add(ctx.state.post);
+         const task = await executer.create(ctx.state.post);
          ctx.status = 201;
          //retrun same post
          ctx.body = ctx.state.post;
@@ -28,7 +27,7 @@ export default class cronController {
     */
    public static async taskUpdateEndPoint(ctx: IParamContext<IPostState, IParamIdState>) {
       try {
-         const updated = await update(ctx.state.post);
+         const updated = await executer.update(ctx.state.post);
          ctx.status = 200;
          ctx.body = ctx.state.post;
       } catch (err) {
@@ -41,7 +40,7 @@ export default class cronController {
     */
    public static async taskDeleteEndPoint(ctx: IParamContext<IPostState, IParamIdState>) {
       try {
-         const deleted = await del(ctx.params.id);
+         const deleted = await executer.del(ctx.params.id);
          ctx.status = 204;
       } catch (err) {
          ctx.app.emit("error", err, ctx);

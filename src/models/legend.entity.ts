@@ -6,7 +6,6 @@ import Thread from "./thread.entity";
 class IsPast implements ValidatorConstraintInterface {
    validate(date: Date) {
       const now = new Date();
-      console.log(`${new Date()} < ${now}`);
       return date < now;
    }
    defaultMessage() {

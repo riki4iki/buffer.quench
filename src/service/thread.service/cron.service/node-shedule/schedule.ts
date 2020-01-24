@@ -1,6 +1,5 @@
 import { scheduledJobs, scheduleJob, Job, rescheduleJob } from "node-schedule";
-import { ICronnable } from "../../../types";
-import { Thread } from "../../../models";
+import { ICronnable } from "../../../../types";
 import { Dictionary } from "lodash";
 
 export default class Schedule {

@@ -3,6 +3,7 @@ import * as facebookTypes from "../../../src/types/facebook";
 import { facebook_test_user } from "../../config/facebook";
 
 let pages: Array<facebookTypes.IFacebookPage>;
+let longsPages: facebookTypes.IFacebookPage[];
 
 describe("facebook api unit test", () => {
    test("get facebook user", async () => {
@@ -21,27 +22,17 @@ describe("facebook api unit test", () => {
       });
    });
    test("getting accounts with long lived access tokens", async () => {
-      pages = await fbService.longLiveAccounts(facebook_test_user.access_token, facebook_test_user.id);
-      pages.forEach(page => {
+      longsPages = await fbService.longLiveAccounts(facebook_test_user.access_token, facebook_test_user.id);
+      longsPages.forEach(page => {
          expect(page).toMatchObject({
             id: expect.any(String),
             access_token: expect.any(String),
-            name: expect.any(String),
-            category: expect.any(String),
-            picture: {
-               data: {
-                  height: expect.any(Number),
-                  width: expect.any(Number),
-                  url: expect.any(String),
-                  is_silhouette: expect.any(Boolean),
-               },
-            },
          });
       });
    });
    test("getting account with short tokens", async () => {
-      const long = await fbService.accounts(facebook_test_user.access_token);
-      long.forEach(page => {
+      pages = await fbService.accounts(facebook_test_user.access_token);
+      pages.forEach(page => {
          expect(page).toMatchObject({
             id: expect.any(String),
             name: expect.any(String),
@@ -58,7 +49,7 @@ describe("facebook api unit test", () => {
       });
    });
    test("get page from api by page_access_token", async () => {
-      pages.forEach(async page => {
+      longsPages.forEach(async page => {
          const api = await fbService.accountByToken(page.access_token);
          expect(api).toMatchObject({
             id: page.id,
@@ -76,7 +67,8 @@ describe("facebook api unit test", () => {
       });
    });
    test("post message to all pages", async done => {
-      pages.map(async page => {
+      longsPages.forEach(async page => {
+         console.log(page);
          const result = await fbService.post(page.id, page.access_token, `I posted by facebook.api.test.ts at ${new Date()}`);
          expect(result).toHaveProperty("id");
          return done();

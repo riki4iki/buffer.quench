@@ -8,7 +8,9 @@ beforeAll(async () => {
 afterAll(async () => {
    await getConnection().close();
 });
-/*
-describe('facebook pages to thread unit test', () => {
 
-})*/
+describe("facebook pages to thread unit test", () => {
+   test("one test", async () => {
+      expect(1).toEqual(1);
+   });
+});
