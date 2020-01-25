@@ -1,7 +1,7 @@
 import { IContext, IThreadState, IParamContext, IParamIdState } from "../../../../types";
 import { all, target, disconnect, connectArrayPages } from "./crud";
 import apiValidator from "../../../api";
-import { BadRequest } from "http-errors";
+import { get as findFacebookSocial } from "../../../social.service/facebook.social/crud";
 /**
  * Controller that work with getting, connectinm disonnecting facebook pages to threads by id
  */
@@ -39,9 +39,10 @@ export class FacebookPageService {
    public static async facebookPageConnectEndPoint(ctx: IContext<IThreadState>) {
       try {
          //need validate input array and social id...
-         const array = await apiValidator.StringToArray(ctx.request.body.pages);
          const socialId = await apiValidator.validateUUID(ctx.request.body.socialId, "socialId");
-         const connected = await connectArrayPages(ctx.state.user, ctx.state.thread, socialId, array);
+         const facebookSocial = await findFacebookSocial(ctx.state.user, socialId);
+         const array = await apiValidator.StringToArray(ctx.request.body.pages);
+         const connected = await connectArrayPages(ctx.state.thread, facebookSocial, array);
          ctx.status = 201;
          ctx.body = connected;
       } catch (err) {

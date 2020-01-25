@@ -25,6 +25,10 @@ describe("user crud unit test", () => {
          email: "nextEmail@gmail.com",
          password: "88005553535",
       };
+      test("get all user from database(useless method now but already written), should return empty array", async () => {
+         const users = await all();
+         expect(users).toEqual([]);
+      });
 
       test("basic CRUD creating new user", async () => {
          const user = await create(firstBody);

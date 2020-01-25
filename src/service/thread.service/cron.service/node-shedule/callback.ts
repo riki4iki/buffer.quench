@@ -1,6 +1,6 @@
 import { getManager, Repository } from "typeorm";
 import { Page, Post, Thread } from "../../../../models";
-import { ISocialPage, IExecuter } from "../../../../types";
+import { ISocialPage } from "../../../../types";
 import { create as createLegend } from "../../legend.service/crud";
 
 export async function execute(): Promise<void> {

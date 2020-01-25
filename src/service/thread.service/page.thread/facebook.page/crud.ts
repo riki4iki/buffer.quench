@@ -2,8 +2,7 @@ import { getManager, Repository } from "typeorm";
 import { BadRequest } from "http-errors";
 
 import { IFacebookPage } from "../../../../types";
-import { FacebookPage, Thread, FacebookUser, User } from "../../../../models";
-import { get as facebookUser } from "../../../social.service/facebook.social/crud";
+import { FacebookPage, Thread, FacebookUser } from "../../../../models";
 import fb from "../../../../lib/facebook";
 
 /**
@@ -39,9 +38,7 @@ export async function target(thread: Thread, id: string): Promise<FacebookPage> 
  * @param facebookUserId String - socialId. Facebook user who owns input pages
  * @param facebookPages String[] - input facebook pages to be connect for thread
  */
-export async function connectArrayPages(user: User, thread: Thread, facebookUserId: string, facebookPages: Array<string>) {
-   //Ned find facebook social by input string
-   const facebookUserModel = await facebookUser(user, facebookUserId);
+export async function connectArrayPages(thread: Thread, facebookUserModel: FacebookUser, facebookPages: Array<string>) {
    //need call facebook api to take long_lived access_token for pages and make sure that connected pages are owned by facebook social
    const pagesByFacebookSocial = await filterPagesByFacebookUser(facebookUserModel, facebookPages);
 
