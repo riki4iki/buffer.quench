@@ -15,6 +15,16 @@ export const endpoints = {
             },
          },
       },
-      thread: {},
+      thread: {
+         access: "/api/v1/user/thread",
+         id: (id: string) => {
+            return {
+               access: `/api/v1/user/thread/${id}`,
+               post: {},
+               page: {},
+               legend: {},
+            };
+         },
+      },
    },
 };

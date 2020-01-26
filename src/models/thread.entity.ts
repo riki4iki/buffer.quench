@@ -1,4 +1,4 @@
-import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, OneToMany, JoinColumn } from "typeorm";
+import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, OneToMany, JoinColumn, getManager, Repository } from "typeorm";
 import { MinLength, MaxLength, IsString } from "class-validator";
 import User from "./user.entity";
 import Post from "./post.entity";
@@ -50,5 +50,18 @@ export default class Thread {
       history => history.thread,
       { onDelete: "CASCADE" },
    )
-   hisotry: Legend;
+   legend: Legend;
+
+   public async withPages?(): Promise<this> {
+      if (!this.page) {
+         const abstractPageRepository: Repository<Page> = getManager().getRepository(Page);
+         const pages = await abstractPageRepository.find({ where: { thread: this } });
+         const responsible = await Promise.all(pages.map(async abstract => await abstract.toResponse()));
+         this.page = responsible;
+      } else {
+         const responsible = await Promise.all(this.page.map(async abstract => await abstract.toResponse()));
+         this.page = responsible;
+      }
+      return this;
+   }
 }

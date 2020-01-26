@@ -1,3 +1,3 @@
-export interface IResponsable<T> {
+export interface IResponsible<T> {
    toResponse: () => Promise<T>;
 }

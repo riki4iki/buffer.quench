@@ -33,7 +33,7 @@ export default class Legend {
 
    @ManyToOne(
       () => Thread,
-      thread => thread.hisotry,
+      thread => thread.legend,
       { onDelete: "CASCADE" },
    )
    thread: Thread;

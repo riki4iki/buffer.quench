@@ -1,7 +1,7 @@
 import { post as target, posts as all, create, update, del } from "./crud";
 import { Next } from "koa";
 import { IContext, IThreadState, IPostState, IParamContext, IParamIdState, IPostBody } from "../../../types";
-
+import { MethodNotAllowed } from "http-errors";
 /**
  * Class controller for post routes(/user/thread/(:threadid)/post)
  */
@@ -167,4 +167,19 @@ export default class postController {
       }
    }
    //#endregion 'Middlewares
+
+   public static async validateAccessToPost(ctx: IContext<IThreadState>, next: Next) {
+      try {
+         const buildedThread = await ctx.state.thread.withPages();
+
+         if (buildedThread.page.length > 0) {
+            await next();
+         } else {
+            const err = new MethodNotAllowed("No reason to post current thread because no pages connected");
+            throw err;
+         }
+      } catch (err) {
+         ctx.app.emit("error", err, ctx);
+      }
+   }
 }

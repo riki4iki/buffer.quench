@@ -1,4 +1,4 @@
-export * from "./IResponsable";
+export * from "./IResponsible";
 export * from "./IAfterInserter";
 export * from "./IBeforeRemover";
 export * from "./ISocialPage";

@@ -4,7 +4,7 @@ const postRouter = new Router();
 
 postRouter.get("/", controller.postsEndPoint);
 postRouter.get("/:id", routes.validateUUIDMiddleware, controller.postEndPoint);
-postRouter.post("/", controller.postCreateMiddleware, tasks.taskCreateEndPoint);
+postRouter.post("/", controller.validateAccessToPost, controller.postCreateMiddleware, tasks.taskCreateEndPoint);
 postRouter.put("/:id", routes.validateUUIDMiddleware, controller.postUpdateMiddleware, tasks.taskUpdateEndPoint);
 postRouter.del("/:id", routes.validateUUIDMiddleware, controller.postDeleteMiddleware, tasks.taskDeleteEndPoint);
 

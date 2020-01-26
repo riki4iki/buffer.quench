@@ -1,11 +1,11 @@
 import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, getManager, Repository } from "typeorm";
 
 import { omit } from "lodash";
-import { IResponsable } from "../types";
+import { IResponsible } from "../types";
 import { SocialType } from "../types/architecture/SocialTypes";
 import SystemUser from "./user.entity";
 @Entity()
-export default class Social implements IResponsable<Social> {
+export default class Social implements IResponsible<Social> {
    @PrimaryGeneratedColumn("uuid")
    id: string;
 

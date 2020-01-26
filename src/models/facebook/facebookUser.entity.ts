@@ -6,7 +6,6 @@ import {
    JoinColumn,
    OneToMany,
    ManyToOne,
-   AfterLoad,
    AfterInsert,
    BeforeRemove,
    getManager,
@@ -15,14 +14,14 @@ import {
 import User from "../user.entity";
 import Page from "./facebookPage.entity";
 import { fbService as fb } from "../../lib";
-import { IFacebookPicture, IResponsable, IAfterInserter, IBeforeRemover } from "../../types";
+import { IFacebookPicture, IResponsible, IAfterInserter, IBeforeRemover } from "../../types";
 import Social from "../social.entity";
 import { omit } from "lodash";
 import { InternalServerError } from "http-errors";
 
 @Entity()
 @Index(["id"], { unique: true })
-export default class FacebookUser implements IResponsable<FacebookUser>, IAfterInserter, IBeforeRemover {
+export default class FacebookUser implements IResponsible<FacebookUser>, IAfterInserter, IBeforeRemover {
    @PrimaryGeneratedColumn("uuid")
    id: string;
 

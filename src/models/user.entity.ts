@@ -4,7 +4,7 @@ import { HmacSHA1 } from "crypto-js";
 import { Unauthorized } from "http-errors";
 import { omit } from "lodash";
 
-import { IResponsable } from "../types/";
+import { IResponsible } from "../types/";
 import Refresh from "./refresh.entity";
 import FacebookUser from "./facebook/facebookUser.entity";
 import Thread from "./thread.entity";
@@ -12,7 +12,7 @@ import Social from "./social.entity";
 
 @Entity()
 @Index(["email"], { unique: true })
-export default class User implements IResponsable<User> {
+export default class User implements IResponsible<User> {
    //#region Body
    @PrimaryGeneratedColumn("uuid")
    id: string;
@@ -79,7 +79,7 @@ export default class User implements IResponsable<User> {
          const socials = await socialRepository.find({ user: this });
          this.social = socials.map(social => <Social>omit(social, "id"));
       } else {
-         this.social = this.social.map(social => <Social>omit(social, "id"));
+         this.social = this.social.map(social => <Social>omit(social, "id")); //chanhe to response(social.toREposnse())
       }
       return await this.toResponse();
    }

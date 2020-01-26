@@ -56,7 +56,9 @@ describe("facebook pages to thread unit test", () => {
             });
          });
          const abstarctReffs = abstarcts.map(abstract => abstract.pageId);
-         expect(abstarctReffs).toEqual(pagesId);
+         console.log(abstarctReffs);
+         console.log(pagesId);
+         expect(abstarctReffs).toEqual(expect.arrayContaining(pagesId));
          return done();
       });
       test("connect same pages to threadm should return pages from database", async () => {

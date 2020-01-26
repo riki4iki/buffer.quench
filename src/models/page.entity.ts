@@ -1,11 +1,11 @@
 import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, JoinColumn } from "typeorm";
 import Thread from "./thread.entity";
-import { ISocialPage, IResponsable, PageGetterFactory } from "../types";
+import { ISocialPage, IResponsible, PageGetterFactory } from "../types";
 import { omit } from "lodash";
 import { SocialType } from "../types/architecture/SocialTypes"; //import directly because from indexs chains return 'undefined' in tests.....
-console.log(SocialType);
+
 @Entity()
-export default class Page implements IResponsable<Page> {
+export default class Page implements IResponsible<Page> {
    @PrimaryGeneratedColumn("uuid")
    id: string;
 
