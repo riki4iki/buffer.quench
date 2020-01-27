@@ -39,6 +39,8 @@ export class FacebookPageService {
    public static async facebookPageConnectEndPoint(ctx: IContext<IThreadState>) {
       try {
          //need validate input array and social id...
+
+         console.log(ctx.request.body.pages);
          const socialId = await apiValidator.validateUUID(ctx.request.body.socialId, "socialId");
          const facebookSocial = await findFacebookSocial(ctx.state.user, socialId);
          const array = await apiValidator.StringToArray(ctx.request.body.pages);

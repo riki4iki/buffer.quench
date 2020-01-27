@@ -39,14 +39,21 @@ export default class apiService {
     *Promise - return parsed array with page id's
     * @param str String - input string from ctx.request.body.pages that present page array for connection to thread from precious middleware
     */
-   public static async StringToArray(str: string): Promise<Array<string>> {
-      try {
-         const pagesString: string = str.replace(/'/g, '"');
-         const pagesIdArray: Array<string> = JSON.parse(pagesString);
-         return pagesIdArray;
-      } catch (err) {
-         const badRequest = new BadRequest(`input pages array exception: ${err.message}`);
-         throw badRequest;
+   public static async StringToArray(pages: any): Promise<string[]> {
+      if (Array.isArray(pages)) {
+         return pages;
+      } else {
+         try {
+            const str = pages.toString();
+            const pagesString: string = str.replace(/'/g, '"');
+            console.log("after replace" + pagesString);
+            const pagesIdArray: Array<string> = JSON.parse(pagesString);
+            console.log("parsed" + pagesIdArray);
+            return pagesIdArray;
+         } catch (err) {
+            const badRequest = new BadRequest(`input pages array exception: ${err.message}`);
+            throw badRequest;
+         }
       }
    }
 }

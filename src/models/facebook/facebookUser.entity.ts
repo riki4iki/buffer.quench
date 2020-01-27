@@ -94,7 +94,7 @@ export default class FacebookUser implements IResponsible<FacebookUser>, IAfterI
    }
    //#endregion typeorm events
    /**
-    * Before disconnect facebook-social delete all pages with dat social. {onDeleting: "CASCADE"} - doesn't work
+    * Before disconnect facebook-social delete all pages with dat social. {onDeleting: "CASCADE"} - doesn't emit BeforeRemove in facebookPages entities
     */
    @BeforeRemove()
    private async delPages?() {

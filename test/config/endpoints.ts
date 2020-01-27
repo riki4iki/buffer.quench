@@ -20,9 +20,21 @@ export const endpoints = {
          id: (id: string) => {
             return {
                access: `/api/v1/user/thread/${id}`,
-               post: {},
-               page: {},
-               legend: {},
+               post: {
+                  access: `/api/v1/user/thread/${id}/post`,
+                  id: (post_id: string) => `/api/v1/user/thread/${id}/post/${post_id}`,
+               },
+               page: {
+                  access: `/api/v1/user/thread/${id}/page`,
+                  facebook: {
+                     access: `/api/v1/user/thread/${id}/page/facebook`,
+                     id: (facebook_page_id: string) => `/api/v1/user/thread/${id}/page/facebook/${facebook_page_id}`,
+                  },
+               },
+               legend: {
+                  access: `/api/v1/user/thread/${id}/legend`,
+                  id: (legend_id: string) => `/api/v1/user/thread/${id}/legend/${legend_id}`,
+               },
             };
          },
       },

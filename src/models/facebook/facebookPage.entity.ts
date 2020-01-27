@@ -84,7 +84,7 @@ export default class FacebookPage implements ISocialPage, IResponsible<FacebookP
          this.name = apiPage.name;
          this.category = apiPage.category;
          this.picture = apiPage.picture;
-         return <FacebookPage>omit(<FacebookPage>this, ["accessToken", "fbUser"]);
+         return <FacebookPage>omit(<FacebookPage>this, ["accessToken", "fbUser", "thread"]);
       } catch (err) {
          console.log(err);
          console.log(`Error with api call in toResponse method Facebook Page ${err.message}`);

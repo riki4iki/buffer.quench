@@ -29,6 +29,7 @@ export default class UserService {
          ctx.app.emit("error", err, ctx);
       }
    }*/
+
    /**
     * EndPoints - update current user by access token from headers
     * @param ctx Context - Koa Context with state IAuthState that contain current user and session
