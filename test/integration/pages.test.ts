@@ -147,6 +147,48 @@ describe("pages integration test by supertest", () => {
                return done();
             });
       });
+      test("connect pages with malfores array as string, should return 400", async done => {
+         request(app.callback())
+            .post(endpoints.user.thread.id(thread.id).page.facebook.access)
+            .set(jwt)
+            .send({ socialId, pages: "['id', '3123'" })
+            .expect(400)
+            .end(err => {
+               if (err) return done(err);
+               return done();
+            });
+      });
+      test("connect pages with input pages as string(correct array pattern), should return 201", async done => {
+         const pageIds: string[] = pages.map(page => page.id);
+
+         const withCommas = pageIds.map(page => `'${page}'`);
+         const arrayString = "[ " + withCommas.toString() + " ]";
+         request(app.callback())
+            .post(endpoints.user.thread.id(thread.id).page.facebook.access)
+            .set(jwt)
+            .send({ socialId, pages: arrayString })
+            .expect(201)
+            .end((err, res) => {
+               if (err) return done(err);
+               const facebookPages = res.body;
+               expect(facebookPages).toBeInstanceOf(Array);
+               expect(facebookPages.length).toEqual(pageIds.length);
+               return done();
+            });
+      });
+      test("connect pages with invalid pages string(isn't array patter) shoul return bad request", async done => {
+         const pageIds: string[] = pages.map(page => page.id);
+         const arrayString = "[" + pageIds.toString() + "]";
+         request(app.callback())
+            .post(endpoints.user.thread.id(thread.id).page.facebook.access)
+            .set(jwt)
+            .send({ socialId, pages: arrayString })
+            .expect(400, `input pages: ${arrayString} are not accounts for user: ${socialId}`)
+            .end(err => {
+               if (err) return done(err);
+               return done();
+            });
+      });
       test("connect pages with invalid socialId, shoudld retur bad request (social not found)", async done => {
          const pageIds: string[] = pages.map(page => page.id);
          request(app.callback())
@@ -181,10 +223,9 @@ describe("pages integration test by supertest", () => {
                const abstractPages = res.body;
                abstractPages.forEach((abstract, index) => {
                   const facebookPage = connected[index];
-                  expect(abstract).toMatchObject({
-                     type: "facebook",
-                     pageId: facebookPage.id,
-                  });
+
+                  expect(abstractPages).toEqual(expect.arrayContaining([{ type: "facebook", pageId: facebookPage.id }]));
+
                   expect(abstract).not.toHaveProperty("id");
                });
                return done();

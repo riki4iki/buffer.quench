@@ -32,7 +32,7 @@ export async function facebookUser(id: string): Promise<fbUser> {
       const err = new Unauthorized("No accounts in system with that facebook user");
       throw err;
    } else if (facebookUser.length > 1) {
-      const err = new Unauthorized("Target facebook account belongs two or more users");
+      const err = new Unauthorized("target facebook account belongs two or more users");
       throw err;
    } else {
       const [target] = facebookUser;

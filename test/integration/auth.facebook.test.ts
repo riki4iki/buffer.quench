@@ -1,11 +1,14 @@
 import request from "supertest";
 import { app } from "../../src/app";
-import { dbConnection } from "../../src/config";
-import { facebook_test_user, endpoints } from "../config";
+import { facebook_test_user, endpoints, user as connectAndCreateUser } from "../config";
+
+import { IJwtPair } from "../../src/types";
 
 import { getConnection } from "typeorm";
+let next_user;
+
 beforeAll(async () => {
-   await dbConnection();
+   next_user = await connectAndCreateUser({ email: "facebook_auth_tester@gmail.com", password: "88005553535" });
 });
 
 afterAll(async () => {
@@ -94,6 +97,61 @@ describe("test facebook authentication", () => {
                return done();
             });
       });
-      describe("create additional account and connect social", () => {});
+      describe("create additional account and connect social", () => {
+         //account already created ib beforeAll
+         let secondJWT: IJwtPair;
+         test("local authenticate to system by second user for connection socials, should return jwt pair", async done => {
+            request(app.callback())
+               .post(endpoints.auth.local.sign_in)
+               .send({ email: "facebook_auth_tester@gmail.com", password: "88005553535" })
+               .expect(200)
+               .end((err, res) => {
+                  if (err) return done(err);
+                  const jwtRes = res.body.jwt;
+                  expect(jwtRes).toMatchObject({
+                     access_token: expect.any(String),
+                     refresh_token: expect.any(String),
+                     expiresIn: expect.any(Number),
+                  });
+                  secondJWT = jwtRes;
+                  return done();
+               });
+         });
+         test("connect same social to second account, shoult retuen facebook user instance", async done => {
+            request(app.callback())
+               .post(endpoints.user.social.facebook.access)
+               .set(secondJWT)
+               .send({ token: facebook_test_user.access_token })
+               .expect(201)
+               .end((err, res) => {
+                  if (err) return done(err);
+                  const facebookInstance = res.body;
+                  expect(facebookInstance).toMatchObject({
+                     id: expect.any(String),
+                     fbId: facebook_test_user.id,
+                     name: facebook_test_user.name,
+                     email: facebook_test_user.email,
+                     picture: {
+                        data: {
+                           width: expect.any(Number),
+                           height: expect.any(Number),
+                           url: expect.any(String),
+                        },
+                     },
+                  });
+                  return done();
+               });
+         });
+         test("try to facebook authenticate by facebook user account connected to two system users", async done => {
+            request(app.callback())
+               .post(endpoints.auth.facebook.sign_in)
+               .send({ token: facebook_test_user.access_token })
+               .expect(401, "target facebook account belongs two or more users")
+               .end((err, res) => {
+                  if (err) return done(err);
+                  return done();
+               });
+         });
+      });
    });
 });

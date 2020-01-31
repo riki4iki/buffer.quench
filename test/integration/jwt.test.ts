@@ -147,7 +147,34 @@ describe("test jwt endpoints/middlewares", () => {
             .expect(200)
             .end((err, res) => {
                if (err) return done(err);
-               const jwtResponse = res.body;
+               const jwtResponse = res.body.jwt;
+               expect(jwtResponse).toMatchObject({
+                  access_token: expect.any(String),
+                  refresh_token: expect.any(String),
+                  expiresIn: expect.any(Number),
+               });
+               jwt = jwtResponse;
+               return done();
+            });
+      });
+      test("delete user by access_token, should return 204", async done => {
+         request(app.callback())
+            .del(endpoints.user.access)
+            .set(jwt)
+            .expect(204)
+            .end(err => {
+               if (err) return done(err);
+               return done();
+            });
+      });
+      test("try to getting new refresh token by access to deleted user(session shouldn't exist in database), should return 401", async done => {
+         request(app.callback())
+            .post(endpoints.auth.refresh)
+            .set(jwt)
+            .expect(401, "No session with input refresh token")
+            .end(err => {
+               if (err) return done(err);
+               return done();
             });
       });
    });

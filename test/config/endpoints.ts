@@ -1,5 +1,6 @@
 export const endpoints = {
    auth: {
+      refresh: "/api/v1/auth/refresh",
       local: { sign_up: "/api/v1/auth/localAuth/sign-up", sign_in: "/api/v1/auth/localAuth/sign-in" },
       facebook: { sign_in: "/api/v1/auth/fbAuth/sign-in" },
    },

@@ -45,7 +45,8 @@ export default class postController {
     * @param ctx Context - Koa context supplemented by state IThreadState
     * - IThreadState Interface - realizes ctx.state param thread, extends from IAuthState
     */
-   public static async postCreateEndPoint(ctx: IContext<IThreadState>): Promise<void> {
+   //useless now
+   /*public static async postCreateEndPoint(ctx: IContext<IThreadState>): Promise<void> {
       try {
          const post = await create(ctx.state.thread, {
             context: ctx.request.body.context,
@@ -56,7 +57,7 @@ export default class postController {
       } catch (err) {
          ctx.app.emit("error", err, ctx);
       }
-   }
+   }*/
 
    /**
     * Endpoint - PUT method for route /post/:id. Udpate post by id. return updated post with status 200
@@ -66,6 +67,8 @@ export default class postController {
     * @param ctx Context - Koa context supplemented by state IThreadState
     * - IThreadState Interface - realizes ctx.state param thread, extends from IAuthState
     */
+   //useless now, post used like middleware
+   /*
    public static async postUpdateEndPoint(ctx: IParamContext<IThreadState, IParamIdState>) {
       try {
          const post = await update(ctx.state.thread, ctx.params.id, {
@@ -77,12 +80,13 @@ export default class postController {
       } catch (err) {
          ctx.app.emit("error", err, ctx);
       }
-   }
+   }*/
    /**
     *Endpoint - DELETE method for route /post:id. Delete target post by id. Return status 204
     * @param ctx Context - Koa context supplemented by state IThreadState
     * - IThreadState Interface - realizes ctx.state param thread, extends from IAuthState
     */
+   /*
    public static async postDeleteEndPoint(ctx: IParamContext<IThreadState, IParamIdState>) {
       try {
          const post = await del(ctx.state.thread, ctx.params.id);
@@ -90,13 +94,13 @@ export default class postController {
       } catch (err) {
          ctx.app.emit("error", err, ctx);
       }
-   }
+   }*/
    //#endregion 'EndPoints'
    //#region  'Middlewares'
    /**
     * Uselss now. FOR FUTURE!!
     */
-   public static async postsMiddleware(ctx: IContext<IPostState>, next: Next) {}
+   //public static async postsMiddleware(ctx: IContext<IPostState>, next: Next) {}
    /**
     * Middleware - GET method for route /post/:id. saves target post of the current thread in ctx.state.post for next middleware chain
     * @param  ctx Context - Koa context supplemented by state IPostState. IPostState Interface - realizes ctx.state additional param post, extends from IThradState

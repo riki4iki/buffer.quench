@@ -17,7 +17,7 @@ const options: ConnectionOptions = {
    synchronize: true,
    logging: false,
    entities: [...(isDev() ? ["src/models/**/*.ts"] : ["dist/models/**/*.js"])],
-   //extra: { ssl: !isDev() },
+   extra: { ssl: !isDev() },
 };
 const testOptions: ConnectionOptions = {
    type: "postgres",

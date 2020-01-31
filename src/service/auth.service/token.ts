@@ -42,14 +42,15 @@ export default class tokenService {
             } else {
                const userRepository: Repository<User> = getManager().getRepository(User);
                const user: User = await userRepository.findOne(inputPayload.id);
-               if (!user) {
+               //if user doesn't exists, session too..
+               /* if (!user) {
                   const err = new Unauthorized("no user with that refresh token");
                   throw err;
-               } else {
-                  const newPair = await jwtService.createPair(user);
-                  ctx.status = 200;
-                  ctx.body = newPair;
-               }
+               } else {*/
+               const newPair = await jwtService.createPair(user);
+               ctx.status = 200;
+               ctx.body = newPair;
+               //}
             }
          }
       } catch (err) {
