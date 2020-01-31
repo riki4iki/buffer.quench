@@ -56,8 +56,7 @@ describe("facebook pages to thread unit test", () => {
             });
          });
          const abstarctReffs = abstarcts.map(abstract => abstract.pageId);
-         console.log(abstarctReffs);
-         console.log(pagesId);
+         
          expect(abstarctReffs).toEqual(expect.arrayContaining(pagesId));
          return done();
       });

@@ -238,6 +238,16 @@ describe("pages integration test by supertest", () => {
                return done();
             });
       });
+      test("get connected pages by invalid thread id in url, should return 400", async done => {
+         request(app.callback())
+            .get(endpoints.user.thread.id(invalid_uuid).page.facebook.access)
+            .set(jwt)
+            .expect(400, "thread not found")
+            .end(err => {
+               if (err) return done(err);
+               return done();
+            });
+      });
    });
    describe("test pages deleting", () => {
       let deletedId: string;

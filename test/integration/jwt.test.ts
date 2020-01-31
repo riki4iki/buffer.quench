@@ -1,7 +1,7 @@
 import { getConnection } from "typeorm";
 import request from "supertest";
 
-import { dbConnection } from "../../src/config";
+import { connect, endpoints } from "../config";
 import { app } from "../../src/app";
 
 let jwt = {
@@ -9,14 +9,14 @@ let jwt = {
    refresh_token: "",
    expiresIn: 0,
 };
+beforeAll(async () => {
+   await connect();
+});
+afterAll(async () => {
+   await getConnection(process.env.CONNECTION).close();
+});
 
 describe("test jwt endpoints/middlewares", () => {
-   beforeAll(async () => {
-      await dbConnection();
-   });
-   afterAll(async () => {
-      await getConnection(process.env.CONNECTION).close();
-   });
    describe("test jsonwebtoken access to user", () => {
       test("create new account for future tests", async done => {
          request(app.callback())
@@ -91,7 +91,7 @@ describe("test jwt endpoints/middlewares", () => {
    describe("test refresh endpoint", () => {
       test("getting new refresh, should return new jwt pair", async done => {
          setTimeout(() => {
-            // create delay cause without return same token with same date
+            // create delay cause without return same token with same date cause of little delay
             request(app.callback())
                .post("/api/v1/auth/refresh")
                .set({ refresh_token: jwt.refresh_token })
@@ -135,6 +135,19 @@ describe("test jwt endpoints/middlewares", () => {
             .end((err, res) => {
                if (err) return done(err);
                return done();
+            });
+      });
+      test("get new valid refresh token for next tests, shoul return jwt pair by sig_in", async done => {
+         request(app.callback())
+            .post(endpoints.auth.local.sign_in)
+            .send({
+               email: "jwt_test@gmail.com",
+               password: "123321",
+            })
+            .expect(200)
+            .end((err, res) => {
+               if (err) return done(err);
+               const jwtResponse = res.body;
             });
       });
    });

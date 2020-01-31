@@ -2,11 +2,8 @@ import request from "supertest";
 import { app } from "../../src/app";
 import { dbConnection } from "../../src/config";
 import { getConnection } from "typeorm";
+import { endpoints } from "../config";
 
-const endpoints = {
-   sign_up: "/api/v1/auth/localAuth/sign-up",
-   sign_in: "/api/v1/auth/localAuth/sign-in",
-};
 beforeAll(async () => {
    await dbConnection();
 });
@@ -21,7 +18,7 @@ describe("test auth endpoints", () => {
          password: "123321",
       };
       request(app.callback())
-         .post(endpoints.sign_up)
+         .post(endpoints.auth.local.sign_up)
          .send(user)
          .set("Accept", "application/json")
          .expect(201, "success")
@@ -37,7 +34,7 @@ describe("test auth endpoints", () => {
          password: "123321",
       };
       request(app.callback())
-         .post(endpoints.sign_in)
+         .post(endpoints.auth.local.sign_in)
          .send(user)
          .set("Accept", "application/json")
          .expect(200)
@@ -56,7 +53,7 @@ describe("test auth endpoints", () => {
          password: "123321",
       };
       request(app.callback())
-         .post(endpoints.sign_up)
+         .post(endpoints.auth.local.sign_up)
          .send(user)
          .set("Accept", "application/json")
          .expect(400, "email already exist")
@@ -69,7 +66,7 @@ describe("test auth endpoints", () => {
 describe("test sign-up errors", () => {
    test("sign-up with invalid props(invalid email pattern)", async done => {
       request(app.callback())
-         .post(endpoints.sign_up)
+         .post(endpoints.auth.local.sign_up)
          .send({ email: "aeee", password: "123321" })
          .expect(400)
          .end((err, res) => {
@@ -82,7 +79,7 @@ describe("test sign-up errors", () => {
    });
    test("sign-up with invalid props(password less then 6 symbols)", async done => {
       request(app.callback())
-         .post(endpoints.sign_up)
+         .post(endpoints.auth.local.sign_up)
          .send({
             email: "google@gmail.com",
             password: ")))",
@@ -98,7 +95,7 @@ describe("test sign-up errors", () => {
    });
    test("sign-up with invalid props(empty values)", async done => {
       request(app.callback())
-         .post(endpoints.sign_up)
+         .post(endpoints.auth.local.sign_up)
          .send({ email: "", password: "" })
          .expect(400)
          .end((err, res) => {
@@ -132,7 +129,7 @@ describe("test sign-in errors", () => {
    };
    test("create user for testing", done => {
       request(app.callback())
-         .post(endpoints.sign_up)
+         .post(endpoints.auth.local.sign_up)
          .send(login_password)
          .expect(201, "success")
          .end((err, res) => {
@@ -143,7 +140,7 @@ describe("test sign-in errors", () => {
 
    test("sign-in with invalid password", async done => {
       request(app.callback())
-         .post(endpoints.sign_in)
+         .post(endpoints.auth.local.sign_in)
          .send({ email: login_password.email, password: "incorrect password" })
          .expect(401, "invalid password")
          .end((err, res) => {
@@ -153,7 +150,7 @@ describe("test sign-in errors", () => {
    });
    test("sign-n with invalid email", async done => {
       request(app.callback())
-         .post(endpoints.sign_in)
+         .post(endpoints.auth.local.sign_in)
          .send({ email: "invalid_email@gmail.com", password: "no_matter" })
          .expect(401, "invalid email, user does not exist")
          .end((err, res) => {
