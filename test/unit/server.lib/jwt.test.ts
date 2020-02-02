@@ -71,7 +71,7 @@ describe("unit test jwt", () => {
             userInstance.id = "";
             const p = await jwt.createPair(userInstance);
          } catch (err) {
-            expect(err).toEqual(new Error('invalid input syntax for type uuid: ""'));
+            expect(err).toEqual(new Error("invalid input syntax for type uuid: \"\""));
          }
       });
       test("try create session with invalid user uuid", async () => {

@@ -45,7 +45,7 @@ export default class apiService {
       } else {
          try {
             const str = pages.toString();
-            const pagesString: string = str.replace(/'/g, '"');
+            const pagesString: string = str.replace(/'/g, "\"");
             console.log("after replace" + pagesString);
             const pagesIdArray: Array<string> = JSON.parse(pagesString);
             console.log("parsed" + pagesIdArray);

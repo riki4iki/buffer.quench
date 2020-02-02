@@ -57,7 +57,7 @@ export default class FacebookUser implements IResponsible<FacebookUser>, IAfterI
          this.name = apiUser.name;
          this.picture = apiUser.picture;
          this.email = apiUser.email;
-         return <FacebookUser>omit(<FacebookUser>this, ["accessToken", "user"]);
+         return omit(this as FacebookUser, ["accessToken", "user"]) as FacebookUser;
       } catch (err) {
          console.log(err);
          console.log(`Error in FacebookUser toResponse ${err.message}`);
@@ -84,7 +84,7 @@ export default class FacebookUser implements IResponsible<FacebookUser>, IAfterI
       const socialRepository = getManager().getRepository(Social);
       const social = await socialRepository.findOne({ where: { socialId: this.id, user: this.user }, relations: ["user"] });
       if (!social) {
-         console.log(`throw error with beforeRemove in facebook social`);
+         console.log("throw error with beforeRemove in facebook social");
          console.log(this);
       } else {
          console.log(social);
@@ -102,9 +102,10 @@ export default class FacebookUser implements IResponsible<FacebookUser>, IAfterI
       const pages: Array<Page> = await pageRepository.find({ where: { fbUser: this }, relations: ["fbUser"] });
       try {
          const removed = await pageRepository.remove(pages);
+         console.log(removed);
       } catch (err) {
          //Need logger or catch???
-         console.log(`Error in @BeforeRemove Facebook user with pages removing`);
+         console.log("Error in @BeforeRemove Facebook user with pages removing");
          console.log(err);
       }
    }

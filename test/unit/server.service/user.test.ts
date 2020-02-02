@@ -38,7 +38,7 @@ describe("user crud unit test", () => {
          expect(typeof user.password).toBe("string");
          userId = user.id;
       });
-      test(`basic CRUD updating created user`, async () => {
+      test("basic CRUD updating created user", async () => {
          const updated = await update(userId, nextBody);
          expect(updated.email).not.toBe(firstBody.email);
          expect(updated.email).toBe(nextBody.email);
@@ -47,7 +47,7 @@ describe("user crud unit test", () => {
          expect(typeof updated.password).toBe("string");
       });
 
-      test(`basic CRUD getting user with`, async () => {
+      test("basic CRUD getting user with", async () => {
          const user = await get(userId);
          expect(user).toBeInstanceOf(User);
          expect(user).not.toBe(null);

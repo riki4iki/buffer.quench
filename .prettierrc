@@ -1,7 +1,7 @@
 {
-   "tabWidth": 3,
-   "useTabs": false,
-   "endOfLine": "auto",
-   "printWidth": 150,
-   "trailingComma": "all"
+    "tabWidth": 3,
+    "useTabs": false,
+    "endOfLine": "auto",
+    "printWidth": 150,
+    "trailingComma": "all"
 }
