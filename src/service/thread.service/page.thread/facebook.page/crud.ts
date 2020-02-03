@@ -31,21 +31,7 @@ export async function target(thread: Thread, id: string): Promise<FacebookPage> 
       return response;
    }
 }
-/**
- *  Promise - Connect facebook pages to thread by current user and facebook social page
- * @param user User - current user from ctx.state decoded from jwt access_token
- * @param thread Thread - thread for which facebook pages will be conected
- * @param facebookUserId String - socialId. Facebook user who owns input pages
- * @param facebookPages String[] - input facebook pages to be connect for thread
- */
-export async function connectArrayPages(thread: Thread, facebookUserModel: FacebookUser, facebookPages: Array<string>) {
-   //need call facebook api to take long_lived access_token for pages and make sure that connected pages are owned by facebook social
-   const pagesByFacebookSocial = await filterPagesByFacebookUser(facebookUserModel, facebookPages);
 
-   //connect validated pages to thread
-   const connectedPaged = await connectPages(thread, facebookUserModel, pagesByFacebookSocial);
-   return connectedPaged;
-}
 /**
  * Promise - Connect facebook pages to input thread
  * @param thread Thread - thread for which pages will be connected
@@ -108,4 +94,20 @@ export async function disconnect(thread: Thread, id: string): Promise<FacebookPa
       const removed = await facebookPageRepository.remove(facebookPage);
       return removed;
    }
+}
+
+/**
+ *  Promise - Connect facebook pages to thread by current user and facebook social page
+ * @param user User - current user from ctx.state decoded from jwt access_token
+ * @param thread Thread - thread for which facebook pages will be conected
+ * @param facebookUserId String - socialId. Facebook user who owns input pages
+ * @param facebookPages String[] - input facebook pages to be connect for thread
+ */
+export async function connectArrayPages(thread: Thread, facebookUserModel: FacebookUser, facebookPages: Array<string>) {
+   //need call facebook api to take long_lived access_token for pages and make sure that connected pages are owned by facebook social
+   const pagesByFacebookSocial = await filterPagesByFacebookUser(facebookUserModel, facebookPages);
+
+   //connect validated pages to thread
+   const connectedPaged = await connectPages(thread, facebookUserModel, pagesByFacebookSocial);
+   return connectedPaged;
 }

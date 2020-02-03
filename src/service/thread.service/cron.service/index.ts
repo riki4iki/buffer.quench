@@ -5,7 +5,7 @@ const executer = new NodeScheduleExecuter();
 /**
  * Controller work with iterior state
  */
-export default class cronController {
+export default class CronController {
    /**
     * EndPoint. Add to cron tasks new task for new post from ctx.state.post, return post to response
     * @param ctx Context - Koa context with IPostState that contain post instanse from previos middleware
@@ -13,7 +13,7 @@ export default class cronController {
    public static async taskCreateEndPoint(ctx: IContext<IPostState>) {
       try {
          //create new task
-         const task = await executer.create(ctx.state.post);
+         await executer.create(ctx.state.post);
          ctx.status = 201;
          //retrun same post
          ctx.body = ctx.state.post;

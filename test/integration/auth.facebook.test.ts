@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/camelcase */
 import request from "supertest";
 import { app } from "../../src/app";
 import { facebook_test_user, endpoints, user as connectAndCreateUser } from "../config";
@@ -21,7 +22,7 @@ describe("test facebook authentication", () => {
          .post(endpoints.auth.facebook.sign_in)
          .send({ token: facebook_test_user.access_token })
          .expect(401, "No accounts in system with that facebook user")
-         .end((err, res) => {
+         .end(err => {
             if (err) return done(err);
             return done();
          });
@@ -36,7 +37,7 @@ describe("test facebook authentication", () => {
             .post(endpoints.auth.local.sign_up)
             .send(account)
             .expect(201)
-            .end((err, res) => {
+            .end(err => {
                if (err) return done(err);
                return done();
             });
@@ -92,7 +93,7 @@ describe("test facebook authentication", () => {
             .post(endpoints.auth.facebook.sign_in)
             .send("invalid_access_token")
             .expect(400)
-            .end((err, res) => {
+            .end(err => {
                if (err) return done(err);
                return done();
             });
@@ -103,7 +104,7 @@ describe("test facebook authentication", () => {
          test("local authenticate to system by second user for connection socials, should return jwt pair", async done => {
             request(app.callback())
                .post(endpoints.auth.local.sign_in)
-               .send({ email: "facebook_auth_tester@gmail.com", password: "88005553535" })
+               .send({ email: next_user.email, password: next_user.password })
                .expect(200)
                .end((err, res) => {
                   if (err) return done(err);
@@ -147,7 +148,7 @@ describe("test facebook authentication", () => {
                .post(endpoints.auth.facebook.sign_in)
                .send({ token: facebook_test_user.access_token })
                .expect(401, "target facebook account belongs two or more users")
-               .end((err, res) => {
+               .end(err => {
                   if (err) return done(err);
                   return done();
                });

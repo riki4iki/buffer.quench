@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/camelcase */
 import jwt from "../../../src/lib/jwt";
 import { dbConnection } from "../../../src/config";
 import { invalid_uuid } from "../../config/const";
@@ -5,7 +6,7 @@ import { create } from "../../../src/service/user.service/crud";
 import { User } from "../../../src/models";
 import { IJwtPair } from "../../../src/types";
 
-import { getConnection, QueryFailedError } from "typeorm";
+import { getConnection } from "typeorm";
 import { Unauthorized } from "http-errors";
 const user = {
    email: "test_jwt_user@gmail.com",
@@ -69,9 +70,10 @@ describe("unit test jwt", () => {
          try {
             const userInstance = created;
             userInstance.id = "";
-            const p = await jwt.createPair(userInstance);
+            await jwt.createPair(userInstance);
          } catch (err) {
-            expect(err).toEqual(new Error("invalid input syntax for type uuid: \"\""));
+            // eslint-disable-next-line quotes
+            expect(err).toEqual(new Error('invalid input syntax for type uuid: ""'));
          }
       });
       test("try create session with invalid user uuid", async () => {

@@ -12,7 +12,7 @@ export default class LocalAuthService {
     * return jsonwebtoken pair (access_token, refresh_token, expiresIn)
     * @param ctx Context - Basic koa context for realize response to clien
     */
-   public static async sign_in(ctx: Context) {
+   public static async signIn(ctx: Context) {
       //input from ctx.request.body:
       // - email
       // - password
@@ -38,7 +38,7 @@ export default class LocalAuthService {
     * return jsonwebtoken pair (access_token, refresh_token, expiresIn)
     * @param ctx Context - Koa Context with state IAuthState that important for getting user from ctx.state created into before middleware
     */
-   public static async sign_up(ctx: IContext<IAuthState>) {
+   public static async signUp(ctx: IContext<IAuthState>) {
       //in middlewares chain before that method has method with user creating in service/user/service
       ctx.status = 201;
       ctx.body = "success";

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/camelcase */
 import { fbService } from "../../../src/lib";
 import * as facebookTypes from "../../../src/types/facebook";
 import { facebook_test_user } from "../../config/facebook";

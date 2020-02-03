@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/camelcase */
 import { user as connectAndCreateUser, facebook_test_user, invalid_uuid } from "../../config";
 import { getConnection } from "typeorm";
 import { all, connectArrayPages, disconnect, target } from "../../../src/service/thread.service/page.thread/facebook.page/crud"; //for unit trsts
@@ -5,7 +6,7 @@ import { all as getAbstractPages } from "../../../src/service/thread.service/pag
 import { IFacebookPage } from "../../../src/types/facebook";
 import { create as createThread } from "../../../src/service/thread.service/crud"; // for thread creation
 import { add as connectSocial } from "../../../src/service/social.service/facebook.social/crud"; // for social connection to user
-import { User, Thread, FacebookUser, FacebookPage } from "../../../src/models";
+import { User, Thread, FacebookUser } from "../../../src/models";
 import { insertPagesfromApi } from "../../../src/service/social.service/facebook.social/page"; // getting facebook pages ids
 
 import { BadRequest } from "http-errors";
@@ -35,6 +36,7 @@ describe("facebook pages to thread unit test", () => {
             pages.map(page => page.id),
          );
          connectedPages.forEach((page, index) => {
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars
             const { id, ...body } = page;
             const associate = pages[index];
             expect(body).not.toMatchObject({ accessToken: expect.any(String) });
@@ -50,13 +52,13 @@ describe("facebook pages to thread unit test", () => {
       test("after connection to thread, should create raw in Page table", async done => {
          const abstarcts = await getAbstractPages(thread);
          expect(abstarcts.length).toEqual(pages.length);
-         abstarcts.forEach((abstarct, index) => {
+         abstarcts.forEach(abstarct => {
             expect(abstarct).toMatchObject({
                type: "facebook",
             });
          });
          const abstarctReffs = abstarcts.map(abstract => abstract.pageId);
-         
+
          expect(abstarctReffs).toEqual(expect.arrayContaining(pagesId));
          return done();
       });
@@ -67,6 +69,7 @@ describe("facebook pages to thread unit test", () => {
             pages.map(page => page.id),
          );
          connectedPages.forEach((page, index) => {
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars
             const { id, ...body } = page;
             const associate = pages[index];
             expect(body).not.toMatchObject({ accessToken: expect.any(String) });
@@ -91,6 +94,7 @@ describe("facebook pages to thread unit test", () => {
       test("get all connected pages, should return FacebookPages[]", async () => {
          const connected = await all(thread);
          connected.forEach((page, index) => {
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars
             const { id, ...body } = page;
             const associate = pages[index];
             expect(body).not.toMatchObject({ accessToken: expect.any(String) });

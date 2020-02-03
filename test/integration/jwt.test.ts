@@ -23,7 +23,7 @@ describe("test jwt endpoints/middlewares", () => {
             .post("/api/v1/auth/localAuth/sign-up")
             .send({ email: "jwt_test@gmail.com", password: "123321" })
             .expect(201, "success")
-            .end((err, res) => {
+            .end(err => {
                if (err) return done(err);
                return done();
             });
@@ -51,7 +51,7 @@ describe("test jwt endpoints/middlewares", () => {
             .get("/api/v1/user")
             .set({ access_token: jwt.access_token, refresh_token: jwt.refresh_token })
             .expect(200)
-            .end((err, res) => {
+            .end(err => {
                if (err) return done(err);
                return done();
             });
@@ -62,7 +62,7 @@ describe("test jwt endpoints/middlewares", () => {
             .get("/api/v1/user/")
             .set({ access_token: "" })
             .expect(401, "jwt must be provided")
-            .end((err, res) => {
+            .end(err => {
                if (err) return done(err);
                return done();
             });
@@ -72,7 +72,7 @@ describe("test jwt endpoints/middlewares", () => {
             .get("/api/v1/user/")
             .set({ access_token: jwt.access_token.replace(jwt.access_token[0], "123") })
             .expect(401, "invalid token")
-            .end((err, res) => {
+            .end(err => {
                if (err) return done(err);
                return done();
             });
@@ -82,7 +82,7 @@ describe("test jwt endpoints/middlewares", () => {
             .get("/api/v1/user/")
             .set({ access_token: jwt.access_token.replace(jwt.access_token[jwt.access_token.length - 1], "123") })
             .expect(401)
-            .end((err, res) => {
+            .end(err => {
                if (err) return done(err);
                return done();
             });
@@ -112,7 +112,7 @@ describe("test jwt endpoints/middlewares", () => {
             .post("/api/v1/auth/refresh")
             .set({ refresh_token: "" })
             .expect(401, "jwt must be provided")
-            .end((err, res) => {
+            .end(err => {
                if (err) return done(err);
                return done();
             });
@@ -122,7 +122,7 @@ describe("test jwt endpoints/middlewares", () => {
             .post("/api/v1/auth/refresh")
             .set({ refresh_token: jwt.refresh_token })
             .expect(401, "wrong input token")
-            .end((err, res) => {
+            .end(err => {
                if (err) return done(err);
                return done();
             });
@@ -132,7 +132,7 @@ describe("test jwt endpoints/middlewares", () => {
             .post("/api/v1/auth/refresh")
             .set({ refresh_token: jwt.refresh_token })
             .expect(401, "No session with input refresh token")
-            .end((err, res) => {
+            .end(err => {
                if (err) return done(err);
                return done();
             });

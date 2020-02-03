@@ -60,8 +60,8 @@ export default class User implements IResponsible<User> {
 
    //#region Methods
    public async toResponse(): Promise<User> {
-      const cutted = omit(<User>this, "password");
-      return <User>cutted;
+      const cutted = omit(this as User, "password");
+      return cutted as User;
    }
 
    public async checkPassword(target: string): Promise<boolean> {
@@ -77,9 +77,9 @@ export default class User implements IResponsible<User> {
       if (!this.social) {
          const socialRepository: Repository<Social> = getManager().getRepository(Social);
          const socials = await socialRepository.find({ user: this });
-         this.social = socials.map(social => <Social>omit(social, "id"));
+         this.social = socials.map(social => omit(social, "id") as Social);
       } else {
-         this.social = this.social.map(social => <Social>omit(social, "id")); //chanhe to response(social.toREposnse())
+         this.social = this.social.map(social => omit(social, "id") as Social); //chanhe to response(social.toREposnse())
       }
       return await this.toResponse();
    }

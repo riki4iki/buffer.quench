@@ -22,7 +22,7 @@ describe("test auth endpoints", () => {
          .send(user)
          .set("Accept", "application/json")
          .expect(201, "success")
-         .end((err, res) => {
+         .end(err => {
             if (err) return done(err);
             return done();
          });
@@ -57,7 +57,7 @@ describe("test auth endpoints", () => {
          .send(user)
          .set("Accept", "application/json")
          .expect(400, "email already exist")
-         .end((err, res) => {
+         .end(err => {
             if (err) return done(err);
             return done();
          });
@@ -123,16 +123,16 @@ describe("test sign-up errors", () => {
 });
 
 describe("test sign-in errors", () => {
-   const login_password = {
+   const loginPassword = {
       email: "testtesttest@gmail.com",
       password: "123321",
    };
    test("create user for testing", done => {
       request(app.callback())
          .post(endpoints.auth.local.sign_up)
-         .send(login_password)
+         .send(loginPassword)
          .expect(201, "success")
-         .end((err, res) => {
+         .end(err => {
             if (err) return done(err);
             return done();
          });
@@ -141,9 +141,9 @@ describe("test sign-in errors", () => {
    test("sign-in with invalid password", async done => {
       request(app.callback())
          .post(endpoints.auth.local.sign_in)
-         .send({ email: login_password.email, password: "incorrect password" })
+         .send({ email: loginPassword.email, password: "incorrect password" })
          .expect(401, "invalid password")
-         .end((err, res) => {
+         .end(err => {
             if (err) return done(err);
             return done();
          });
@@ -153,7 +153,7 @@ describe("test sign-in errors", () => {
          .post(endpoints.auth.local.sign_in)
          .send({ email: "invalid_email@gmail.com", password: "no_matter" })
          .expect(401, "invalid email, user does not exist")
-         .end((err, res) => {
+         .end(err => {
             if (err) return done(err);
             return done();
          });

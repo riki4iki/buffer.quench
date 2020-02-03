@@ -28,7 +28,7 @@ export async function create(user: User, body: IThreadBody): Promise<Thread> {
    } else {
       //save in database
       const saved = await threadRepository.save(newThread);
-      return <Thread>omit(saved, "user");
+      return omit(saved, "user") as Thread;
    }
 }
 /**

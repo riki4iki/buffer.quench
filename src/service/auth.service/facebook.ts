@@ -10,9 +10,10 @@ export default class FacebookAuthService {
     * If target facebook account connected with two or more will returned 401 status.
     * @param ctx Context - basic koa context contain requests and response instanses
     */
-   public static async sign_in(ctx: Context) {
+   public static async signIn(ctx: Context) {
       try {
          //input token from body
+         // eslint-disable-next-line @typescript-eslint/camelcase
          const user_access_token_2h = ctx.request.body.token;
          //getting facebook user by facebook api
          const apiFacebookUser = await fb.getUser(user_access_token_2h);

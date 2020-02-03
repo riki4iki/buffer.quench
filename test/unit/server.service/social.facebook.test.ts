@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/camelcase */
 import { add, all, del, get } from "../../../src/service/social.service/facebook.social/crud";
 import { insertPagesfromApi } from "../../../src/service/social.service/facebook.social/page";
 import { invalid_uuid } from "../../config/const";
@@ -115,7 +116,7 @@ describe("unit test facebook soicial crud", () => {
       });
       test("delete by invalid id, should return bad request", async () => {
          try {
-            const social = await del(user, invalid_uuid);
+            await del(user, invalid_uuid);
          } catch (err) {
             expect(err).toEqual(new BadRequest("social not found"));
          }

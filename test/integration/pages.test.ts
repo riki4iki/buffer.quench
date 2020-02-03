@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/camelcase */
 import request from "supertest";
 import { getConnection } from "typeorm";
 
@@ -28,7 +29,6 @@ afterAll(async () => {
 describe("pages integration test by supertest", () => {
    let socialId: string;
    let pages: IFacebookPage[];
-   let connectedPageIds: string[];
    let connected; //Facebook[]
    describe("need connect social to thread before", () => {
       test("connect test facebook user to thread by user/social/facebook - POST, body:[access_token], should return 201 with created instace social", async done => {
@@ -118,7 +118,7 @@ describe("pages integration test by supertest", () => {
             .set(jwt)
             .send({ socialId, pages: incorrectIds })
             .expect(400, `input pages: [${incorrectIds}] are not accounts for user: ${socialId}`)
-            .end((err, res) => {
+            .end(err => {
                if (err) return done(err);
                return done();
             });
@@ -196,7 +196,7 @@ describe("pages integration test by supertest", () => {
             .set(jwt)
             .send({ socialId: invalid_uuid, pages: pageIds })
             .expect(400, "social not found")
-            .end((err, res) => {
+            .end(err => {
                if (err) return done(err);
                return done();
             });

@@ -1,6 +1,6 @@
+/* eslint-disable @typescript-eslint/camelcase */
 import { all, get, create, del, update } from "../../../src/service/user.service/crud";
 import { invalid_uuid, connect } from "../../config";
-import { dbConnection } from "../../../src/config";
 import { User } from "../../../src/models";
 import { BadRequest } from "http-errors";
 import { getConnection } from "typeorm";

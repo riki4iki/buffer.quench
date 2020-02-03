@@ -1,6 +1,7 @@
+/* eslint-disable @typescript-eslint/camelcase */
 import { all, create, del, get } from "../../../src/service/thread.service/legend.service/crud";
 import { getConnection } from "typeorm";
-import { invalid_uuid, post as postCreate, nextSecond, nextMinutes } from "../../config";
+import { invalid_uuid, post as postCreate, nextSecond } from "../../config";
 import { BadRequest } from "http-errors";
 let post;
 const SECONDS = 2;

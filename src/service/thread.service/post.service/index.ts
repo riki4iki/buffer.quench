@@ -5,7 +5,7 @@ import { MethodNotAllowed } from "http-errors";
 /**
  * Class controller for post routes(/user/thread/(:threadid)/post)
  */
-export default class postController {
+export default class PostController {
    //#region 'EndPoints'
    /**
     * Endpoint - GET method for route /post. Return posts array for current thread with status 200
@@ -145,7 +145,7 @@ export default class postController {
     */
    public static async postUpdateMiddleware(ctx: IParamContext<IPostState, IParamIdState>, next: Next) {
       try {
-         const post = await update(ctx.state.thread, ctx.params.id, <IPostBody>{
+         const post = await update(ctx.state.thread, ctx.params.id, {
             context: ctx.request.body.context,
             expireDate: new Date(ctx.request.body.expireDate),
          });

@@ -16,7 +16,7 @@ const generateJTI = (range: string): string => {
    return [...Array(parsed)].map(i => (~~(Math.random() * 36)).toString(36)).join("");
 };
 const isDev = process.env.NODE_ENV === "development";
-const ONE_DAY_SECCONDS: number = 84600;
+const ONE_DAY_SECCONDS = 84600;
 const config: IJwt = {
    secret: process.env.JWT_TOKEN_SECRET,
    accessLife: isDev ? ONE_DAY_SECCONDS : ONE_DAY_SECCONDS / 4,

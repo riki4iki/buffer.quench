@@ -35,6 +35,7 @@ export default class FacebookSocialService {
     * @param ctx Context - koa context with IAuthState that contains current user and current session, decoded from jwt access token in headers
     */
    public static async facebookUserConnectEndPoint(ctx: IContext<IAuthState>) {
+      // eslint-disable-next-line @typescript-eslint/camelcase
       const user_access_token_2h = ctx.request.body.token;
       try {
          const social = await add(ctx.state.user, user_access_token_2h);

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/camelcase */
 import { getConnection } from "typeorm";
 import { all, create, del, get, update } from "../../../src/service/thread.service/crud";
 import { invalid_uuid, user as createUser } from "../../config";
@@ -13,7 +14,7 @@ afterAll(async done => {
 });
 
 describe("unit test thread cruds", () => {
-   const name: string = "test_thread";
+   const name = "test_thread";
    let threadId: string;
    describe("test thread creating", () => {
       test("create thread, should retur nthread object", async () => {
@@ -27,7 +28,7 @@ describe("unit test thread cruds", () => {
       });
       test("create thread with same name, should throw badrequest cause name must be unique value", async () => {
          try {
-            const thread = await create(user, { name });
+            await create(user, { name });
          } catch (err) {
             expect(err).toEqual(new BadRequest(`thread with name '${name}' already exist`));
          }
@@ -61,7 +62,7 @@ describe("unit test thread cruds", () => {
       });
       test("getting by invalid id", async () => {
          try {
-            const thread = await get(user, invalid_uuid);
+            await get(user, invalid_uuid);
          } catch (err) {
             expect(err).toEqual(new BadRequest("thread not found"));
          }
@@ -77,12 +78,12 @@ describe("unit test thread cruds", () => {
    });
    describe("test updating thread", () => {
       test("update thread, should return 200", async () => {
-         const next_name: string = "next_thread_name";
+         const next_name = "next_thread_name";
          const thread = await update(user, threadId, { name: next_name });
          expect(thread).toMatchObject({ id: threadId, name: next_name });
       });
       test("update thread with existing name, should return 400", async () => {
-         const crossName: string = "cross_name";
+         const crossName = "cross_name";
          const created = await create(user, { name: crossName });
          try {
             await update(user, threadId, { name: crossName });

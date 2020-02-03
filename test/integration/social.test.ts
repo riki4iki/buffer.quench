@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/camelcase */
 import { facebook_test_user } from "../config/facebook";
 import { invalid_uuid } from "../config/const";
 import { dbConnection } from "../../src/config";
@@ -31,7 +32,7 @@ describe("test social routers....", () => {
             .post("/api/v1/auth/localAuth/sign-up")
             .send(account)
             .expect(201, "success")
-            .end((err, res) => {
+            .end(err => {
                if (err) return done(err);
                return done();
             });
@@ -74,7 +75,7 @@ describe("test social routers....", () => {
             .send({ token: "invalid token" })
             .set({ access_token: jwt.access_token })
             .expect(400)
-            .end((err, res) => {
+            .end(err => {
                if (err) return done(err);
                return done();
             });
@@ -172,7 +173,7 @@ describe("test social routers....", () => {
             .get(`${endpoints.facebook}/${invalid_uuid}`)
             .set({ access_token: jwt.access_token })
             .expect(400, "social not found")
-            .end((err, res) => {
+            .end(err => {
                if (err) return done(err);
                return done();
             });
@@ -239,7 +240,7 @@ describe("test social routers....", () => {
                .get(`${endpoints.facebook}/${invalid_uuid}/page`)
                .set({ access_token: jwt.access_token })
                .expect(400, "social not found")
-               .end((err, res) => {
+               .end(err => {
                   if (err) return done(err);
                   return done();
                });
@@ -251,7 +252,7 @@ describe("test social routers....", () => {
             .del(`${endpoints.facebook}/${social_id}`)
             .set({ access_token: jwt.access_token })
             .expect(204)
-            .end((err, res) => {
+            .end(err => {
                if (err) return done(err);
                return done();
             });
@@ -261,7 +262,7 @@ describe("test social routers....", () => {
             .get(`${endpoints.facebook}/${social_id}`)
             .set({ access_token: jwt.access_token })
             .expect(400, "social not found")
-            .end((err, res) => {
+            .end(err => {
                if (err) return done(err);
                return done();
             });
@@ -271,7 +272,7 @@ describe("test social routers....", () => {
             .get(`${endpoints.facebook}/___`)
             .set({ access_token: jwt.access_token })
             .expect(400, "uuid validation error at facebook")
-            .end((err, res) => {
+            .end(err => {
                if (err) return done(err);
                return done();
             });
@@ -281,7 +282,7 @@ describe("test social routers....", () => {
             .del(`${endpoints.facebook}/${invalid_uuid}`)
             .set({ access_token: jwt.access_token })
             .expect(400)
-            .end((err, res) => {
+            .end(err => {
                if (err) return done(err);
                return done();
             });

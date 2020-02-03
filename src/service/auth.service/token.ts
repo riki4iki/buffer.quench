@@ -7,7 +7,7 @@ import { Unauthorized } from "http-errors";
 /**
  * Class Controller works with jwt tokens for authentication
  */
-export default class tokenService {
+export default class TokenService {
    /**
     * EndPoint - take from headres refresh token, check with database sessions, create new jsonwebtoken pair
     * @param ctx Context - basic koa context contain rsponse and request instanse

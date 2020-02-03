@@ -93,7 +93,7 @@ export default class JwtService {
    public static async payload(token: string): Promise<IPayload> {
       try {
          const payLoad = await jwt.verify(token, jwtConfig.secret);
-         return <IPayload>payLoad;
+         return payLoad as IPayload;
       } catch (error) {
          const err = new Unauthorized(error.message);
          throw err;

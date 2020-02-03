@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/camelcase */
 import request from "supertest";
 import { getConnection } from "typeorm";
 

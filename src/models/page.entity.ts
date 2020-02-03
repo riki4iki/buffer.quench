@@ -30,7 +30,7 @@ export default class Page implements IResponsible<Page> {
    }
 
    public async toResponse(): Promise<Page> {
-      const response = omit(<Page>this, "id");
-      return <Page>response;
+      const response = omit(this as Page, "id");
+      return response as Page;
    }
 }

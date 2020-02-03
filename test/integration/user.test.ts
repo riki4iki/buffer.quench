@@ -31,7 +31,7 @@ describe("test /user endpoints", () => {
          .post(endpoints.sign_up)
          .send(account)
          .expect(201, "success")
-         .end((err, res) => {
+         .end(err => {
             if (err) return done(err);
             return done();
          });
@@ -163,7 +163,7 @@ describe("test /user endpoints", () => {
             .get(endpoints.user)
             .set({ access_token: jwt.access_token })
             .expect(400, "User doesn't exist with input session")
-            .end((err, res) => {
+            .end(err => {
                if (err) return done(err);
                return done();
             });

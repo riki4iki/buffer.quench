@@ -1,6 +1,7 @@
+/* eslint-disable @typescript-eslint/camelcase */
 import request from "supertest";
 import { app } from "../../src/app";
-import { getConnection, Any } from "typeorm";
+import { getConnection } from "typeorm";
 import { user as createAndConnect, endpoints, invalid_uuid } from "../config";
 import { IJwtPair } from "../../src/types";
 let jwt: IJwtPair;
@@ -54,7 +55,7 @@ describe("integration tests thread routes", () => {
             .send({ name: "_" })
             .set(jwt)
             .expect(400, [{ property: "name", constraints: { minLength: "Thread name is too short, min size is 6 symbols" } }])
-            .end((err, res) => {
+            .end(err => {
                if (err) return done(err);
                return done();
             });
@@ -102,7 +103,7 @@ describe("integration tests thread routes", () => {
             .get(endpoints.user.thread.id(invalid_uuid).access)
             .set(jwt)
             .expect(400, "thread not found")
-            .end((err, res) => {
+            .end(err => {
                if (err) return done(err);
                return done();
             });
@@ -112,7 +113,7 @@ describe("integration tests thread routes", () => {
             .get(endpoints.user.thread.id(")").access)
             .set(jwt)
             .expect(400, "uuid validation error at thread")
-            .end((err, res) => {
+            .end(err => {
                if (err) return done(err);
                return done();
             });
@@ -142,7 +143,7 @@ describe("integration tests thread routes", () => {
             .set(jwt)
             .send({ name })
             .expect(201)
-            .end((err, res) => {
+            .end(err => {
                if (err) return done(err);
                return done();
             });
@@ -153,7 +154,7 @@ describe("integration tests thread routes", () => {
             .set(jwt)
             .send({ name })
             .expect(400, `thread with name: '${name}' already exist`)
-            .end((err, res) => {
+            .end(err => {
                if (err) return done(err);
                return done();
             });
@@ -164,7 +165,7 @@ describe("integration tests thread routes", () => {
             .set(jwt)
             .send({ name: "_" })
             .expect(400, [{ property: "name", constraints: { minLength: "Thread name is too short, min size is 6 symbols" } }])
-            .end((err, res) => {
+            .end(err => {
                if (err) return done(err);
                return done();
             });
@@ -175,7 +176,7 @@ describe("integration tests thread routes", () => {
             .set(jwt)
             .send("namename")
             .expect(400, "uuid validation error at thread")
-            .end((err, res) => {
+            .end(err => {
                if (err) return done();
                return done();
             });
@@ -187,7 +188,7 @@ describe("integration tests thread routes", () => {
             .del(endpoints.user.thread.id(thread_id).access)
             .set(jwt)
             .expect(204)
-            .end((err, res) => {
+            .end(err => {
                if (err) return done(err);
                return done();
             });
@@ -197,7 +198,7 @@ describe("integration tests thread routes", () => {
             .del(endpoints.user.thread.id(invalid_uuid).access)
             .set(jwt)
             .expect(400, "thread not found")
-            .end((err, res) => {
+            .end(err => {
                if (err) return done(err);
                return done();
             });

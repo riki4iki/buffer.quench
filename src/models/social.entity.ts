@@ -23,7 +23,7 @@ export default class Social implements IResponsible<Social> {
    socialId: string;
 
    public async toResponse(): Promise<Social> {
-      const cutted = omit(<Social>this, "id");
-      return <Social>cutted;
+      const cutted = omit(this as Social, "id");
+      return cutted as Social;
    }
 }

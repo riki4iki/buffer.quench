@@ -1,10 +1,22 @@
+/* eslint-disable quotes */
 import { DefaultState, Next } from "koa";
 import { BadRequest } from "http-errors";
 import { IParamContext, IParamIdState } from "../types";
+
+//parse input url to identify resource name id that came
+const getResouceName = async (url: string, id: string): Promise<string> => {
+   const routesArray: string[] = url.split("/");
+   const indexId = routesArray.indexOf(id);
+   if (indexId < 0) {
+      return "undefined";
+   }
+   return routesArray[indexId - 1];
+};
+
 /**
  * Class with common/abstract middlewares
  */
-export default class apiService {
+export default class ApiService {
    /**
     * Middleware for validate input param /:id from query string. With validation error return 400 status with message: 'uuid validation error'
     * @param ctx Context - Koa context that has request and response types
@@ -13,7 +25,7 @@ export default class apiService {
    public static async validateUUIDMiddleware(ctx: IParamContext<DefaultState, IParamIdState>, next: Next) {
       try {
          const resourceName = await getResouceName(ctx.URL.pathname, ctx.params.id);
-         const uuid = await apiService.validateUUID(ctx.params.id, resourceName);
+         await ApiService.validateUUID(ctx.params.id, resourceName);
          await next();
       } catch (err) {
          ctx.app.emit("error", err, ctx);
@@ -39,13 +51,13 @@ export default class apiService {
     *Promise - return parsed array with page id's
     * @param str String - input string from ctx.request.body.pages that present page array for connection to thread from precious middleware
     */
-   public static async StringToArray(pages: any): Promise<string[]> {
+   public static async StringToArray(pages: string | string[]): Promise<string[]> {
       if (Array.isArray(pages)) {
          return pages;
       } else {
          try {
             const str = pages.toString();
-            const pagesString: string = str.replace(/'/g, "\"");
+            const pagesString: string = str.replace(/'/g, '"');
             console.log("after replace" + pagesString);
             const pagesIdArray: Array<string> = JSON.parse(pagesString);
             console.log("parsed" + pagesIdArray);
@@ -57,13 +69,3 @@ export default class apiService {
       }
    }
 }
-
-//parse input url to identify resource name id that came
-const getResouceName = async (url: string, id: string): Promise<string> => {
-   const routesArray: string[] = url.split("/");
-   const index_id = routesArray.indexOf(id);
-   if (index_id < 0) {
-      return "undefined";
-   }
-   return routesArray[index_id - 1];
-};

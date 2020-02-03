@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/camelcase */
 import { nextMinutes, invalid_uuid, thread as createThread } from "../../config";
 import { create, del, post, posts, update } from "../../../src/service/thread.service/post.service/crud";
 import { getConnection } from "typeorm";
