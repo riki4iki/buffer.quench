@@ -1,4 +1,3 @@
-import { Context } from "koa";
 import Router from "koa-router";
 import { SocialService } from "../../../../service";
 const social = new Router();

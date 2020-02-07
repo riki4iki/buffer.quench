@@ -5,7 +5,8 @@ import { execute } from "./callback";
 
 export class NodeScheduleExecuter implements IExecuter {
    public async create(post: Post): Promise<void> {
-      await schedule.create({ id: post.id, expireDate: post.expireDate, cb: execute });
+      const job = await schedule.create({ id: post.id, expireDate: post.expireDate, cb: execute });
+      console.log(job);
    }
    public async update(post: Post): Promise<void> {
       await schedule.update({ id: post.id, expireDate: post.expireDate, cb: null });

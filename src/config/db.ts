@@ -24,7 +24,7 @@ const testOptions: ConnectionOptions = {
    host: dbString.host,
    username: dbString.user,
    password: dbString.password,
-   database: "database_test",
+   database: "test",
    synchronize: true,
    dropSchema: true,
    logging: false,

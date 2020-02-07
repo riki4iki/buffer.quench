@@ -64,6 +64,7 @@ export default class FacebookService {
          qs: {
             message: message,
             access_token: token,
+            url: "https://i.ibb.co/PNTjmNG/aattr.png",
          },
       };
       return request(options)

@@ -16,6 +16,14 @@ export const endpoints = {
             },
          },
       },
+      dashboard: {
+         access: "/api/v1/user/dashboard",
+         id: (id: string) => {
+            return {
+               access: `/api/v1/user/dashboard/${id}`,
+            };
+         },
+      },
       thread: {
          access: "/api/v1/user/thread",
          id: (id: string) => {

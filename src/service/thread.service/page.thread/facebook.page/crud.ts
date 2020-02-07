@@ -33,6 +33,45 @@ export async function target(thread: Thread, id: string): Promise<FacebookPage> 
 }
 
 /**
+ * Promise. Delete raw from mediator Page that connect thread and facebook page
+ * @param thread Thread - currnet thread taken by id from before middleware
+ * @param id String - uuid resource for identify target connected page
+ */
+export async function disconnect(thread: Thread, id: string): Promise<FacebookPage> {
+   const facebookPageRepository: Repository<FacebookPage> = getManager().getRepository(FacebookPage);
+   const facebookPage = await facebookPageRepository.findOne({ where: { thread, id }, relations: ["thread"] });
+   if (!facebookPage) {
+      const err = new BadRequest("facebook page not found");
+      throw err;
+   } else {
+      const removed = await facebookPageRepository.remove(facebookPage);
+      return removed;
+   }
+}
+
+/**
+ *  Promise - Connect facebook pages to thread by current user and facebook social page
+ * @param user User - current user from ctx.state decoded from jwt access_token
+ * @param thread Thread - thread for which facebook pages will be conected
+ * @param facebookUserId String - socialId. Facebook user who owns input pages
+ * @param facebookPages String[] - input facebook pages to be connect for thread
+ */
+export async function connectArrayPages(thread: Thread, facebookUserModel: FacebookUser, facebookPages: Array<string>): Promise<FacebookPage[]> {
+   //need call facebook api to take long_lived access_token for pages and make sure that connected pages are owned by facebook social
+   const pagesByFacebookSocial = await filterPagesByFacebookUser(facebookUserModel, facebookPages);
+
+   //connect validated pages to thread
+   const connectedPages = await connectPages(thread, facebookUserModel, pagesByFacebookSocial);
+   return connectedPages;
+}
+export async function connectStringPage(thread: Thread, facebookUserModel: FacebookUser, facebookPage: string): Promise<FacebookPage> {
+   const pageByFacebookSocial = await filterPagesByFacebookUser(facebookUserModel, [facebookPage]);
+
+   const [connectedPage] = await connectPages(thread, facebookUserModel, pageByFacebookSocial);
+   return connectedPage;
+}
+
+/**
  * Promise - Connect facebook pages to input thread
  * @param thread Thread - thread for which pages will be connected
  * @param facebookUser FacebookUser - facebook social instance who owns this pages
@@ -77,37 +116,4 @@ async function filterPagesByFacebookUser(facebookUser: FacebookUser, pages: Arra
       const err = new BadRequest(`input pages: [${failed}] are not accounts for user: ${facebookUser.id}`);
       throw err;
    }
-}
-
-/**
- * Promise. Delete raw from mediator Page that connect thread and facebook page
- * @param thread Thread - currnet thread taken by id from before middleware
- * @param id String - uuid resource for identify target connected page
- */
-export async function disconnect(thread: Thread, id: string): Promise<FacebookPage> {
-   const facebookPageRepository: Repository<FacebookPage> = getManager().getRepository(FacebookPage);
-   const facebookPage = await facebookPageRepository.findOne({ where: { thread, id }, relations: ["thread"] });
-   if (!facebookPage) {
-      const err = new BadRequest("facebook page not found");
-      throw err;
-   } else {
-      const removed = await facebookPageRepository.remove(facebookPage);
-      return removed;
-   }
-}
-
-/**
- *  Promise - Connect facebook pages to thread by current user and facebook social page
- * @param user User - current user from ctx.state decoded from jwt access_token
- * @param thread Thread - thread for which facebook pages will be conected
- * @param facebookUserId String - socialId. Facebook user who owns input pages
- * @param facebookPages String[] - input facebook pages to be connect for thread
- */
-export async function connectArrayPages(thread: Thread, facebookUserModel: FacebookUser, facebookPages: Array<string>) {
-   //need call facebook api to take long_lived access_token for pages and make sure that connected pages are owned by facebook social
-   const pagesByFacebookSocial = await filterPagesByFacebookUser(facebookUserModel, facebookPages);
-
-   //connect validated pages to thread
-   const connectedPaged = await connectPages(thread, facebookUserModel, pagesByFacebookSocial);
-   return connectedPaged;
 }

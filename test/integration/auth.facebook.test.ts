@@ -6,6 +6,7 @@ import { facebook_test_user, endpoints, user as connectAndCreateUser } from "../
 import { IJwtPair } from "../../src/types";
 
 import { getConnection } from "typeorm";
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 let next_user;
 
 beforeAll(async () => {
@@ -104,7 +105,7 @@ describe("test facebook authentication", () => {
          test("local authenticate to system by second user for connection socials, should return jwt pair", async done => {
             request(app.callback())
                .post(endpoints.auth.local.sign_in)
-               .send({ email: next_user.email, password: next_user.password })
+               .send({ email: "facebook_auth_tester@gmail.com", password: "88005553535" })
                .expect(200)
                .end((err, res) => {
                   if (err) return done(err);

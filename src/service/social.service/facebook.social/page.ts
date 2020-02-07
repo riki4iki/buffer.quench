@@ -1,7 +1,7 @@
-import { getManager, Repository } from "typeorm";
-import { FacebookPage as FacebookPageModel, FacebookUser as FacebookUserModel } from "../../../models";
+import { omit } from "lodash";
+
+import { FacebookUser as FacebookUserModel } from "../../../models";
 import { IFacebookPage } from "../../../types";
-import { BadRequest } from "http-errors";
 import { fbService as api } from "../../../lib";
 
 /**
@@ -10,7 +10,9 @@ import { fbService as api } from "../../../lib";
  * @param facebookUser FacebookUserModel - social from facebook for whom the pages will be getted
  */
 export async function insertPagesfromApi(facebookUser: FacebookUserModel): Promise<Array<IFacebookPage>> {
-   const apiFacebookPage = await api.accounts(facebookUser.accessToken);
+   const apiFacebookPages = await api.accounts(facebookUser.accessToken);
 
-   return await apiFacebookPage;
+   const responsableFacebookPages = apiFacebookPages.map(page => omit(page, "access_token") as IFacebookPage);
+
+   return responsableFacebookPages;
 }

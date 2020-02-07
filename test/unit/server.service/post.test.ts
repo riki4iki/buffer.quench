@@ -15,7 +15,7 @@ afterAll(async done => {
 });
 
 describe("unit test post crud", () => {
-   const context: string = "some_text_for_post";
+   const context = "some_text_for_post";
    const expireDate: Date = nextMinutes(2);
    let postId: string;
    describe("post creating test", () => {
