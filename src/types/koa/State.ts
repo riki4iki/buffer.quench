@@ -15,6 +15,6 @@ export interface IParamIdState {
 export interface IFaceBookState extends IAuthState {
    social: FacebookUser;
 }
-export interface ISocial<T> extends IAuthState {
+export interface ISocialState<T> extends IAuthState {
    social: T;
 }

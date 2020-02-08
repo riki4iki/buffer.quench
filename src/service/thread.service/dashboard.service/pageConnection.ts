@@ -2,7 +2,7 @@ import { User, Thread } from "../../../models";
 import { IUknownPageBody, ISocialPage } from "../../../types";
 
 import { SocialSelector } from "./social.factory";
-import { ConnectionSelector } from "./pageConnection.factory";
+import { ConnectionSelector, connectionPromise } from "./pageConnection.factory";
 
 export async function connectPages(user: User, thread: Thread, body: IUknownPageBody[]): Promise<ISocialPage[]> {
    const connectPages = Promise.all(
@@ -15,4 +15,15 @@ export async function connectPages(user: User, thread: Thread, body: IUknownPage
       }),
    );
    return connectPages;
+}
+
+export async function selectSocials(user: User, body: IUknownPageBody[]) {
+   const socials = Promise.all(
+      body.map(async item => {
+         const socialGetterPromise = SocialSelector.selectSocialByType(item.type);
+         const social = await socialGetterPromise(user, item.socialId);
+         return social;
+      }),
+   );
+   return socials;
 }

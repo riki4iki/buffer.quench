@@ -14,14 +14,14 @@ import {
 import User from "../user.entity";
 import Page from "./facebookPage.entity";
 import { fbService as fb } from "../../lib";
-import { IFacebookPicture, IResponsible, IAfterInserter, IBeforeRemover } from "../../types";
+import { IFacebookPicture, IResponsible, IAfterInserter, IBeforeRemover, ISocial } from "../../types";
 import Social from "../social.entity";
 import { omit } from "lodash";
 import { InternalServerError } from "http-errors";
 
 @Entity()
 @Index(["id"], { unique: true })
-export default class FacebookUser implements IResponsible<FacebookUser>, IAfterInserter, IBeforeRemover {
+export default class FacebookUser implements IResponsible<FacebookUser>, IAfterInserter, IBeforeRemover, ISocial {
    @PrimaryGeneratedColumn("uuid")
    id: string;
 

@@ -68,11 +68,4 @@ export default class ApiService {
          }
       }
    }
-   public static async objectExistValidate(object: any) {
-      if (!object) {
-         const err = new BadRequest(`${object} is undefined`);
-         throw err;
-      }
-      return object;
-   }
 }

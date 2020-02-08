@@ -8,7 +8,7 @@
    },
    "rules": {
       "semi": ["error", "always"],
-      "quotes": ["error", "double"],
+      //"quotes": ["error", "double"],
       "@typescript-eslint/explicit-function-return-type": "off",
       "@typescript-eslint/no-explicit-any": 1,
       "@typescript-eslint/no-inferrable-types": [
@@ -20,6 +20,8 @@
       "@typescript-eslint/no-unused-vars": "warn",
       "@typescript-eslint/interface-name-prefix": 0,
       "@typescript-eslint/camelcase": ["error", { "properties": "never" }],
-      "@typescript-eslint/no-use-before-define": ["error", { "functions": false }]
+      "@typescript-eslint/no-use-before-define": ["error", { "functions": false }],
+      "no-empty-function": "warn",
+      "@typescript-eslint/no-empty-function": { "allow": ["arrowFunctions"] }
    }
 }

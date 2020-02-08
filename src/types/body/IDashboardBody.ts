@@ -1,7 +1,7 @@
 import { IPostBody } from "./IPostBody";
-import { IPageBody } from "./IPageBody";
+import { IUknownPageBody } from "./IUknownPageBody";
 
 export interface IDashboardBody {
    post: IPostBody;
-   pages: IPageBody[];
+   pages: IUknownPageBody[];
 }

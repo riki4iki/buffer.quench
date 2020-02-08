@@ -3,7 +3,8 @@ import { getConnection } from "typeorm";
 
 import { app } from "../../src/app";
 import { IJwtPair, IFacebookPage, IPostBody, IUknownPageBody } from "../../src/types";
-import { user as connectAndCreateUser, facebook_test_user as facebookUser, endpoints, nextMinutes } from "../config";
+import { SocialType } from "../../src/types/architecture/SocialTypes";
+import { user as connectAndCreateUser, facebook_test_user as facebookUser, endpoints, nextMinutes, invalid_uuid } from "../config";
 
 const account = { email: "dashboard_tester@gmail.com", password: "123321" };
 let jwt: IJwtPair;
@@ -98,10 +99,184 @@ describe("test dashboard endpoint(hard logic realize), before need add social, g
             .post(endpoints.user.dashboard.access)
             .set(jwt)
             .send({ pages })
-            .expect(400)
-            .end((err, res) => {
+            .expect(400, [{ property: "post", constraints: { isNotEmpty: "post should not be empty" } }])
+            .end(err => {
                if (err) return done(err);
-               console.log(res.body);
+               return done();
+            });
+      });
+      test("create new post with malfored post object, should return bad request", async done => {
+         const pages: IUknownPageBody[] = socialPages.map(item => {
+            return { type: "facebook", socialId, page: item.id };
+         });
+
+         request(app.callback())
+            .post(endpoints.user.dashboard.access)
+            .set(jwt)
+            .send({ pages, post: { expireDate: "228" } })
+            .expect(400, [
+               { property: "context", constraints: { isNotEmpty: "context should not be empty" } },
+               { property: "expireDate", constraints: { isFuture: "impossible set date in past time" } },
+            ])
+            .end(err => {
+               if (err) return done(err);
+               return done();
+            });
+      });
+      test("create new post with empty array object, should return bad request", async done => {
+         const post: IPostBody = {
+            context: `dashboard test at ${new Date()}`,
+            expireDate: nextMinutes(1),
+         };
+         request(app.callback())
+            .post(endpoints.user.dashboard.access)
+            .set(jwt)
+            .send({ post })
+            .expect(400, [
+               {
+                  property: "pages",
+                  constraints: {
+                     arrayNotEmpty: "pages should not be empty",
+                     isArray: "pages must be an array",
+                     isNotEmpty: "pages should not be empty",
+                  },
+               },
+            ])
+            .end(err => {
+               if (err) return done(err);
+               return done();
+            });
+      });
+      test("create new post with empty array pages, should return 400 validation bad request", async done => {
+         const post: IPostBody = {
+            context: `dashboard test at ${new Date()}`,
+            expireDate: nextMinutes(1),
+         };
+         const pages = [];
+         request(app.callback())
+            .post(endpoints.user.dashboard.access)
+            .set(jwt)
+            .send({ post, pages })
+            .expect(400, [
+               {
+                  property: "pages",
+                  constraints: {
+                     arrayNotEmpty: "pages should not be empty",
+                  },
+               },
+            ])
+            .end(err => {
+               if (err) return done(err);
+               return done();
+            });
+      });
+      test("create new post with invalid facebook_id in page object, should return 400 ", async done => {
+         const post: IPostBody = {
+            context: `dashboard test at ${new Date()}`,
+            expireDate: nextMinutes(1),
+         };
+         const page = "fadagwegfadasdsadasfdgsd"; //pageid in facebook
+         const pages = [{ type: "facebook", socialId, page }];
+         request(app.callback())
+            .post(endpoints.user.dashboard.access)
+            .set(jwt)
+            .send({ post, pages })
+            .expect(400, `input pages: [${page}] are not accounts for user: ${socialId}`)
+            .end(err => {
+               if (err) return done(err);
+               return done();
+            });
+      });
+      test("create new post with invalid object in pages(doesn't match in pattern {type:string,socialId:string,page:string}, should return 400", async done => {
+         const post: IPostBody = {
+            context: `dashboard test at ${new Date()}`,
+            expireDate: nextMinutes(1),
+         };
+         const pages = [{ tupe: "AAAAAAAAAAAAAAAA", social: "))", page: 228 }];
+         request(app.callback())
+            .post(endpoints.user.dashboard.access)
+            .set(jwt)
+            .send({ post, pages })
+            .expect(400, [
+               { property: "socialId", constraints: { isUuid: "socialId must be an UUID", isNotEmpty: "socialId should not be empty" } },
+               {
+                  property: "type",
+                  constraints: {
+                     isNotEmpty: "type should not be empty",
+                     isSocialType: "invalid input type of social, only the following types are currently available: facebook,instagram,twitter",
+                  },
+               },
+            ])
+            .end(err => {
+               if (err) return done(err);
+               return done();
+            });
+      });
+      test("create new post with invalid type in pages object, should return 400", async done => {
+         const post: IPostBody = {
+            context: `dashboard test at ${new Date()}`,
+            expireDate: nextMinutes(1),
+         };
+         const pages = [{ type: 1, socialId, page: 1 }];
+         request(app.callback())
+            .post(endpoints.user.dashboard.access)
+            .set(jwt)
+            .send({ post, pages })
+            .expect(400, [
+               {
+                  property: "type",
+                  constraints: {
+                     isSocialType: `invalid input type of social, only the following types are currently available: ${Object.values(SocialType)}`,
+                  },
+               },
+            ])
+            .end(err => {
+               if (err) return done(err);
+               return done();
+            });
+      });
+      test("create new post with pages array where first object is valid type, second object is invalid type, should return 400", async done => {
+         const post: IPostBody = {
+            context: `dashboard test at ${new Date()}`,
+            expireDate: nextMinutes(1),
+         };
+         const pages = [
+            { type: "facebook", socialId, page: 1 },
+            { type: 1, socialId, page: 1 },
+         ];
+         request(app.callback())
+            .post(endpoints.user.dashboard.access)
+            .set(jwt)
+            .send({ post, pages })
+            .expect(400, [
+               {
+                  property: "type",
+                  constraints: {
+                     isSocialType: `invalid input type of social, only the following types are currently available: ${Object.values(SocialType)}`,
+                  },
+               },
+            ])
+            .end(err => {
+               if (err) return done(err);
+               return done();
+            });
+      });
+      test("create new post with invalid socialId on pages array objct, should return 400", async done => {
+         const post: IPostBody = {
+            context: `dashboard test at ${new Date()}`,
+            expireDate: nextMinutes(1),
+         };
+         const pages = [
+            { type: "facebook", socialId: invalid_uuid, page: "13" },
+            { type: "facebook", socialId, page: 0 },
+         ];
+         request(app.callback())
+            .post(endpoints.user.dashboard.access)
+            .set(jwt)
+            .send({ post, pages })
+            .expect(400, "social not found")
+            .end(err => {
+               if (err) return done(err);
                return done();
             });
       });

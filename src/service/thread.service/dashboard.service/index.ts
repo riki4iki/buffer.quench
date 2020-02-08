@@ -1,10 +1,11 @@
 import { IContext, IAuthState, IParamContext, IParamIdState } from "../../../types/koa";
-import { create as createThread } from "../crud";
+import { create as createThread, all as selectAllThread, get as selectTargetThread, del as deleteThread, update as updateThread } from "../crud";
 import { create as createPost } from "../post.service/crud";
 import { NodeScheduleExecuter } from "../cron.service/node-shedule/executer";
-import apiHelper from "../../api";
 
-import { connectPages } from "./pageConnection";
+import { validateDashboardBody } from "./dashboard.validator";
+
+import { connectPages, selectSocials } from "./pageConnection";
 
 export class DashboardService {
    public static async getDashboard(ctx: IContext<IAuthState>) {
@@ -22,6 +23,7 @@ export class DashboardService {
       }
    }
    public static async createPostDashboard(ctx: IContext<IAuthState>) {
+      const name = new Date().getTime().toString();
       try {
          //create new thread and connect pages and post from input body:
 
@@ -36,17 +38,21 @@ export class DashboardService {
           */
 
          console.log(ctx.request.body);
+         const dashboard = await validateDashboardBody(ctx.request.body);
+         const socials = await selectSocials(ctx.state.user, dashboard.pages);
+         console.log(socials);
+         /*
          const inputPages = await apiHelper.objectExistValidate(ctx.request.body.pages);
-         const inputPost = await apiHelper.objectExistValidate(ctx.request.body.post);
-         const pages = await apiHelper.StringToArray(ctx.request.body.pages);
+         const inputPost = await apiHelper.objectExistValidate(ctx.request.body.post);*/
+
          //create thread with name current date
-         const thread = await createThread(ctx.state.user, { name: new Date().getTime().toString() });
+         const thread = await createThread(ctx.state.user, { name });
          console.log(thread);
          //connect pages to created thread
-         await connectPages(ctx.state.user, thread, ctx.request.body.pages);
+         const pages = await connectPages(ctx.state.user, thread, dashboard.pages);
          console.log(pages);
          //create post in dat thread
-         const post = await createPost(thread, ctx.request.body.post);
+         const post = await createPost(thread, dashboard.post);
          console.log(post);
 
          //create job by node-schedule
@@ -57,6 +63,7 @@ export class DashboardService {
          ctx.status = 201;
          ctx.body = post;
       } catch (err) {
+         //just delete thread??
          ctx.app.emit("error", err, ctx);
       }
    }
