@@ -70,7 +70,26 @@ export async function connectStringPage(thread: Thread, facebookUserModel: Faceb
    const [connectedPage] = await connectPages(thread, facebookUserModel, pageByFacebookSocial);
    return connectedPage;
 }
+export async function connectResponsedPage(thread: Thread, facebookUser: FacebookUser, facebookPage: IFacebookPage) {
+   const facebookPageRepository: Repository<FacebookPage> = getManager().getRepository(FacebookPage);
 
+   const pageFromDatabase = await facebookPageRepository.findOne({ fbId: facebookPage.id, thread, fbUser: facebookUser });
+   if (pageFromDatabase) {
+      //page with dat facebook_id already connected to thread;
+      //no reason to update access_token cause of acess_token never expires
+      const toResponse = await pageFromDatabase.toResponse();
+      return toResponse;
+   } else {
+      const toSave = new FacebookPage();
+      toSave.accessToken = facebookPage.access_token;
+      toSave.fbId = facebookPage.id;
+      toSave.thread = thread;
+      toSave.fbUser = facebookUser;
+      const saved = await facebookPageRepository.save(toSave);
+      const toResponse = await saved.toResponse();
+      return toResponse;
+   }
+}
 /**
  * Promise - Connect facebook pages to input thread
  * @param thread Thread - thread for which pages will be connected
@@ -90,7 +109,8 @@ async function connectPages(thread: Thread, facebookUser: FacebookUser, pages: I
          } else {
             const newPage = new FacebookPage();
             newPage.accessToken = page.access_token;
-            (newPage.fbId = page.id), (newPage.thread = thread);
+            newPage.fbId = page.id;
+            newPage.thread = thread;
             newPage.fbUser = facebookUser;
             const saved = await facebookPageRepository.save(newPage);
             const toResponse = await saved.toResponse();
@@ -115,5 +135,18 @@ async function filterPagesByFacebookUser(facebookUser: FacebookUser, pages: Arra
       const failed = pages.filter(page => !ids.includes(page));
       const err = new BadRequest(`input pages: [${failed}] are not accounts for user: ${facebookUser.id}`);
       throw err;
+   }
+}
+
+export async function validatePageBySocial(facebookUser: FacebookPage, page: string) {
+   const pagesFromAPI = await fb.longLiveAccounts(facebookUser.accessToken, facebookUser.fbId);
+   const ids = pagesFromAPI.map(page => page.id);
+   const isInclude = ids.includes(page);
+   if (!isInclude) {
+      const err = new BadRequest(`input facebook page: ${page} is not account for social: ${facebookUser.id}`);
+      throw err;
+   } else {
+      const toConnect = pagesFromAPI.find(apiPage => apiPage.id === page);
+      return toConnect;
    }
 }

@@ -5,6 +5,7 @@ import { ISocialPage } from "./ISocialPage";
 import { SocialType } from "./SocialTypes";
 //import oters types
 
+//rewrite!
 export class PageGetterFactory {
    public static async createGetter(type: string): Promise<(Thread: Thread, string: string) => Promise<ISocialPage>> {
       if (type === SocialType.Facebook) {

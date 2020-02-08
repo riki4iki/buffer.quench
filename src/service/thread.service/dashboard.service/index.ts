@@ -5,7 +5,7 @@ import { NodeScheduleExecuter } from "../cron.service/node-shedule/executer";
 
 import { validateDashboardBody } from "./dashboard.validator";
 
-import { connectPages, selectSocials } from "./pageConnection";
+import { connectPages, selectSocials, selectFilters } from "./pageConnection";
 
 export class DashboardService {
    public static async getDashboard(ctx: IContext<IAuthState>) {
@@ -41,6 +41,11 @@ export class DashboardService {
          const dashboard = await validateDashboardBody(ctx.request.body);
          const socials = await selectSocials(ctx.state.user, dashboard.pages);
          console.log(socials);
+
+         const filters = await selectFilters(socials);
+         console.log(filters);
+
+         //need validate page by social...
          /*
          const inputPages = await apiHelper.objectExistValidate(ctx.request.body.pages);
          const inputPost = await apiHelper.objectExistValidate(ctx.request.body.post);*/

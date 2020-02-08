@@ -1,11 +1,12 @@
 import { SocialType } from "../../../types/architecture/SocialTypes";
 
 import { get as facebookSocialById } from "../../social.service/facebook.social/crud";
+import { ISocial } from "../../../types/architecture";
 import { FacebookUser, User } from "../../../models";
 
 import { BadRequest } from "http-errors";
 
-type socialGetterType = (user: User, id: string) => Promise<FacebookUser>;
+type socialGetterType = (user: User, id: string) => Promise<ISocial>;
 
 export class SocialSelector {
    private static socials: { [type: string]: socialGetterType } = {

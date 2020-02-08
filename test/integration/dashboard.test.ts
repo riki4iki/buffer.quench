@@ -181,7 +181,7 @@ describe("test dashboard endpoint(hard logic realize), before need add social, g
             .post(endpoints.user.dashboard.access)
             .set(jwt)
             .send({ post, pages })
-            .expect(400, `input pages: [${page}] are not accounts for user: ${socialId}`)
+            .expect(400, `input facebook page: ${page} is not account for social: ${socialId}`)
             .end(err => {
                if (err) return done(err);
                return done();

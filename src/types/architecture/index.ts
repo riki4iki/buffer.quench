@@ -4,6 +4,7 @@ export * from "./IBeforeRemover";
 
 export * from "./ISocialPage";
 export * from "./ISocial";
+export * from "./ISocialPageResponse";
 
 export * from "./ICronnable";
 export * from "./IExecuter";

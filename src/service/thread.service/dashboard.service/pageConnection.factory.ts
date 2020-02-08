@@ -4,9 +4,9 @@ import { connectStringPage as facebookConnectPage } from "../page.thread/faceboo
 import { BadRequest } from "http-errors";
 
 import { FacebookUser, Thread } from "../../../models";
-import { ISocialPage } from "../../../types/architecture";
+import { ISocialPage, ISocial } from "../../../types/architecture";
 
-export type connectionPromise = (thread: Thread, social: FacebookUser, page: string) => Promise<ISocialPage>;
+export type connectionPromise = (thread: Thread, social: ISocial, page: string) => Promise<ISocialPage>;
 
 export class ConnectionSelector {
    private static pages: { [type: string]: connectionPromise } = {
