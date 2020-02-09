@@ -1,13 +1,14 @@
 import { IContext, IAuthState, IParamContext, IParamIdState } from "../../../types/koa";
-import { create as createThread, all as selectAllThread, get as selectTargetThread, del as deleteThread, update as updateThread } from "../crud";
-import { create as createPost, posts as selectPostByThread } from "../post.service/crud";
-import { all as selectAllPagesByThread } from "../page.thread/crud";
+import { create as createThread } from "../crud";
+import { create as createPost, update as updatePost } from "../post.service/crud";
+
 import { NodeScheduleExecuter } from "../cron.service/node-shedule/executer";
 
 import { validateDashboardBody } from "./dashboard.validator";
 
 import { connectPages, socialConvertors, typesToPromises, validatePagesBySocial } from "./connectionService";
-import { selectDashboardedThreadWithPost, selectAllDashboardedThreadsWithPost } from "./getterServie";
+import { selectDashboardedThreadWithPost, selectAllDashboardedThreadsWithPost } from "./getterService";
+import { findThreadById, convertPages, difference } from "./updateService";
 
 export class DashboardService {
    public static async getDashboard(ctx: IContext<IAuthState>) {
@@ -89,6 +90,30 @@ export class DashboardService {
    }
    public static async updatePostDashboard(ctx: IParamContext<IAuthState, IParamIdState>) {
       try {
+         //need check does thread is exist
+         const thread = await findThreadById(ctx.state.user, ctx.params.id);
+
+         //thread exist, validate input body
+         const dashboard = await validateDashboardBody(ctx.request.body);
+
+         const convertedByType = typesToPromises(dashboard.pages);
+
+         const convertedSocials = await socialConvertors(ctx.state.user, convertedByType);
+         console.log(convertedSocials);
+
+         const validatedBySocials = await validatePagesBySocial(convertedSocials);
+         console.log(validatedBySocials);
+
+         const converted = await convertPages(thread, thread.page);
+
+         const { toConnect, toDisconnect } = difference(converted, validatedBySocials);
+         const connecte;
+
+         const [post] = await thread.posts;
+         const updatedPost = await updatePost(thread, post.id, dashboard.post);
+
+         const cronExecuter = new NodeScheduleExecuter();
+         await cronExecuter.update(post);
       } catch (err) {
          ctx.app.emit("error", err, ctx);
       }
