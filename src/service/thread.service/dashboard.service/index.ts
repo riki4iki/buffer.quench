@@ -5,7 +5,10 @@ import { NodeScheduleExecuter } from "../cron.service/node-shedule/executer";
 
 import { validateDashboardBody } from "./dashboard.validator";
 
-import { connectPages, selectSocials, selectFilters } from "./pageConnection";
+import { typesToPromises } from "./typeConvertor";
+import { socialConvertors } from "./socialConvertor";
+import { validatePagesBySocial } from "./validatePageConvertor";
+import { connectPages } from "./connectPage";
 
 export class DashboardService {
    public static async getDashboard(ctx: IContext<IAuthState>) {
@@ -23,7 +26,6 @@ export class DashboardService {
       }
    }
    public static async createPostDashboard(ctx: IContext<IAuthState>) {
-      const name = new Date().getTime().toString();
       try {
          //create new thread and connect pages and post from input body:
 
@@ -39,23 +41,27 @@ export class DashboardService {
 
          console.log(ctx.request.body);
          const dashboard = await validateDashboardBody(ctx.request.body);
-         const socials = await selectSocials(ctx.state.user, dashboard.pages);
-         console.log(socials);
 
-         const filters = await selectFilters(socials);
-         console.log(filters);
+         const convertedByType = typesToPromises(dashboard.pages);
+
+         const convertedSocials = await socialConvertors(ctx.state.user, convertedByType);
+         console.log(convertedSocials);
+
+         const validatedBySocials = await validatePagesBySocial(convertedSocials);
+         console.log(validatedBySocials);
 
          //need validate page by social...
          /*
          const inputPages = await apiHelper.objectExistValidate(ctx.request.body.pages);
          const inputPost = await apiHelper.objectExistValidate(ctx.request.body.post);*/
 
-         //create thread with name current date
-         const thread = await createThread(ctx.state.user, { name });
+         //create thread with name current dateobject
+         const thread = await createThread(ctx.state.user, { name: new Date().getTime().toString() });
          console.log(thread);
-         //connect pages to created thread
-         const pages = await connectPages(ctx.state.user, thread, dashboard.pages);
+
+         const pages = await connectPages(thread, validatedBySocials);
          console.log(pages);
+         //connect pages to created thread
          //create post in dat thread
          const post = await createPost(thread, dashboard.post);
          console.log(post);

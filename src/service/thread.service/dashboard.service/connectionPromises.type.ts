@@ -4,15 +4,19 @@ import { User, Thread } from "../../../models";
 
 import { BadRequest } from "http-errors";
 
+export type socialPromise = (user: User, id: string) => Promise<ISocial>;
+export type validatePagePromise = (social: ISocial, page: string) => Promise<ISocialPageResponse>;
+export type connectionPromise = (thread: Thread, social: ISocial, page: ISocialPageResponse) => Promise<ISocialPage>;
+
 export type ConnectionPromises = {
-   socialPromise: (user: User, id: string) => Promise<ISocial>;
-   filterPromise: (social: ISocial, pageId: string) => Promise<ISocialPageResponse>;
-   connectionPromise: (thread: Thread, social: ISocial, page: ISocialPageResponse) => Promise<ISocialPage>;
+   socialPromise: socialPromise;
+   validatePagePromise: validatePagePromise;
+   connectionPromise: connectionPromise;
 };
 
 export const failedTypePromises: ConnectionPromises = {
    socialPromise: (user: User, id: string) => badRequest(),
-   filterPromise: (social: ISocial, pageId: string) => badRequest(),
+   validatePagePromise: (social: ISocial, page: string) => badRequest(),
    connectionPromise: (thread: Thread, social: ISocial, page: ISocialPageResponse) => badRequest(),
 };
 

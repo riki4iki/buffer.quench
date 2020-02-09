@@ -6,7 +6,7 @@ import { validatePageBySocial as facebookValidation, connectResponsedPage as fac
 
 export class ConnectionPromisesFactory {
    private static promises: { [type: string]: ConnectionPromises } = {
-      [SocialType.Facebook]: { socialPromise: facebookSocialById, filterPromise: facebookValidation, connectionPromise: facebookConnection },
+      [SocialType.Facebook]: { socialPromise: facebookSocialById, validatePagePromise: facebookValidation, connectionPromise: facebookConnection },
       default: failedTypePromises,
    };
 
