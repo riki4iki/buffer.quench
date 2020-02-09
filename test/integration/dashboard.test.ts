@@ -18,6 +18,7 @@ afterAll(async () => {
 describe("test dashboard endpoint(hard logic realize), before need add social, get pages from dat social", () => {
    let socialId: string;
    let socialPages: IFacebookPage[];
+   let threadId: string;
    describe("add social to account, get social pages", () => {
       test("login into service, should return jwt pair", async done => {
          request(app.callback())
@@ -81,7 +82,7 @@ describe("test dashboard endpoint(hard logic realize), before need add social, g
             return { type: "facebook", socialId, page: item.id };
          });
          request(app.callback())
-            .post(endpoints.user.dashboard.access)
+            .post(endpoints.user.dashboard.post.access)
             .set(jwt)
             .send({ post, pages })
             .expect(201)
@@ -91,6 +92,7 @@ describe("test dashboard endpoint(hard logic realize), before need add social, g
                expect(response).toMatchObject({
                   id: expect.any(String),
                });
+               threadId = res.body.id;
                /* expect(response).toMatchObject({
                   thread: {
                      //name: expect.any(String),
@@ -116,7 +118,7 @@ describe("test dashboard endpoint(hard logic realize), before need add social, g
             return { type: "facebook", socialId, page: item.id };
          });
          request(app.callback())
-            .post(endpoints.user.dashboard.access)
+            .post(endpoints.user.dashboard.post.access)
             .set(jwt)
             .send({ pages })
             .expect(400, [{ property: "post", constraints: { isNotEmpty: "post should not be empty" } }])
@@ -131,7 +133,7 @@ describe("test dashboard endpoint(hard logic realize), before need add social, g
          });
 
          request(app.callback())
-            .post(endpoints.user.dashboard.access)
+            .post(endpoints.user.dashboard.post.access)
             .set(jwt)
             .send({ pages, post: { expireDate: "228" } })
             .expect(400, [
@@ -149,7 +151,7 @@ describe("test dashboard endpoint(hard logic realize), before need add social, g
             expireDate: nextMinutes(1),
          };
          request(app.callback())
-            .post(endpoints.user.dashboard.access)
+            .post(endpoints.user.dashboard.post.access)
             .set(jwt)
             .send({ post })
             .expect(400, [
@@ -174,7 +176,7 @@ describe("test dashboard endpoint(hard logic realize), before need add social, g
          };
          const pages = [];
          request(app.callback())
-            .post(endpoints.user.dashboard.access)
+            .post(endpoints.user.dashboard.post.access)
             .set(jwt)
             .send({ post, pages })
             .expect(400, [
@@ -198,7 +200,7 @@ describe("test dashboard endpoint(hard logic realize), before need add social, g
          const page = "fadagwegfadasdsadasfdgsd"; //pageid in facebook
          const pages = [{ type: "facebook", socialId, page }];
          request(app.callback())
-            .post(endpoints.user.dashboard.access)
+            .post(endpoints.user.dashboard.post.access)
             .set(jwt)
             .send({ post, pages })
             .expect(400, `input facebook page: ${page} is not account for social: ${socialId}`)
@@ -214,7 +216,7 @@ describe("test dashboard endpoint(hard logic realize), before need add social, g
          };
          const pages = [{ tupe: "AAAAAAAAAAAAAAAA", social: "))", page: 228 }];
          request(app.callback())
-            .post(endpoints.user.dashboard.access)
+            .post(endpoints.user.dashboard.post.access)
             .set(jwt)
             .send({ post, pages })
             .expect(400, [
@@ -239,7 +241,7 @@ describe("test dashboard endpoint(hard logic realize), before need add social, g
          };
          const pages = [{ type: 1, socialId, page: 1 }];
          request(app.callback())
-            .post(endpoints.user.dashboard.access)
+            .post(endpoints.user.dashboard.post.access)
             .set(jwt)
             .send({ post, pages })
             .expect(400, [
@@ -265,7 +267,7 @@ describe("test dashboard endpoint(hard logic realize), before need add social, g
             { type: 1, socialId, page: 1 },
          ];
          request(app.callback())
-            .post(endpoints.user.dashboard.access)
+            .post(endpoints.user.dashboard.post.access)
             .set(jwt)
             .send({ post, pages })
             .expect(400, [
@@ -291,7 +293,7 @@ describe("test dashboard endpoint(hard logic realize), before need add social, g
             { type: "facebook", socialId, page: 0 },
          ];
          request(app.callback())
-            .post(endpoints.user.dashboard.access)
+            .post(endpoints.user.dashboard.post.access)
             .set(jwt)
             .send({ post, pages })
             .expect(400, "social not found")
@@ -309,7 +311,7 @@ describe("test dashboard endpoint(hard logic realize), before need add social, g
             return { type: "facebook", socialId, page: item.id };
          });
          request(app.callback())
-            .post(endpoints.user.dashboard.access)
+            .post(endpoints.user.dashboard.post.access)
             .set(jwt)
             .send({ post, pages })
             .expect(201)
@@ -343,12 +345,70 @@ describe("test dashboard endpoint(hard logic realize), before need add social, g
    describe("test dashboard getting", () => {
       test("get all threads in dashboard, should return 200 and array of dashboard objects", async done => {
          request(app.callback())
-            .get(endpoints.user.dashboard.access)
+            .get(endpoints.user.dashboard.post.access)
             .set(jwt)
             .expect(200)
             .end((err, res) => {
                if (err) return done(err);
-               console.log(res.body);
+               const array = res.body;
+               expect(array).toBeInstanceOf(Array);
+               array.forEach(item => {
+                  expect(item).toMatchObject({
+                     id: expect.any(String),
+                     post: {
+                        id: expect.any(String),
+                        context: expect.any(String),
+                        expireDate: expect.any(String),
+                     },
+                     pages: expect.any(Array),
+                  });
+                  const pages = item.pages;
+                  expect(pages).toEqual(expect.arrayContaining([{ type: expect.any(String), pageId: expect.any(String) }]));
+               });
+               return done();
+            });
+      });
+      test("get target thread by id that created before.., should return dashboard object with 200 status", async done => {
+         request(app.callback())
+            .get(endpoints.user.dashboard.post.id(threadId).access)
+            .set(jwt)
+            .expect(200)
+            .end((err, res) => {
+               if (err) return done(err);
+               const item = res.body;
+               expect(item).toMatchObject({
+                  id: expect.any(String),
+                  post: {
+                     id: expect.any(String),
+                     context: expect.any(String),
+                     expireDate: expect.any(String),
+                  },
+                  pages: expect.any(Array),
+               });
+               const pages = item.pages;
+               expect(pages).toEqual(expect.arrayContaining([{ type: expect.any(String), pageId: expect.any(String) }]));
+
+               return done();
+            });
+      });
+      test("get target thread by invalid uuid, should return 400", async done => {
+         request(app.callback())
+            .get(endpoints.user.dashboard.post.id(invalid_uuid).access)
+            .set(jwt)
+            .expect(400, "thread not found")
+            .end(err => {
+               if (err) return done(err);
+
+               return done();
+            });
+      });
+      test("get target thread by malfores uuid, should return 400", async done => {
+         request(app.callback())
+            .get(endpoints.user.dashboard.post.id(")").access)
+            .set(jwt)
+            .expect(400, "uuid validation error at post")
+            .end(err => {
+               if (err) return done(err);
                return done();
             });
       });

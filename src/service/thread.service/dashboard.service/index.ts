@@ -1,28 +1,21 @@
 import { IContext, IAuthState, IParamContext, IParamIdState } from "../../../types/koa";
 import { create as createThread, all as selectAllThread, get as selectTargetThread, del as deleteThread, update as updateThread } from "../crud";
 import { create as createPost, posts as selectPostByThread } from "../post.service/crud";
-import { all } from "../page.thread/crud";
+import { all as selectAllPagesByThread } from "../page.thread/crud";
 import { NodeScheduleExecuter } from "../cron.service/node-shedule/executer";
 
 import { validateDashboardBody } from "./dashboard.validator";
 
 import { connectPages, socialConvertors, typesToPromises, validatePagesBySocial } from "./connectionService";
+import { selectDashboardedThreadWithPost, selectAllDashboardedThreadsWithPost } from "./getterServie";
 
 export class DashboardService {
    public static async getDashboard(ctx: IContext<IAuthState>) {
       try {
-         const threads = await selectAllThread(ctx.state.user);
-         const response = Promise.all(
-            threads.map(async thread => {
-               const posts = await selectPostByThread(thread);
-               const pages = await all(thread);
-               const [post] = posts;
-               console.log(pages);
-               return { id: thread.id, post, pages };
-            }),
-         );
+         const response = await selectAllDashboardedThreadsWithPost(ctx.state.user);
+         console.log(response);
          ctx.status = 200;
-         ctx.body = await response;
+         ctx.body = response;
          //get all thread with dashboard mark and convert to responsable dashboard
       } catch (err) {
          ctx.app.emit("error", err, ctx);
@@ -31,6 +24,9 @@ export class DashboardService {
    public static async getPostInDashboard(ctx: IParamContext<IAuthState, IParamIdState>) {
       try {
          //get thread by id and return post from dat thread
+         const response = await selectDashboardedThreadWithPost(ctx.state.user, ctx.params.id);
+         ctx.status = 200;
+         ctx.body = response;
       } catch (err) {
          ctx.app.emit("error", err, ctx);
       }
@@ -66,7 +62,7 @@ export class DashboardService {
          const inputPost = await apiHelper.objectExistValidate(ctx.request.body.post);*/
 
          //create thread with name current dateobject
-         const thread = await createThread(ctx.state.user, { name: new Date().getTime().toString() });
+         const thread = await createThread(ctx.state.user, { name: new Date().getTime().toString(), dashboarded: true });
          console.log(thread);
 
          const pages = await connectPages(thread, validatedBySocials);

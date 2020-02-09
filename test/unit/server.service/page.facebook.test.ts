@@ -19,7 +19,7 @@ let pages: IFacebookPage[];
 beforeAll(async () => {
    user = await connectAndCreateUser({ email: "facebook_pages_tester@test.com", password: "123321" });
    social = await connectSocial(user, facebook_test_user.access_token);
-   thread = await createThread(user, { name: "facebook_pages_test_thread" });
+   thread = await createThread(user, { name: "facebook_pages_test_thread", dashboarded: false });
    pages = await insertPagesfromApi(social);
 });
 afterAll(async () => {

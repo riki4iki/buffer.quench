@@ -16,6 +16,9 @@ export default class Thread {
    @MaxLength(30, { message: "Thread name is too long, max size is 30 symbols" })
    name: string;
 
+   @Column({ default: false })
+   dashboarded: boolean;
+
    @ManyToOne(
       () => User,
       user => user.thread,

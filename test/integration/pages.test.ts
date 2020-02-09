@@ -11,7 +11,7 @@ let thread: Thread;
 let jwt: IJwtPair;
 beforeAll(async done => {
    const account = { email: "pages_tester@gmail.com", password: "123321" };
-   thread = await connectWithThread(account, { name: "test_thread_pages" });
+   thread = await connectWithThread(account, { name: "test_thread_pages", dashboarded: false });
    request(app.callback())
       .post(endpoints.auth.local.sign_in)
       .send(account)

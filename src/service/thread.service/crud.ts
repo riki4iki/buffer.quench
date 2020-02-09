@@ -15,6 +15,7 @@ export async function create(user: User, body: IThreadBody): Promise<Thread> {
    const newThread = new Thread();
    newThread.user = user;
    newThread.name = body.name;
+   newThread.dashboarded = body.dashboarded;
 
    const errors: ValidationError[] = await validate(newThread);
    if (errors.length > 0) {
@@ -83,6 +84,7 @@ export async function update(user: User, id: string, body: IThreadBody): Promise
       newThread.id = before.id;
       newThread.user = before.user;
       newThread.name = body.name;
+      newThread.dashboarded = body.dashboarded;
 
       //validate
       const errors: ValidationError[] = await validate(newThread);
@@ -116,4 +118,10 @@ export async function del(user: User, id: string): Promise<Thread> {
       const removed = await threadRepository.remove(thread);
       return removed;
    }
+}
+
+export async function selectAllDashboarded(user: User, id: string): Promise<Thread[]> {
+   const threadRepository: Repository<Thread> = getManager().getRepository(Thread);
+   const threads = await threadRepository.find({ user, dashboarded: true });
+   return threads;
 }

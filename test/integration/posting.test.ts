@@ -14,7 +14,7 @@ let jwt: IJwtPair;
 
 beforeAll(async done => {
    const account = { email: "post/cron/legend_integration_tester@gmail.com", password: "123231" };
-   thread = await createThread(account, { name: "post/cron/legend_thread" });
+   thread = await createThread(account, { name: "post/cron/legend_thread", dashboarded: false });
    request(app.callback())
       .post(endpoints.auth.local.sign_in)
       .send(account)
