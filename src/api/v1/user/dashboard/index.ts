@@ -4,9 +4,7 @@ import { DashboardService } from "../../../../service/thread.service/dashboard.s
 
 const dashBoardRouter = new Router();
 
-dashBoardRouter.get("/", ctx => {
-   ctx.body = "return all posts";
-});
+dashBoardRouter.get("/", DashboardService.getDashboard);
 dashBoardRouter.get("/:id", apiMiddlewareHelper.validateUUIDMiddleware, ctx => {
    ctx.body = "return target dashboard";
 });

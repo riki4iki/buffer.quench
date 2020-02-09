@@ -1,5 +1,5 @@
 import { convertedSocial, convertedType } from "./convertors.type";
-import { User } from "../../../models";
+import { User } from "../../../../models";
 
 export const socialConvertors = async (user: User, body: convertedType[]): Promise<convertedSocial[]> => {
    const convertedSoicals = Promise.all(

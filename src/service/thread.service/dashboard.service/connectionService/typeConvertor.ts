@@ -1,4 +1,4 @@
-import { IUknownPageBody } from "../../../types/body";
+import { IUknownPageBody } from "../../../../types/body";
 
 import { ConnectionPromisesFactory } from "./connectionPromises.factory";
 import { convertedType } from "./convertors.type";

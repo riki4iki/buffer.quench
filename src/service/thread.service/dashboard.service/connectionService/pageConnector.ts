@@ -1,5 +1,5 @@
-import { Thread } from "../../../models";
-import { ISocialPage } from "../../../types";
+import { Thread } from "../../../../models";
+import { ISocialPage } from "../../../../types";
 
 import { validatedPage } from "./convertors.type";
 export const connectPages = async (thread: Thread, body: validatedPage[]): Promise<ISocialPage[]> => {

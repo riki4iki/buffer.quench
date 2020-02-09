@@ -1,6 +1,6 @@
-import { ISocial, ISocialPage, ISocialPageResponse } from "../../../types";
-import { SocialType } from "../../../types/architecture/SocialTypes";
-import { User, Thread } from "../../../models";
+import { ISocial, ISocialPage, ISocialPageResponse } from "../../../../types";
+import { SocialType } from "../../../../types/architecture/SocialTypes";
+import { User, Thread } from "../../../../models";
 
 import { BadRequest } from "http-errors";
 

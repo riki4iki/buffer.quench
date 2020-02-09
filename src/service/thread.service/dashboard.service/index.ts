@@ -1,18 +1,28 @@
 import { IContext, IAuthState, IParamContext, IParamIdState } from "../../../types/koa";
 import { create as createThread, all as selectAllThread, get as selectTargetThread, del as deleteThread, update as updateThread } from "../crud";
-import { create as createPost } from "../post.service/crud";
+import { create as createPost, posts as selectPostByThread } from "../post.service/crud";
+import { all } from "../page.thread/crud";
 import { NodeScheduleExecuter } from "../cron.service/node-shedule/executer";
 
 import { validateDashboardBody } from "./dashboard.validator";
 
-import { typesToPromises } from "./typeConvertor";
-import { socialConvertors } from "./socialConvertor";
-import { validatePagesBySocial } from "./validatePageConvertor";
-import { connectPages } from "./connectPage";
+import { connectPages, socialConvertors, typesToPromises, validatePagesBySocial } from "./connectionService";
 
 export class DashboardService {
    public static async getDashboard(ctx: IContext<IAuthState>) {
       try {
+         const threads = await selectAllThread(ctx.state.user);
+         const response = Promise.all(
+            threads.map(async thread => {
+               const posts = await selectPostByThread(thread);
+               const pages = await all(thread);
+               const [post] = posts;
+               console.log(pages);
+               return { id: thread.id, post, pages };
+            }),
+         );
+         ctx.status = 200;
+         ctx.body = await response;
          //get all thread with dashboard mark and convert to responsable dashboard
       } catch (err) {
          ctx.app.emit("error", err, ctx);
@@ -71,8 +81,11 @@ export class DashboardService {
          await cronExecuter.create(post);
 
          //return pot instance
+         const respose = {
+            id: thread.id,
+         };
          ctx.status = 201;
-         ctx.body = post;
+         ctx.body = respose;
       } catch (err) {
          //just delete thread??
          ctx.app.emit("error", err, ctx);

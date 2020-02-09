@@ -87,7 +87,27 @@ describe("test dashboard endpoint(hard logic realize), before need add social, g
             .expect(201)
             .end((err, res) => {
                if (err) return done(err);
-               console.log(res.body);
+               const response = res.body;
+               expect(response).toMatchObject({
+                  id: expect.any(String),
+               });
+               /* expect(response).toMatchObject({
+                  thread: {
+                     //name: expect.any(String),
+                     id: expect.any(String),
+                  },
+                  post: {
+                     context: post.context,
+                     id: expect.any(String),
+                  },
+                  pages: expect.any(Array),
+               });
+               expect(new Date(response.post.expireDate)).toEqual(post.expireDate);
+               response.pages.forEach(page => {
+                  expect(socialPages).toEqual(
+                     expect.arrayContaining([{ id: page.fbId, category: page.category, name: page.name, picture: page.picture }]),
+                  );
+               });*/
                return done();
             });
       });
@@ -277,6 +297,58 @@ describe("test dashboard endpoint(hard logic realize), before need add social, g
             .expect(400, "social not found")
             .end(err => {
                if (err) return done(err);
+               return done();
+            });
+      });
+      test("create new post again with same arguments, should return 201(cause of unique thread name create by current time)", async done => {
+         const post: IPostBody = {
+            context: `dashboard test at ${new Date()}`,
+            expireDate: nextMinutes(1),
+         };
+         const pages: IUknownPageBody[] = socialPages.map(item => {
+            return { type: "facebook", socialId, page: item.id };
+         });
+         request(app.callback())
+            .post(endpoints.user.dashboard.access)
+            .set(jwt)
+            .send({ post, pages })
+            .expect(201)
+            .end((err, res) => {
+               if (err) return done(err);
+               const response = res.body;
+               expect(response).toMatchObject({
+                  id: expect.any(String),
+               });
+               /*expect(response).toMatchObject({
+                  thread: {
+                     name: expect.any(String),
+                     id: expect.any(String),
+                  },
+                  post: {
+                     context: post.context,
+                     id: expect.any(String),
+                  },
+                  pages: expect.any(Array),
+               });
+               expect(new Date(response.post.expireDate)).toEqual(post.expireDate);
+               response.pages.forEach(page => {
+                  expect(socialPages).toEqual(
+                     expect.arrayContaining([{ id: page.fbId, category: page.category, name: page.name, picture: page.picture }]),
+                  );
+               });*/
+               return done();
+            });
+      });
+   });
+   describe("test dashboard getting", () => {
+      test("get all threads in dashboard, should return 200 and array of dashboard objects", async done => {
+         request(app.callback())
+            .get(endpoints.user.dashboard.access)
+            .set(jwt)
+            .expect(200)
+            .end((err, res) => {
+               if (err) return done(err);
+               console.log(res.body);
                return done();
             });
       });
