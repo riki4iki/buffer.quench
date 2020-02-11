@@ -7,9 +7,7 @@ postDashboardRouter.get("/", DashboardService.getDashboard);
 postDashboardRouter.get("/:id", apiMiddleware.validateUUIDMiddleware, DashboardService.getPostInDashboard);
 postDashboardRouter.post("/", DashboardService.createPostDashboard);
 
-postDashboardRouter.put("/:id", apiMiddleware.validateUUIDMiddleware, ctx => {
-   ctx.body = "update by id";
-});
+postDashboardRouter.put("/:id", DashboardService.updatePostDashboard);
 postDashboardRouter.del("/:id", apiMiddleware.validateUUIDMiddleware, ctx => {
    ctx.body = " delete by id";
 });

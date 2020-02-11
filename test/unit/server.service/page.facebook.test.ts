@@ -19,7 +19,7 @@ let pages: IFacebookPage[];
 beforeAll(async () => {
    user = await connectAndCreateUser({ email: "facebook_pages_tester@test.com", password: "123321" });
    social = await connectSocial(user, facebook_test_user.access_token);
-   thread = await createThread(user, { name: "facebook_pages_test_thread", dashboarded: false });
+   thread = await createThread(user, { name: "facebook_pages_test_thread" });
    pages = await insertPagesfromApi(social);
 });
 afterAll(async () => {
@@ -41,7 +41,7 @@ describe("facebook pages to thread unit test", () => {
             const associate = pages[index];
             expect(body).not.toMatchObject({ accessToken: expect.any(String) });
             expect(body).toMatchObject({
-               fbId: associate.id,
+               social_id: associate.id,
                name: associate.name,
                category: associate.category,
                picture: associate.picture,
@@ -74,7 +74,7 @@ describe("facebook pages to thread unit test", () => {
             const associate = pages[index];
             expect(body).not.toMatchObject({ accessToken: expect.any(String) });
             expect(body).toMatchObject({
-               fbId: associate.id,
+               social_id: associate.id,
                name: associate.name,
                category: associate.category,
                picture: associate.picture,
@@ -99,7 +99,7 @@ describe("facebook pages to thread unit test", () => {
             const associate = pages[index];
             expect(body).not.toMatchObject({ accessToken: expect.any(String) });
             expect(body).toMatchObject({
-               fbId: associate.id,
+               social_id: associate.id,
                name: associate.name,
                category: associate.category,
                picture: associate.picture,
@@ -141,7 +141,7 @@ describe("facebook pages to thread unit test", () => {
          const removed = await disconnect(thread, id);
          expect(removed).toMatchObject({
             id: undefined,
-            fbId: associate.id,
+            social_id: associate.id,
          });
          deletedId = id;
       });

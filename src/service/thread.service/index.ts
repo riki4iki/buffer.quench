@@ -42,7 +42,7 @@ export class ThreadService {
     */
    public static async createThreadEndPoint(ctx: IContext<IAuthState>) {
       try {
-         const created = await create(ctx.state.user, { name: ctx.request.body.name, dashboarded: false });
+         const created = await create(ctx.state.user, { name: ctx.request.body.name });
          ctx.status = 201;
          ctx.body = created;
       } catch (err) {
@@ -57,7 +57,7 @@ export class ThreadService {
     */
    public static async updateThreadEndPoint(ctx: IParamContext<IAuthState, IParamIdState>) {
       try {
-         const updated = await update(ctx.state.user, ctx.params.id, { name: ctx.request.body.name, dashboarded: false });
+         const updated = await update(ctx.state.user, ctx.params.id, { name: ctx.request.body.name });
          ctx.status = 200;
          ctx.body = updated;
       } catch (err) {

@@ -15,7 +15,7 @@ export default class FacebookPage implements ISocialPage, IResponsible<FacebookP
    id: string;
 
    @Column()
-   fbId: string;
+   social_id: string;
 
    @ManyToOne(
       () => FbUser,
@@ -41,9 +41,9 @@ export default class FacebookPage implements ISocialPage, IResponsible<FacebookP
    category?: string;
 
    async post(postInstace: Post) {
-      const post = await fb.post(this.fbId, this.accessToken, postInstace.context);
+      const post = await fb.post(this.social_id, this.accessToken, postInstace.context);
       if (post.err) {
-         console.log(`Error api post with page: ${this.id}, facebook_id: ${this.fbId}`);
+         console.log(`Error api post with page: ${this.id}, facebook_id: ${this.social_id}`);
          console.log(post.err);
          //Error with post to facebook by page
          return false;

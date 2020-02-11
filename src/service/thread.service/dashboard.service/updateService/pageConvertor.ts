@@ -1,7 +1,8 @@
 import { Page, Thread } from "../../../../models";
-import { GetterPromiseFactory } from "./getterPromise.factory";
+import { toDeleter } from "./updaters.type";
+import { UpdatedPromisesFactory } from "./updatePromisesFactory";
 
-export const convertPages = async (thread: Thread, pages: Page[]) => {
+export const convertPages = async (thread: Thread, pages: Page[]): Promise<toDeleter[]> => {
    const convertedPages = Promise.all(
       pages.map(async page => {
          const converted = await convertPage(thread, page);
@@ -11,9 +12,9 @@ export const convertPages = async (thread: Thread, pages: Page[]) => {
    return convertedPages;
 };
 
-const convertPage = async (thread: Thread, page: Page) => {
+const convertPage = async (thread: Thread, page: Page): Promise<toDeleter> => {
    const { pageId, type } = page;
-   const promise = GetterPromiseFactory.getterSelector(type);
-   const converted = await promise(thread, pageId);
-   return converted;
+   const { getterPromise, deleterPromise } = UpdatedPromisesFactory.selectUpdatePromises(type);
+   const converted = await getterPromise(thread, pageId);
+   return { converted, deleterPromise };
 };

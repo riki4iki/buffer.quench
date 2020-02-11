@@ -6,7 +6,7 @@ import { BadRequest } from "http-errors";
 
 let thread;
 beforeAll(async done => {
-   thread = await createThread({ email: "post_unit_test@test.com", password: "123321" }, { name: "post_test_thread", dashboarded: false });
+   thread = await createThread({ email: "post_unit_test@test.com", password: "123321" }, { name: "post_test_thread" });
    return done();
 });
 afterAll(async done => {

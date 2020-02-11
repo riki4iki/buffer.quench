@@ -5,7 +5,7 @@ import { Post, Thread, User } from "../../../../models";
 export async function selectDashboardedThreadWithPost(user: User, id: string) {
    const threadRepository: Repository<Thread> = getManager().getRepository(Thread);
    const dashboarded = true;
-   const thread = await threadRepository.findOne({ where: { id, user, dashboarded }, relations: ["posts", "page"] });
+   const thread = await threadRepository.findOne({ where: { id, user }, relations: ["posts", "page"] });
    if (!thread) {
       const err = new BadRequest("thread not found");
       throw err;

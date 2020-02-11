@@ -11,7 +11,7 @@ let thread: Thread;
 let jwt: IJwtPair;
 beforeAll(async done => {
    const account = { email: "pages_tester@gmail.com", password: "123321" };
-   thread = await connectWithThread(account, { name: "test_thread_pages", dashboarded: false });
+   thread = await connectWithThread(account, { name: "test_thread_pages" });
    request(app.callback())
       .post(endpoints.auth.local.sign_in)
       .send(account)
@@ -86,7 +86,7 @@ describe("pages integration test by supertest", () => {
                   const iFacebookPage: IFacebookPage = pages[index];
                   expect(page).toMatchObject({
                      id: expect.any(String),
-                     fbId: iFacebookPage.id,
+                     social_id: iFacebookPage.id,
                      name: iFacebookPage.name,
                      category: iFacebookPage.category,
                      picture: iFacebookPage.picture,
@@ -139,7 +139,7 @@ describe("pages integration test by supertest", () => {
                expect(array.length).toEqual(1);
                const [page] = array;
                expect(page).toMatchObject({
-                  fbId: facebook_page.id,
+                  social_id: facebook_page.id,
                   category: facebook_page.category,
                   name: facebook_page.name,
                   picture: facebook_page.picture,

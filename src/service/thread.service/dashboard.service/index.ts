@@ -8,7 +8,7 @@ import { validateDashboardBody } from "./dashboard.validator";
 
 import { connectPages, socialConvertors, typesToPromises, validatePagesBySocial } from "./connectionService";
 import { selectDashboardedThreadWithPost, selectAllDashboardedThreadsWithPost } from "./getterService";
-import { findThreadById, convertPages, difference } from "./updateService";
+import { findThreadById, convertPages, difference, disconnectPages } from "./updateService";
 
 export class DashboardService {
    public static async getDashboard(ctx: IContext<IAuthState>) {
@@ -63,7 +63,7 @@ export class DashboardService {
          const inputPost = await apiHelper.objectExistValidate(ctx.request.body.post);*/
 
          //create thread with name current dateobject
-         const thread = await createThread(ctx.state.user, { name: new Date().getTime().toString(), dashboarded: true });
+         const thread = await createThread(ctx.state.user, { name: new Date().getTime().toString() });
          console.log(thread);
 
          const pages = await connectPages(thread, validatedBySocials);
@@ -96,24 +96,36 @@ export class DashboardService {
          //thread exist, validate input body
          const dashboard = await validateDashboardBody(ctx.request.body);
 
-         const convertedByType = typesToPromises(dashboard.pages);
+         const inputPagesConvertedByType = typesToPromises(dashboard.pages);
 
-         const convertedSocials = await socialConvertors(ctx.state.user, convertedByType);
+         const convertedSocials = await socialConvertors(ctx.state.user, inputPagesConvertedByType);
          console.log(convertedSocials);
 
-         const validatedBySocials = await validatePagesBySocial(convertedSocials);
-         console.log(validatedBySocials);
+         const pagesValidatedBySocials = await validatePagesBySocial(convertedSocials);
+         console.log(pagesValidatedBySocials);
 
          const converted = await convertPages(thread, thread.page);
+         console.log(converted);
 
-         const { toConnect, toDisconnect } = difference(converted, validatedBySocials);
-         const connecte;
+         const { toConnect, toDisconnect } = await difference(converted, pagesValidatedBySocials);
+         console.log(toConnect);
+         console.log(toDisconnect);
+         const connectedPages = await connectPages(thread, toConnect);
+         console.log(connectedPages);
+
+         const disconnectedPages = await disconnectPages(thread, toDisconnect);
+         console.log(disconnectedPages);
 
          const [post] = await thread.posts;
+         console.log(post);
          const updatedPost = await updatePost(thread, post.id, dashboard.post);
+         console.log(updatedPost);
 
          const cronExecuter = new NodeScheduleExecuter();
          await cronExecuter.update(post);
+         const response = { id: thread.id };
+         ctx.status = 200;
+         ctx.body = response;
       } catch (err) {
          ctx.app.emit("error", err, ctx);
       }

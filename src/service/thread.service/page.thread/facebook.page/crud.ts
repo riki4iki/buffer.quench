@@ -73,7 +73,7 @@ export async function connectStringPage(thread: Thread, facebookUserModel: Faceb
 export async function connectResponsedPage(thread: Thread, facebookUser: FacebookUser, facebookPage: IFacebookPage) {
    const facebookPageRepository: Repository<FacebookPage> = getManager().getRepository(FacebookPage);
 
-   const pageFromDatabase = await facebookPageRepository.findOne({ fbId: facebookPage.id, thread, fbUser: facebookUser });
+   const pageFromDatabase = await facebookPageRepository.findOne({ social_id: facebookPage.id, thread, fbUser: facebookUser });
    if (pageFromDatabase) {
       //page with dat facebook_id already connected to thread;
       //no reason to update access_token cause of acess_token never expires
@@ -82,7 +82,7 @@ export async function connectResponsedPage(thread: Thread, facebookUser: Faceboo
    } else {
       const toSave = new FacebookPage();
       toSave.accessToken = facebookPage.access_token;
-      toSave.fbId = facebookPage.id;
+      toSave.social_id = facebookPage.id;
       toSave.thread = thread;
       toSave.fbUser = facebookUser;
       const saved = await facebookPageRepository.save(toSave);
@@ -100,7 +100,7 @@ async function connectPages(thread: Thread, facebookUser: FacebookUser, pages: I
    const facebookPageRepository: Repository<FacebookPage> = getManager().getRepository(FacebookPage);
    return Promise.all(
       pages.map(async page => {
-         const pageFromDatabase = await facebookPageRepository.findOne({ fbId: page.id, thread: thread, fbUser: facebookUser });
+         const pageFromDatabase = await facebookPageRepository.findOne({ social_id: page.id, thread: thread, fbUser: facebookUser });
          if (pageFromDatabase) {
             //page with id already connected to thread
             //here we can update page.access_token
@@ -109,7 +109,7 @@ async function connectPages(thread: Thread, facebookUser: FacebookUser, pages: I
          } else {
             const newPage = new FacebookPage();
             newPage.accessToken = page.access_token;
-            newPage.fbId = page.id;
+            newPage.social_id = page.id;
             newPage.thread = thread;
             newPage.fbUser = facebookUser;
             const saved = await facebookPageRepository.save(newPage);
@@ -138,7 +138,7 @@ async function filterPagesByFacebookUser(facebookUser: FacebookUser, pages: Arra
    }
 }
 
-export async function validatePageBySocial(facebookUser: FacebookPage, page: string) {
+export async function validatePageBySocial(facebookUser: FacebookUser, page: string) {
    const pagesFromAPI = await fb.longLiveAccounts(facebookUser.accessToken, facebookUser.fbId);
    const ids = pagesFromAPI.map(page => page.id);
    const isInclude = ids.includes(page);

@@ -413,4 +413,27 @@ describe("test dashboard endpoint(hard logic realize), before need add social, g
             });
       });
    });
+   describe("test updating target post with dashboard", () => {
+      test("update post with new post object, should return 200", async done => {
+         const post: IPostBody = {
+            context: `update post in dashboard test at ${new Date()}`,
+            expireDate: nextMinutes(10),
+         };
+         const pages: IUknownPageBody[] = [{ type: "facebook", socialId, page: socialPages[0].id }];
+         /*const pages: IUknownPageBody[] = socialPages.map(item => {
+            return { type: "facebook", socialId, page: item.id };
+         });*/
+         request(app.callback())
+            .put(endpoints.user.dashboard.post.id(threadId).access)
+            .set(jwt)
+            .send({ post, pages })
+            .expect(200)
+            .end((err, res) => {
+               if (err) return done(err);
+
+               console.log(res.body);
+               return done();
+            });
+      });
+   });
 });

@@ -80,7 +80,7 @@ export async function update(thread: Thread, id: string, body: IPostBody): Promi
       newPost.id = before.id;
       newPost.thread = before.thread;
       newPost.context = body.context;
-      newPost.expireDate = body.expireDate;
+      newPost.expireDate = new Date(body.expireDate);
       const errors = await validate(newPost);
       if (errors.length > 0) {
          const err = new ValidationRequest(errors);
