@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { ISocial, ISocialPage, ISocialPageResponse } from "../../../../types";
 import { SocialType } from "../../../../types/architecture/SocialTypes";
 import { User, Thread } from "../../../../models";

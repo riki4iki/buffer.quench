@@ -20,8 +20,9 @@
       "@typescript-eslint/no-unused-vars": "warn",
       "@typescript-eslint/interface-name-prefix": 0,
       "@typescript-eslint/camelcase": ["error", { "properties": "never" }],
-      "@typescript-eslint/no-use-before-define": ["error", { "functions": false }],
+      "no-use-before-define": 0,
+      "@typescript-eslint/no-use-before-define": 0,
       "no-empty-function": "warn",
-      "@typescript-eslint/no-empty-function": { "allow": ["arrowFunctions"] }
+      "@typescript-eslint/no-empty-function": 1
    }
 }

@@ -16,3 +16,5 @@ __snapshots__
 coverage
 
 .prettierrc
+
+Dockerfile

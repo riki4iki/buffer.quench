@@ -9,7 +9,9 @@ export class NodeScheduleExecuter implements IExecuter {
       console.log(job);
    }
    public async update(post: Post): Promise<void> {
-      await schedule.update({ id: post.id, expireDate: post.expireDate, cb: null });
+      console.log(post);
+      const updated = await schedule.update({ id: post.id, expireDate: post.expireDate, cb: null });
+      console.log(updated);
    }
    public async del(id: string): Promise<void> {
       await schedule.del(id);

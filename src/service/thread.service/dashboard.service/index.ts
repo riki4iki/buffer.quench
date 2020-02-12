@@ -118,20 +118,15 @@ export class DashboardService {
 
          const [post] = await thread.posts;
          console.log(post);
+         console.log(thread);
          const updatedPost = await updatePost(thread, post.id, dashboard.post);
          console.log(updatedPost);
 
          const cronExecuter = new NodeScheduleExecuter();
-         await cronExecuter.update(post);
+         await cronExecuter.update(updatedPost);
          const response = { id: thread.id };
          ctx.status = 200;
          ctx.body = response;
-      } catch (err) {
-         ctx.app.emit("error", err, ctx);
-      }
-   }
-   public static async delPostDashboard(ctx: IParamContext<IAuthState, IParamIdState>) {
-      try {
       } catch (err) {
          ctx.app.emit("error", err, ctx);
       }

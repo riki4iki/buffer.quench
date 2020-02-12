@@ -8,6 +8,7 @@ import { ISocialPage } from "../../../../types";
 export class GetterPromiseFactory {
    private static promise: { [type: string]: (thread: Thread, id: string) => Promise<ISocialPage> } = {
       [SocialType.Facebook]: target,
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       default: (thread: Thread, id: string) => {
          const error = new BadRequest(`invalid input type of social, only the following types are currently available: ${Object.values(SocialType)}`);
          throw error;

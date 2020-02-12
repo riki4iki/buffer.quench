@@ -72,7 +72,7 @@ export async function create(thread: Thread, body: IPostBody): Promise<Post> {
 export async function update(thread: Thread, id: string, body: IPostBody): Promise<Post> {
    const postRepository: Repository<Post> = getManager().getRepository(Post);
 
-   const before = await postRepository.findOne({ id: id, thread: thread });
+   const before = await postRepository.findOne({ where: { id: id, thread: thread } });
    if (!before) {
       throw new BadRequest("post not found");
    } else {

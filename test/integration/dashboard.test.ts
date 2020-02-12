@@ -4,8 +4,12 @@ import { getConnection } from "typeorm";
 import { app } from "../../src/app";
 import { IJwtPair, IFacebookPage, IPostBody, IUknownPageBody } from "../../src/types";
 import { SocialType } from "../../src/types/architecture/SocialTypes";
-import { user as connectAndCreateUser, facebook_test_user as facebookUser, endpoints, nextMinutes, invalid_uuid } from "../config";
+// eslint-disable-next-line @typescript-eslint/camelcase
+import { user as connectAndCreateUser, facebook_test_user as facebookUser, endpoints, nextMinutes, invalid_uuid, nextSecond } from "../config";
 
+const SECONDS = 3;
+
+jest.setTimeout(SECONDS * 2 * 1000);
 const account = { email: "dashboard_tester@gmail.com", password: "123321" };
 let jwt: IJwtPair;
 beforeAll(async () => {
@@ -368,7 +372,57 @@ describe("test dashboard endpoint(hard logic realize), before need add social, g
                return done();
             });
       });
-      test("get target thread by id that created before.., should return dashboard object with 200 status", async done => {
+      describe("getting target thread by thread endpoinst", () => {
+         test("getting thread, should return thread object with 200", async done => {
+            request(app.callback())
+               .get(endpoints.user.thread.id(threadId).access)
+               .set(jwt)
+               .expect(200)
+               .end((err, res) => {
+                  if (err) return done(err);
+                  const response = res.body;
+                  expect(response).toMatchObject({
+                     id: threadId,
+                     name: expect.any(String),
+                  });
+                  return done();
+               });
+         });
+         test("getting post from thread, should return post object", async done => {
+            request(app.callback())
+               .get(endpoints.user.thread.id(threadId).post.access)
+               .set(jwt)
+               .expect(200)
+               .end((err, res) => {
+                  if (err) return done(err);
+                  const posts = res.body;
+                  expect(posts).toBeInstanceOf(Array);
+                  expect(posts.length).toEqual(1);
+                  const [page] = posts;
+                  expect(page).toMatchObject({
+                     id: expect.any(String),
+                     context: expect.any(String),
+                     expireDate: expect.any(String),
+                  });
+                  return done();
+               });
+         });
+         test("getting pages from created thread, should return abstract pages objects", async done => {
+            request(app.callback())
+               .get(endpoints.user.thread.id(threadId).page.access)
+               .set(jwt)
+               .expect(200)
+               .end((err, res) => {
+                  if (err) return done();
+                  const pages = res.body;
+                  expect(pages).toBeInstanceOf(Array);
+                  expect(pages.length).toEqual(socialPages.length);
+
+                  return done();
+               });
+         });
+      });
+      /*test("get target thread by id that created before.., should return dashboard object with 200 status", async done => {
          request(app.callback())
             .get(endpoints.user.dashboard.post.id(threadId).access)
             .set(jwt)
@@ -411,7 +465,7 @@ describe("test dashboard endpoint(hard logic realize), before need add social, g
                if (err) return done(err);
                return done();
             });
-      });
+      });*/
    });
    describe("test updating target post with dashboard", () => {
       test("update post with new post object, should return 200", async done => {
@@ -419,10 +473,9 @@ describe("test dashboard endpoint(hard logic realize), before need add social, g
             context: `update post in dashboard test at ${new Date()}`,
             expireDate: nextMinutes(10),
          };
-         const pages: IUknownPageBody[] = [{ type: "facebook", socialId, page: socialPages[0].id }];
-         /*const pages: IUknownPageBody[] = socialPages.map(item => {
+         const pages: IUknownPageBody[] = socialPages.map(item => {
             return { type: "facebook", socialId, page: item.id };
-         });*/
+         });
          request(app.callback())
             .put(endpoints.user.dashboard.post.id(threadId).access)
             .set(jwt)
@@ -431,6 +484,113 @@ describe("test dashboard endpoint(hard logic realize), before need add social, g
             .end((err, res) => {
                if (err) return done(err);
 
+               console.log(res.body);
+               const response = res.body;
+               expect(response).toMatchObject({
+                  id: threadId,
+               });
+               return done();
+            });
+      });
+      test("udate post with undefined post instance, should return 400 bad request", async done => {
+         const pages: IUknownPageBody[] = socialPages.map(item => {
+            return { type: "facebook", socialId, page: item.id };
+         });
+         request(app.callback())
+            .put(endpoints.user.dashboard.post.id(threadId).access)
+            .set(jwt)
+            .send({ pages })
+            .expect(400, [
+               {
+                  property: "post",
+                  constraints: { isNotEmpty: "post should not be empty" },
+               },
+            ])
+            .end(err => {
+               if (err) return done(err);
+
+               return done();
+            });
+      });
+      test("update post with emty pages instance in body, should return 400 bad request", async done => {
+         const post: IPostBody = {
+            context: `update post in dashboard test at ${new Date()}`,
+            expireDate: nextMinutes(10),
+         };
+         request(app.callback())
+            .put(endpoints.user.dashboard.post.id(threadId).access)
+            .set(jwt)
+            .send({ post })
+            .expect(400, [
+               {
+                  property: "pages",
+                  constraints: {
+                     arrayNotEmpty: "pages should not be empty",
+                     isArray: "pages must be an array",
+                     isNotEmpty: "pages should not be empty",
+                  },
+               },
+            ])
+            .end(err => {
+               if (err) return done(err);
+               return done();
+            });
+      });
+      describe("test executing post by schedule", () => {
+         test("update post from maximum pages coutn to 1 random from array, should disconnect other pages, and return thread id", async done => {
+            const post: IPostBody = {
+               context: `update again in dashboard testing... at ${new Date()}`,
+               expireDate: nextSecond(SECONDS),
+            };
+            const randomPage = Math.floor(Math.random() * socialPages.length);
+            const pages = [{ type: "facebook", socialId, page: socialPages[randomPage].id }];
+            request(app.callback())
+               .put(endpoints.user.dashboard.post.id(threadId).access)
+               .set(jwt)
+               .send({ post, pages })
+               .expect(200)
+               .end((err, res) => {
+                  if (err) return done(err);
+                  const response = res.body;
+                  expect(response).toMatchObject({ id: threadId });
+                  return done();
+               });
+         });
+         test("after executing get post from thread, should be posted in socials", async done => {
+            setTimeout(() => {
+               request(app.callback())
+                  .get(endpoints.user.thread.id(threadId).post.access)
+                  .set(jwt)
+                  .expect(200)
+                  .end((err, res) => {
+                     if (err) return done(err);
+                     const response = res.body;
+                     expect(response).toEqual([]);
+                     return done();
+                  });
+            }, (SECONDS + 1) * 1000);
+         });
+      });
+   });
+   describe("test dashboard deleting", () => {
+      test("delete thread in dashboard, should return 204", async done => {
+         request(app.callback())
+            .del(endpoints.user.thread.id(threadId).access)
+            .set(jwt)
+            .expect(204)
+            .end(err => {
+               if (err) return done(err);
+
+               return done();
+            });
+      });
+      test("getting dasgboard after deleteng thread, should return 1 thread", async done => {
+         request(app.callback())
+            .get(endpoints.user.dashboard.post.access)
+            .set(jwt)
+            .expect(200)
+            .end((err, res) => {
+               if (err) return done(err);
                console.log(res.body);
                return done();
             });
