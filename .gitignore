@@ -11,6 +11,7 @@ dist/**/*
 
 .key
 
+docs
 
 __snapshots__
 coverage

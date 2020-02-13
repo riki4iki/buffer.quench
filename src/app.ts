@@ -4,6 +4,9 @@ import bodyparser from "koa-bodyparser";
 import cors from "@koa/cors";
 import helmet from "koa-helmet";
 import logger from "koa-logger";
+
+import "module-alias/register";
+
 import { setHeaders } from "./lib";
 
 const app = new Koa();

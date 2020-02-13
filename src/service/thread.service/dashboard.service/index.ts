@@ -4,7 +4,7 @@ import { create as createPost, update as updatePost } from "../post.service/crud
 
 import { NodeScheduleExecuter } from "../cron.service/node-shedule/executer";
 
-import { validateDashboardBody } from "./dashboard.validator";
+import { validateRequestBody } from "./validator";
 
 import { connectPages, socialConvertors, typesToPromises, validatePagesBySocial } from "./connectionService";
 import { selectDashboardedThreadWithPost, selectAllDashboardedThreadsWithPost } from "./getterService";
@@ -47,7 +47,7 @@ export class DashboardService {
           */
 
          console.log(ctx.request.body);
-         const dashboard = await validateDashboardBody(ctx.request.body);
+         const dashboard = await validateRequestBody(ctx.request.body);
 
          const convertedByType = typesToPromises(dashboard.pages);
 
@@ -94,7 +94,7 @@ export class DashboardService {
          const thread = await findThreadById(ctx.state.user, ctx.params.id);
 
          //thread exist, validate input body
-         const dashboard = await validateDashboardBody(ctx.request.body);
+         const dashboard = await validateRequestBody(ctx.request.body);
 
          const inputPagesConvertedByType = typesToPromises(dashboard.pages);
 

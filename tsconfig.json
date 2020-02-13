@@ -11,7 +11,14 @@
       "experimentalDecorators": true,
       "emitDecoratorMetadata": true,
       "rootDir": "./src",
-      "baseUrl": "."
+      "baseUrl": "./src",
+      "paths": {
+         "types/*": ["types/*"],
+         "config/*": ["config/*"],
+         "service/*": ["service/*"],
+         "lib/*": ["lib/*"],
+         "models/*": ["models/*"]
+      }
    },
    "include": ["src/**/*"]
 }

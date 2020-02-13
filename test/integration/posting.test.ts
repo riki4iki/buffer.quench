@@ -100,7 +100,7 @@ describe("integration test for post/legend routes", () => {
                connectedPages.forEach(page => {
                   expect(page).toMatchObject({
                      id: expect.any(String),
-                     fbId: expect.any(String),
+                     social_id: expect.any(String),
                      name: expect.any(String),
                      category: expect.any(String),
                      picture: {
