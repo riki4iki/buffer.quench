@@ -1,6 +1,7 @@
+import { Post } from "models";
+import { IExecuter } from "types";
+
 import schedule from "./schedule";
-import { Post } from "../../../../models";
-import { IExecuter } from "../../../../types";
 import { execute } from "./callback";
 
 export class NodeScheduleExecuter implements IExecuter {

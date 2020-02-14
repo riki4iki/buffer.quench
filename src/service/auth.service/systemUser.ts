@@ -1,6 +1,7 @@
 import { getManager, Repository } from "typeorm";
-import { User, FacebookUser as fbUser } from "../../models";
 import { Unauthorized } from "http-errors";
+
+import { User, FacebookUser as fbUser } from "models";
 
 /**
  * Promise. return system user from database by email or throw Unauthorized

@@ -1,7 +1,8 @@
 /* eslint-disable quotes */
 import { DefaultState, Next } from "koa";
 import { BadRequest } from "http-errors";
-import { IParamContext, IParamIdState } from "../types";
+
+import { IParamContext, IParamIdState } from "types";
 
 //parse input url to identify resource name id that came
 const getResouceName = async (url: string, id: string): Promise<string> => {

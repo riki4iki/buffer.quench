@@ -1,6 +1,8 @@
-import { IContext, IThreadState, IAuthState, IParamContext, IParamIdState } from "../../types";
-import { all, create, get, update, del } from "./crud";
 import { Next } from "koa";
+
+import { IContext, IThreadState, IAuthState, IParamContext, IParamIdState } from "types";
+
+import { all, create, get, update, del } from "./crud";
 export * from "./page.thread";
 
 /**

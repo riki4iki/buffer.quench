@@ -1,9 +1,10 @@
 import jwt from "jsonwebtoken";
-import { jwtConfig } from "../config";
-import { Repository, getManager } from "typeorm";
-import { Refresh as Session, User } from "../models";
-import { IPayload, IJwtPair } from "../types";
 import { Unauthorized } from "http-errors";
+import { Repository, getManager } from "typeorm";
+
+import { jwtConfig } from "config";
+import { Refresh as Session, User } from "models";
+import { IPayload, IJwtPair } from "types";
 
 /**
  * Generate token with access token live, get option from config file
@@ -61,7 +62,7 @@ const createSession = async (refresh: string, user: User): Promise<Session> => {
       await sessionRepository.save(session);
    } else {
       session.id = old.id;
-      const next = await sessionRepository.save(session);
+      await sessionRepository.save(session);
    }
    return session;
 };
@@ -78,7 +79,7 @@ export default class JwtService {
       const refresh = await generateRefresh(user.id); //generate refresh token
       const expiresIn = (await expireIn()) + jwtConfig.accessLife; //get expireIn for access token
 
-      const session = await createSession(refresh, user);
+      await createSession(refresh, user);
 
       return {
          access_token: access,

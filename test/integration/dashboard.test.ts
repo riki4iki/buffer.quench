@@ -568,7 +568,97 @@ describe("test dashboard endpoint(hard logic realize), before need add social, g
                      expect(response).toEqual([]);
                      return done();
                   });
-            }, (SECONDS + 1) * 1000);
+            }, (SECONDS + 2) * 1000);
+         });
+         test("update thread by dashboad after executing, should return 400 cause of thread haven't any post", async done => {
+            const post: IPostBody = {
+               context: `update again in dashboard testing... at ${new Date()}`,
+               expireDate: nextSecond(SECONDS),
+            };
+            const pages = "not need now";
+            request(app.callback())
+               .put(endpoints.user.dashboard.post.id(threadId).access)
+               .set(jwt)
+               .send({ post, pages })
+               .expect(400, "thread haven't post")
+               .end(err => {
+                  if (err) return done(err);
+                  return done();
+               });
+         });
+      });
+      test("update therad with incorrect id, should return bad request", async done => {
+         request(app.callback())
+            .put(endpoints.user.dashboard.post.id(invalid_uuid).access)
+            .set(jwt)
+            .expect(400, "thread not found")
+            .end(err => {
+               if (err) return done(err);
+               return done();
+            });
+      });
+      describe("test dashboard thread with 2 or more posts..", () => {
+         let id: string;
+         test("create new post again with same arguments, should return 201(cause of unique thread name create by current time)", async done => {
+            const post: IPostBody = {
+               context: `test for update at ${new Date()}`,
+               expireDate: nextMinutes(1),
+            };
+            const pages: IUknownPageBody[] = socialPages.map(item => {
+               return { type: "facebook", socialId, page: item.id };
+            });
+            request(app.callback())
+               .post(endpoints.user.dashboard.post.access)
+               .set(jwt)
+               .send({ post, pages })
+               .expect(201)
+               .end((err, res) => {
+                  if (err) return done(err);
+                  const response = res.body;
+                  expect(response).toMatchObject({
+                     id: expect.any(String),
+                  });
+                  id = response.id;
+                  return done();
+               });
+         });
+         test("add additional post to thread created in dashboard, should be created", async done => {
+            const post: IPostBody = {
+               context: `second post for thread with id ${id}`,
+               expireDate: nextMinutes(228),
+            };
+            request(app.callback())
+               .post(endpoints.user.thread.id(id).post.access)
+               .set(jwt)
+               .send(post)
+               .expect(201)
+               .end((err, res) => {
+                  if (err) return done(err);
+
+                  const response = res.body;
+                  expect(response).toMatchObject({
+                     id: expect.any(String),
+                     context: post.context,
+                  });
+                  expect(new Date(response.expireDate)).toEqual(post.expireDate);
+                  return done();
+               });
+         });
+         test("update thread by dashboard, should return bad request", async done => {
+            const post: IPostBody = {
+               context: "i ll throw cause by dashboard update thread can have only 1 post",
+               expireDate: nextMinutes(111),
+            };
+            const pages = "dont need to create pages array fron socials";
+            request(app.callback())
+               .put(endpoints.user.dashboard.post.id(id).access)
+               .set(jwt)
+               .send({ post, pages })
+               .expect(400, "dashboard thread can't has 2 or more posts")
+               .end(err => {
+                  if (err) return done(err);
+                  return done();
+               });
          });
       });
    });

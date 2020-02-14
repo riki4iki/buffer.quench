@@ -1,8 +1,8 @@
 import Router from "koa-router";
 
-const userRouter = new Router();
+import { userLogic, sessionAuthService } from "service";
 
-import { userLogic, sessionAuthService } from "../../../service";
+const userRouter = new Router();
 
 import { social } from "./social";
 import { threadRouter as thread } from "./thread";

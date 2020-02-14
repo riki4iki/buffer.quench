@@ -1,7 +1,8 @@
-import { Thread, Legend, Post } from "../../../models";
 import { validate, ValidationError } from "class-validator";
 import { Repository, getManager } from "typeorm";
 import { BadRequest } from "http-errors";
+
+import { Thread, Legend, Post } from "models";
 
 /**
  * Promise. Create new legend and save in database based on executed post

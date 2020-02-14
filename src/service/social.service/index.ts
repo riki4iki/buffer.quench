@@ -1,7 +1,9 @@
-import facebookSocialService from "./facebook.social";
-import { IContext, IAuthState } from "../../types";
-import { Social } from "../../models";
 import { Repository, getManager } from "typeorm";
+
+import { IContext, IAuthState } from "types";
+import { Social } from "models";
+
+import facebookSocialService from "./facebook.social";
 /**
  * Controler. work with route user/social - get all socials for current user
  */

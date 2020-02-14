@@ -1,7 +1,9 @@
-import { post as target, posts as all, create, update, del } from "./crud";
 import { Next } from "koa";
-import { IContext, IThreadState, IPostState, IParamContext, IParamIdState, IPostBody } from "../../../types";
 import { MethodNotAllowed } from "http-errors";
+
+import { IContext, IThreadState, IPostState, IParamContext, IParamIdState } from "types";
+
+import { post as target, posts as all, create, update, del } from "./crud";
 /**
  * Class controller for post routes(/user/thread/(:threadid)/post)
  */
@@ -106,7 +108,7 @@ export default class PostController {
     * @param  ctx Context - Koa context supplemented by state IPostState. IPostState Interface - realizes ctx.state additional param post, extends from IThradState
     * @param next Next - Connection mechanics for realizing next step middleware execution
     */
-   public static async postMiddleware(ctx: IParamContext<IPostState, IParamIdState>, next: Next) {
+   /** public static async postMiddleware(ctx: IParamContext<IPostState, IParamIdState>, next: Next) {
       try {
          const post = await target(ctx.state.thread, ctx.params.id);
          ctx.state.post = post;
@@ -114,7 +116,7 @@ export default class PostController {
       } catch (err) {
          ctx.app.emit("error", err, ctx);
       }
-   }
+   }*/
    /**
     * Middleware - POST method for route .post. Create new post for current thread and save in ctx.state.post for next middleware chain
     * * @ inputs:

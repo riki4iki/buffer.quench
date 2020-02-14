@@ -1,8 +1,9 @@
 import { getManager, Repository, Not, Equal } from "typeorm";
-import { Post, Thread } from "../../../models";
 import { ValidationError, validate } from "class-validator";
 import { BadRequest } from "http-errors";
-import { ValidationRequest, IPostBody } from "../../../types";
+
+import { Post, Thread } from "models";
+import { ValidationRequest, IPostBody } from "types";
 /**
  * Promise that return all posts for input thread from database
  * @param thread Thread - current thread from earlier route /thread/:id. required for posts finding

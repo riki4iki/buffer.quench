@@ -1,6 +1,7 @@
-import { Thread, FacebookPage } from "../../models/";
-
 import { getManager, Repository } from "typeorm";
+
+import { Thread, FacebookPage } from "models";
+
 import { ISocialPage } from "./ISocialPage";
 import { SocialType } from "./SocialTypes";
 //import oters types

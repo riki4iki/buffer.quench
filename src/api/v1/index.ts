@@ -1,4 +1,5 @@
 import Router from "koa-router";
+
 const router = new Router();
 
 import { router as auth } from "./auth";

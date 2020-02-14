@@ -1,4 +1,4 @@
-import { User, Thread, Post, FacebookUser } from "../../models";
+import { User, Thread, Post, FacebookUser } from "models";
 export interface IAuthState {
    session: string;
    user: User;

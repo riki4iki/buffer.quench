@@ -1,7 +1,9 @@
 import { getManager, Repository } from "typeorm";
-import { Page, Post, Thread } from "../../../../models";
-import { ISocialPage } from "../../../../types";
-import { create as createLegend } from "../../legend.service/crud";
+
+import { Page, Post, Thread } from "models";
+import { ISocialPage } from "types";
+
+import { create as createLegend } from "service/thread.service/legend.service/crud";
 
 const getPost = async (id: string): Promise<Post> => {
    const postRepository: Repository<Post> = getManager().getRepository(Post);

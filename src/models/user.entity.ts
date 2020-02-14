@@ -4,7 +4,8 @@ import { HmacSHA1 } from "crypto-js";
 import { Unauthorized } from "http-errors";
 import { omit } from "lodash";
 
-import { IResponsible } from "../types/";
+import { IResponsible } from "types";
+
 import Refresh from "./refresh.entity";
 import FacebookUser from "./facebook/facebookUser.entity";
 import Thread from "./thread.entity";

@@ -1,7 +1,9 @@
-import { IContext, IAuthState, IParamContext, IParamIdState, IFaceBookState } from "../../../types";
+import { Next } from "koa";
+
+import { IContext, IAuthState, IParamContext, IParamIdState, IFaceBookState } from "types";
+
 import { all, add, del, get } from "./crud";
 import { insertPagesfromApi } from "./page";
-import { Next } from "koa";
 /**
  * Class Controller for facebook soical routers. Getting all connected socials, target by id, add new disconnect
  */

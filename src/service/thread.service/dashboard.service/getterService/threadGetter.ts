@@ -1,6 +1,7 @@
 import { getManager, Repository } from "typeorm";
 import { BadRequest } from "http-errors";
-import { Thread, User } from "../../../../models";
+
+import { Thread, User } from "models";
 
 export async function findThreadById(user: User, id: string): Promise<Thread> {
    const threadRepository: Repository<Thread> = getManager().getRepository(Thread);
@@ -11,6 +12,9 @@ export async function findThreadById(user: User, id: string): Promise<Thread> {
    } else if (thread.posts.length < 1) {
       console.log(thread);
       const err = new BadRequest("thread haven't post");
+      throw err;
+   } else if (thread.posts.length > 1) {
+      const err = new BadRequest("dashboard thread can't has 2 or more posts");
       throw err;
    } else {
       return thread;

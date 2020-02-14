@@ -1,4 +1,4 @@
-import { IContext, IParamContext, IParamIdState, IThreadState } from "../../../types";
+import { IContext, IParamContext, IParamIdState, IThreadState } from "types";
 import { all, get } from "./crud";
 /**
  * Class - Controller for legend posts logic

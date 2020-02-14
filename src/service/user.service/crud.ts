@@ -1,8 +1,9 @@
 import { getManager, Repository, Not, Equal } from "typeorm";
 import { BadRequest } from "http-errors";
-import { IUserBody, ValidationRequest } from "../../types";
-import { User } from "../../models";
 import { validate, ValidationError } from "class-validator";
+
+import { IUserBody, ValidationRequest } from "types";
+import { User } from "models";
 /**
  * Return all users in databases. Not need now
  */

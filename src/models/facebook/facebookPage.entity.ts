@@ -1,11 +1,13 @@
 import { Entity, Column, ManyToOne, JoinColumn, PrimaryGeneratedColumn, BeforeRemove, getManager, Repository, AfterInsert } from "typeorm";
-import { fbService as fb } from "../../lib";
-import FbUser from "./facebookUser.entity";
-import Page from "../page.entity";
-import { ISocialPage, IFacebookPicture, IResponsible, IBeforeRemover, IAfterInserter } from "../../types";
-import { SocialType } from "../../types/architecture/SocialTypes"; // import directly cause of error export enums....
 import { omit } from "lodash";
 import { InternalServerError } from "http-errors";
+
+import { fbService as fb } from "lib";
+import { ISocialPage, IFacebookPicture, IResponsible, IBeforeRemover, IAfterInserter } from "types";
+import { SocialType } from "types/architecture/SocialTypes"; // import directly cause of error export enums....
+
+import FbUser from "./facebookUser.entity";
+import Page from "../page.entity";
 import Thread from "../thread.entity";
 import Post from "../post.entity";
 

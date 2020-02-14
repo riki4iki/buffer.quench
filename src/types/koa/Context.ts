@@ -1,5 +1,5 @@
 import { Context } from "koa";
-import { User, Thread } from "../../models";
+import { User, Thread } from "models";
 
 export interface IAuthContext extends Context {
    params: {

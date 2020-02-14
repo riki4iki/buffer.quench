@@ -13,7 +13,7 @@ export interface IJwt {
 
 const generateJTI = (range: string): string => {
    const parsed = parseInt(range);
-   return [...Array(parsed)].map(i => (~~(Math.random() * 36)).toString(36)).join("");
+   return [...Array(parsed)].map(() => (~~(Math.random() * 36)).toString(36)).join("");
 };
 const isDev = process.env.NODE_ENV === "development";
 const ONE_DAY_SECCONDS = 84600;

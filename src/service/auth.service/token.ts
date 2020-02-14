@@ -1,8 +1,9 @@
 import { Context } from "koa";
 import { Repository, getManager } from "typeorm";
-import { User, Refresh } from "../../models";
-import { jwtService } from "../../lib";
 import { Unauthorized } from "http-errors";
+
+import { User, Refresh } from "models";
+import { jwtService } from "lib";
 
 /**
  * Class Controller works with jwt tokens for authentication

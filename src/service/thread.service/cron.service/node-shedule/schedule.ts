@@ -1,6 +1,7 @@
 import { scheduledJobs, scheduleJob, Job, rescheduleJob } from "node-schedule";
-import { ICronnable } from "../../../../types";
 import { Dictionary } from "lodash";
+
+import { ICronnable } from "types";
 
 export default class Schedule {
    /**Get all server tasks */

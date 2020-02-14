@@ -1,8 +1,10 @@
 import Router from "koa-router";
+
+import { DashboardService } from "service/thread.service/dashboard.service";
+import apiMiddleware from "service/api";
+
 const postDashboardRouter = new Router();
 
-import { DashboardService } from "../../../../service/thread.service/dashboard.service";
-import apiMiddleware from "../../../../service/api";
 postDashboardRouter.get("/", DashboardService.getDashboard);
 postDashboardRouter.post("/", DashboardService.createPostDashboard);
 

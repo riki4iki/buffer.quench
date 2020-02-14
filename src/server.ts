@@ -1,6 +1,6 @@
 import http from "http";
 import { app } from "./app";
-import { dbConnection } from "./config";
+import { dbConnection } from "config";
 
 import dotenv from "dotenv";
 dotenv.config({ path: ".env" });

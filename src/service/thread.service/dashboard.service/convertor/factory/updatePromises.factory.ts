@@ -1,5 +1,4 @@
 import { SocialType } from "types/architecture/SocialTypes";
-import { factoryBadRequest } from "./badRequest.error";
 
 import { GetSocialPagePromiseFactory } from "./getPromise.factory";
 import { DisconnectSocialPagePromiseFactory } from "./disconnectPromise.factory";
@@ -12,13 +11,9 @@ class UpdatePromisesFactory {
          getterPromise: GetSocialPagePromiseFactory.selectPromise(SocialType.Facebook),
          disconnecterPromise: DisconnectSocialPagePromiseFactory.selectPromise(SocialType.Facebook),
       },
-      default: {
-         disconnecterPromise: factoryBadRequest,
-         getterPromise: factoryBadRequest,
-      },
    };
    public static selectPromises(type: string): updatePromisesType {
-      const promises = UpdatePromisesFactory.promises[type] || UpdatePromisesFactory.promises.default;
+      const promises = UpdatePromisesFactory.promises[type];
       return promises;
    }
 }

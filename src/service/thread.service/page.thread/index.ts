@@ -1,4 +1,5 @@
-import { IContext, IThreadState } from "../../../types";
+import { IContext, IThreadState } from "types";
+
 import { all } from "./crud";
 import { FacebookPageService } from "./facebook.page";
 /**

@@ -1,4 +1,5 @@
 import { User } from "models";
+
 import { typeConvertedType, socialConvertedType } from "./convertor.types";
 
 export const socialConvertors = async (user: User, body: typeConvertedType[]): Promise<socialConvertedType[]> => {

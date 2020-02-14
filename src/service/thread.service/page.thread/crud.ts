@@ -1,5 +1,5 @@
 import { Repository, getManager } from "typeorm";
-import { Thread, Page } from "../../../models";
+import { Thread, Page } from "models";
 
 /**
  * Return all connected pages by input thread from database

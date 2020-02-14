@@ -1,9 +1,9 @@
 import { getManager, Repository } from "typeorm";
 import { BadRequest } from "http-errors";
 
-import { IFacebookPage } from "../../../../types";
-import { FacebookPage, Thread, FacebookUser } from "../../../../models";
-import fb from "../../../../lib/facebook";
+import { IFacebookPage } from "types";
+import { FacebookPage, Thread, FacebookUser } from "models";
+import fb from "lib/facebook";
 
 /**
  * Promise. Return all connected facebook pages to thread converted to Facebook Model
@@ -89,23 +89,15 @@ export async function disconnect(thread: Thread, id: string): Promise<FacebookPa
 
 export async function connectResponsedPage(thread: Thread, facebookUser: FacebookUser, facebookPage: IFacebookPage) {
    const facebookPageRepository: Repository<FacebookPage> = getManager().getRepository(FacebookPage);
-
-   const pageFromDatabase = await facebookPageRepository.findOne({ social_id: facebookPage.id, thread, fbUser: facebookUser });
-   if (pageFromDatabase) {
-      //page with dat facebook_id already connected to thread;
-      //no reason to update access_token cause of acess_token never expires
-      const toResponse = await pageFromDatabase.toResponse();
-      return toResponse;
-   } else {
-      const toSave = new FacebookPage();
-      toSave.accessToken = facebookPage.access_token;
-      toSave.social_id = facebookPage.id;
-      toSave.thread = thread;
-      toSave.fbUser = facebookUser;
-      const saved = await facebookPageRepository.save(toSave);
-      const toResponse = await saved.toResponse();
-      return toResponse;
-   }
+   //not need check faceboon Page in repository cause in dashboard that method use only for connection new pages.
+   const toSave = new FacebookPage();
+   toSave.accessToken = facebookPage.access_token;
+   toSave.social_id = facebookPage.id;
+   toSave.thread = thread;
+   toSave.fbUser = facebookUser;
+   const saved = await facebookPageRepository.save(toSave);
+   const toResponse = await saved.toResponse();
+   return toResponse;
 }
 
 /**
@@ -135,13 +127,14 @@ export async function connectArrayPages(thread: Thread, facebookUserModel: Faceb
    const connectedPages = await connectPages(thread, facebookUserModel, pagesByFacebookSocial);
    return connectedPages;
 }
+/* useless now, maybe in future need for target facebook connection 
 export async function connectStringPage(thread: Thread, facebookUserModel: FacebookUser, facebookPage: string): Promise<FacebookPage> {
    const pageByFacebookSocial = await filterPagesByFacebookUser(facebookUserModel, [facebookPage]);
 
    const [connectedPage] = await connectPages(thread, facebookUserModel, pageByFacebookSocial);
    return connectedPage;
 }
-
+*/
 export async function validatePageBySocial(facebookUser: FacebookUser, page: string) {
    const pagesFromAPI = await fb.longLiveAccounts(facebookUser.accessToken, facebookUser.fbId);
    const ids = pagesFromAPI.map(page => page.id);

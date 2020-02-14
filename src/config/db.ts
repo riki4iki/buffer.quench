@@ -1,6 +1,7 @@
 import { createConnection, ConnectionOptions, Connection } from "typeorm";
 import { parse } from "pg-connection-string";
 import { config } from "dotenv";
+
 config();
 
 const dbString = parse(process.env.DATABASE_URL);

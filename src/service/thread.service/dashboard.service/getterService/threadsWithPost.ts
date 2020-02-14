@@ -1,4 +1,5 @@
 import { getManager, Repository } from "typeorm";
+
 import { Thread, User } from "models";
 
 export async function selectAllDashboardedThreadsWithPost(user: User) {

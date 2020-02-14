@@ -1,5 +1,6 @@
 import Router from "koa-router";
-import { facebookAuthService as controller } from "../../../service";
+
+import { facebookAuthService as controller } from "service";
 
 const router = new Router();
 

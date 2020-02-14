@@ -1,6 +1,7 @@
 import { Next } from "koa";
-import { IContext, IAuthState } from "../../types";
-import { jwtService as jwt } from "../../lib";
+
+import { IContext, IAuthState } from "types";
+import { jwtService as jwt } from "lib";
 /**
  * Class controller implement logic creating session
  */

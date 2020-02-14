@@ -1,7 +1,9 @@
 import { Context } from "koa";
+
+import { jwtService as jwt } from "lib";
+import { IContext, IAuthState } from "types";
+
 import { userByEmail } from "./systemUser";
-import { jwtService as jwt } from "../../lib";
-import { IContext, IAuthState } from "../../types";
 
 /**
  * Class controller for local authentication to system

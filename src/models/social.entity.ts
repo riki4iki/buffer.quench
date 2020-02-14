@@ -1,8 +1,9 @@
 import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from "typeorm";
-
 import { omit } from "lodash";
-import { IResponsible } from "../types";
-import { SocialType } from "../types/architecture/SocialTypes";
+
+import { IResponsible } from "types";
+import { SocialType } from "types/architecture/SocialTypes";
+
 import SystemUser from "./user.entity";
 @Entity()
 export default class Social implements IResponsible<Social> {

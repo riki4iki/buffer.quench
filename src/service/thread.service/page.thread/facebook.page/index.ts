@@ -1,7 +1,7 @@
-import { IContext, IThreadState, IParamContext, IParamIdState } from "../../../../types";
+import { IContext, IThreadState, IParamContext, IParamIdState } from "types";
 import { all, target, disconnect, connectArrayPages } from "./crud";
-import apiValidator from "../../../api";
-import { get as findFacebookSocial } from "../../../social.service/facebook.social/crud";
+import apiValidator from "service/api";
+import { get as findFacebookSocial } from "service/social.service/facebook.social/crud";
 /**
  * Controller that work with getting, connectinm disonnecting facebook pages to threads by id
  */
@@ -57,7 +57,7 @@ export class FacebookPageService {
     */
    public static async facebookPageDisconnectEndPoint(ctx: IParamContext<IThreadState, IParamIdState>) {
       try {
-         const removed = await disconnect(ctx.state.thread, ctx.params.id);
+         await disconnect(ctx.state.thread, ctx.params.id);
          ctx.status = 204;
       } catch (err) {
          ctx.app.emit("error", err, ctx);

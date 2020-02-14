@@ -1,5 +1,4 @@
 import { SocialType } from "types/architecture/SocialTypes";
-import { factoryBadRequest } from "./badRequest.error";
 
 import { SocialPromiseFactory } from "./socialPromise.factory";
 import { ValidatePromiseFactory } from "./validatePromise.factory";
@@ -14,14 +13,9 @@ class ConnectionPromisesFactory {
          validatePagePromise: ValidatePromiseFactory.selectPromise(SocialType.Facebook),
          connectionPromise: ConnectSocialPagePromiseFactory.selectPromise(SocialType.Facebook),
       },
-      default: {
-         connectionPromise: factoryBadRequest,
-         socialPromise: factoryBadRequest,
-         validatePagePromise: factoryBadRequest,
-      },
    };
    public static selectPromises(type: string): connectionPromisesType {
-      const promises = ConnectionPromisesFactory.promises[type] || ConnectionPromisesFactory.promises.default;
+      const promises = ConnectionPromisesFactory.promises[type];
       return promises;
    }
 }

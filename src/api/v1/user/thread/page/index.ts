@@ -1,5 +1,7 @@
 import Router from "koa-router";
-import { PageService } from "../../../../../service";
+
+import { PageService } from "service";
+
 const pageRouter = new Router();
 
 import { pageRouter as facebookRouter } from "./facebook";

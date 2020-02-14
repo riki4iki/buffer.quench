@@ -1,8 +1,8 @@
 import { Repository, getManager } from "typeorm";
-import { FacebookUser as FacebookUserModel, User as SystemUserModel } from "../../../models";
-import { omit } from "lodash";
 import { BadRequest } from "http-errors";
-import { fbService as fb } from "../../../lib";
+
+import { FacebookUser as FacebookUserModel, User as SystemUserModel } from "models";
+import { fbService as fb } from "lib";
 
 /**
  * Promise. return all connected facebook socials from database

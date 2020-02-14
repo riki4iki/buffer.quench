@@ -1,5 +1,5 @@
 import { Context } from "koa";
-import { fbService as fb, jwtService as jwt } from "../../lib";
+import { fbService as fb, jwtService as jwt } from "lib";
 import { facebookUser } from "./systemUser";
 /**
  * Class Controller work with facebook authentication

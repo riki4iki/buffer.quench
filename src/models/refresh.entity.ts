@@ -1,5 +1,7 @@
 import { Entity, Column, PrimaryGeneratedColumn, OneToOne, JoinColumn } from "typeorm";
+
 import User from "./user.entity";
+
 @Entity()
 export default class RefreshToken {
    @PrimaryGeneratedColumn("uuid")
@@ -8,7 +10,7 @@ export default class RefreshToken {
    @OneToOne(
       () => User,
       user => user.refresh,
-      { onDelete: "CASCADE" }
+      { onDelete: "CASCADE" },
    )
    @JoinColumn()
    user: User;

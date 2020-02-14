@@ -11,13 +11,15 @@ import {
    getManager,
    Repository,
 } from "typeorm";
-import User from "../user.entity";
-import Page from "./facebookPage.entity";
-import { fbService as fb } from "../../lib";
-import { IFacebookPicture, IResponsible, IAfterInserter, IBeforeRemover, ISocial } from "../../types";
-import Social from "../social.entity";
 import { omit } from "lodash";
 import { InternalServerError } from "http-errors";
+
+import { fbService as fb } from "lib";
+import { IFacebookPicture, IResponsible, IAfterInserter, IBeforeRemover, ISocial } from "types";
+
+import User from "../user.entity";
+import Page from "./facebookPage.entity";
+import Social from "../social.entity";
 
 @Entity()
 @Index(["id"], { unique: true })

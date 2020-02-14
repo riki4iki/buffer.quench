@@ -1,8 +1,9 @@
-import { IContext, IAuthState } from "../../types";
 import { Next } from "koa";
-import { Unauthorized } from "http-errors";
-import { get, create, del, update } from "./crud";
 import { omit } from "lodash";
+
+import { IContext, IAuthState } from "types";
+
+import { get, create, del, update } from "./crud";
 
 export default class UserService {
    //#region endPoints

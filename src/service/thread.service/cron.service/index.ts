@@ -1,4 +1,5 @@
-import { IContext, IPostState, IParamContext, IParamIdState } from "../../../types";
+import { IContext, IPostState, IParamContext, IParamIdState } from "types";
+
 import { NodeScheduleExecuter } from "./node-shedule/executer";
 
 const executer = new NodeScheduleExecuter();
@@ -27,7 +28,7 @@ export default class CronController {
     */
    public static async taskUpdateEndPoint(ctx: IParamContext<IPostState, IParamIdState>) {
       try {
-         const updated = await executer.update(ctx.state.post);
+         await executer.update(ctx.state.post);
          ctx.status = 200;
          ctx.body = ctx.state.post;
       } catch (err) {
@@ -40,7 +41,7 @@ export default class CronController {
     */
    public static async taskDeleteEndPoint(ctx: IParamContext<IPostState, IParamIdState>) {
       try {
-         const deleted = await executer.del(ctx.params.id);
+         await executer.del(ctx.params.id);
          ctx.status = 204;
       } catch (err) {
          ctx.app.emit("error", err, ctx);

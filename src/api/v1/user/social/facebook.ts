@@ -1,5 +1,7 @@
 import Router from "koa-router";
-import { routeServie as api, facebookSocialService as controller } from "../../../../service";
+
+import { routeServie as api, facebookSocialService as controller } from "service";
+
 const fbRouter = new Router();
 
 fbRouter.get("/", controller.facebookUsersEndPoint);

@@ -1,9 +1,10 @@
 import { getManager, Repository, Not, Equal } from "typeorm";
-import { User, Thread } from "../../models";
 import { BadRequest } from "http-errors";
-import { IThreadBody, ValidationRequest } from "../../types";
 import { validate, ValidationError } from "class-validator";
 import { omit } from "lodash";
+
+import { User, Thread } from "models";
+import { IThreadBody, ValidationRequest } from "types";
 /**
  * Promise - Create ne thread by current user and unique input name, return thread instance saved in database
  * @param user - current user taken from access jwt token in headers

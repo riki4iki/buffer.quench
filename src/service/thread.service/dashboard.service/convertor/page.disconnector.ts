@@ -1,5 +1,6 @@
 import { Thread } from "models";
 import { ISocialPage } from "types";
+
 import { disconnectConevertedType } from "./convertor.types";
 
 const disconnectPages = async (thread: Thread, toDelete: disconnectConevertedType[]): Promise<ISocialPage[]> => {

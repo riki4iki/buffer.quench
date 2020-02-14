@@ -1,6 +1,8 @@
 import Router from "koa-router";
+
+import { FacebookPageService, routeServie as api } from "service";
+
 const pageRouter = new Router();
-import { FacebookPageService, routeServie as api } from "../../../../../service";
 
 pageRouter.get("/", FacebookPageService.allFacebookPagesEndPoint);
 pageRouter.get("/:id", api.validateUUIDMiddleware, FacebookPageService.targetFacebookPagesEndPoint);
