@@ -7,7 +7,7 @@ import { connectorPromiseType } from "./factory.types";
 class ConnectSocialPagePromiseFactory {
    private static promise: { [type: string]: connectorPromiseType } = {
       [SocialType.Facebook]: connectFacebookPage,
-      default: factoryBadRequest(),
+      default: factoryBadRequest,
    };
 
    public static selectPromise(type: string): connectorPromiseType {

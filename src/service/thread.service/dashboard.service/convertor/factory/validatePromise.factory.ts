@@ -7,7 +7,7 @@ import { validatePromiseType } from "./factory.types";
 class ValidatePromiseFactory {
    private static promise: { [type: string]: validatePromiseType } = {
       [SocialType.Facebook]: facebook,
-      default: factoryBadRequest(),
+      default: factoryBadRequest,
    };
    public static selectPromise(type: string): validatePromiseType {
       const promise = ValidatePromiseFactory.promise[type] || ValidatePromiseFactory.promise.default;

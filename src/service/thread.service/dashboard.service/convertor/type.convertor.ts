@@ -1,5 +1,5 @@
 import { PageBody } from "../validator/page.body";
-import { ConnectionPromisesFactory } from "../factory";
+import { ConnectionPromisesFactory } from "./factory";
 
 import { typeConvertedType } from "./convertor.types";
 

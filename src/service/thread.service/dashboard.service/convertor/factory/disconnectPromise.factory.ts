@@ -7,7 +7,7 @@ import { disconnecterPromiseType } from "./factory.types";
 class DisconnectSocialPagePromiseFactory {
    private static promise: { [type: string]: disconnecterPromiseType } = {
       [SocialType.Facebook]: disconnectFacebookPage,
-      default: factoryBadRequest(),
+      default: factoryBadRequest,
    };
    public static selectPromise(type: string): disconnecterPromiseType {
       const promise = DisconnectSocialPagePromiseFactory.promise[type] || DisconnectSocialPagePromiseFactory.promise.default;

@@ -1,6 +1,6 @@
 import { Page, Thread } from "models";
 import { disconnectConevertedType } from "./convertor.types";
-import { UpdatePromisesFactory } from "../factory";
+import { UpdatePromisesFactory } from "./factory";
 
 export const convertPages = async (thread: Thread, pages: Page[]): Promise<disconnectConevertedType[]> => {
    const convertedPages = Promise.all(

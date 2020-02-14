@@ -14,7 +14,11 @@ class ConnectionPromisesFactory {
          validatePagePromise: ValidatePromiseFactory.selectPromise(SocialType.Facebook),
          connectionPromise: ConnectSocialPagePromiseFactory.selectPromise(SocialType.Facebook),
       },
-      default: factoryBadRequest(),
+      default: {
+         connectionPromise: factoryBadRequest,
+         socialPromise: factoryBadRequest,
+         validatePagePromise: factoryBadRequest,
+      },
    };
    public static selectPromises(type: string): connectionPromisesType {
       const promises = ConnectionPromisesFactory.promises[type] || ConnectionPromisesFactory.promises.default;

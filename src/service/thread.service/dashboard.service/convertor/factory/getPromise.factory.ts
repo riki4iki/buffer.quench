@@ -7,7 +7,7 @@ import { getterPromiseType } from "./factory.types";
 class GetSocialPagePromiseFactory {
    private static promise: { [type: string]: getterPromiseType } = {
       [SocialType.Facebook]: findFacebookPage,
-      default: factoryBadRequest(),
+      default: factoryBadRequest,
    };
    public static selectPromise(type: string): getterPromiseType {
       const promise = GetSocialPagePromiseFactory.promise[type] || GetSocialPagePromiseFactory.promise.default;

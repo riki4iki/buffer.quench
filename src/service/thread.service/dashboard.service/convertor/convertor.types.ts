@@ -1,5 +1,5 @@
 import { ISocial, ISocialPageResponse, ISocialPage } from "types/architecture";
-import { connectionPromisesType, validatePromiseType, connectorPromiseType, disconnecterPromiseType } from "../factory";
+import { connectionPromisesType, validatePromiseType, connectorPromiseType, disconnecterPromiseType } from "./factory";
 
 export type typeConvertedType = { socialId: string; page: string; promises: connectionPromisesType };
 export type socialConvertedType = {

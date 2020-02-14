@@ -12,7 +12,10 @@ class UpdatePromisesFactory {
          getterPromise: GetSocialPagePromiseFactory.selectPromise(SocialType.Facebook),
          disconnecterPromise: DisconnectSocialPagePromiseFactory.selectPromise(SocialType.Facebook),
       },
-      default: factoryBadRequest(),
+      default: {
+         disconnecterPromise: factoryBadRequest,
+         getterPromise: factoryBadRequest,
+      },
    };
    public static selectPromises(type: string): updatePromisesType {
       const promises = UpdatePromisesFactory.promises[type] || UpdatePromisesFactory.promises.default;
