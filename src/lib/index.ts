@@ -1,5 +1,4 @@
-import jwtService from "./jwt";
-import fbService from "./facebook";
-
+export { default as jwtService } from "./jwt";
 export * from "./headers";
-export { jwtService, fbService };
+export { default as fbService } from "./facebook";
+export * from "./errorHTTPHandler";

@@ -41,7 +41,6 @@ describe("unit test post crud", () => {
             await create(thread, { expireDate, context: "" });
          } catch (err) {
             expect(err).toMatchObject({
-               message: "Bad Request",
                validationArray: [{ property: "context", constraints: { isNotEmpty: "context should not be empty" } }],
             });
          }
@@ -51,7 +50,6 @@ describe("unit test post crud", () => {
             await create(thread, { context, expireDate: nextMinutes(-1) });
          } catch (err) {
             expect(err).toMatchObject({
-               message: "Bad Request",
                validationArray: [{ property: "expireDate", constraints: { isFuture: "impossible set date in past time" } }],
             });
          }
@@ -104,7 +102,6 @@ describe("unit test post crud", () => {
             await update(thread, postId, { context, expireDate: nextMinutes(-100) });
          } catch (err) {
             expect(err).toMatchObject({
-               message: "Bad Request",
                validationArray: [{ property: "expireDate", constraints: { isFuture: "impossible set date in past time" } }],
             });
          }
@@ -115,7 +112,6 @@ describe("unit test post crud", () => {
             await update(thread, postId, { expireDate: date, context: "" });
          } catch (err) {
             expect(err).toMatchObject({
-               message: "Bad Request",
                validationArray: [{ property: "context", constraints: { isNotEmpty: "context should not be empty" } }],
             });
          }

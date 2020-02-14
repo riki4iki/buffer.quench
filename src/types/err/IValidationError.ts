@@ -1,4 +1,4 @@
 export interface IValidationError {
    property: string;
-   constraints: Object;
+   constraints: { [type: string]: string };
 }

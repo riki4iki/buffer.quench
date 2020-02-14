@@ -1,14 +1,19 @@
-import { IValidationError } from "./IValidationError";
-
 import { BadRequest } from "http-errors";
 import { ValidationError } from "class-validator";
 
-export class ValidationRequest extends BadRequest {
+import { IValidationError } from "./IValidationError";
+
+class ValidationRequest extends BadRequest {
+   message: string;
+   validationArray: IValidationError[];
    constructor(errors: ValidationError[]) {
       super();
+      console.log(errors);
       this.validationArray = errors.map(error => {
-         return { property: error.property, constraints: error.constraints };
+         const { property, constraints } = error;
+         return { property, constraints };
       });
+      this.message = JSON.stringify(this.validationArray);
    }
-   validationArray: Array<IValidationError>;
 }
+export { ValidationRequest };

@@ -6,7 +6,7 @@ import { BadRequest } from "http-errors";
 import { getConnection } from "typeorm";
 
 beforeAll(async done => {
-   const connection = await connect();
+   await connect();
    return done();
 });
 afterAll(async done => {
@@ -103,7 +103,7 @@ describe("user crud unit test", () => {
       };
 
       test("update user with exist email, should throw error with bad request", async () => {
-         const firstUser = await create(first);
+         await create(first);
          const secondUser = await create(second);
          expect(update(secondUser.id, first)).rejects.toEqual(new BadRequest("email already exist"));
       });

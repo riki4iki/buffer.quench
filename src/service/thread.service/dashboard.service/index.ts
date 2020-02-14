@@ -1,4 +1,4 @@
-import { IContext, IAuthState, IParamContext, IParamIdState } from "../../../types/koa";
+import { IContext, IAuthState, IParamContext, IParamIdState } from "types/koa";
 
 import { validateRequestBody } from "./validator";
 
@@ -6,7 +6,7 @@ import { createThreadAndConnect } from "./connectionService";
 import { createPost, updatePost } from "./postService";
 import { updateThreadPages } from "./updateService";
 
-import { selectDashboardedThreadWithPost, selectAllDashboardedThreadsWithPost, findThreadById } from "./getterService";
+import { selectAllDashboardedThreadsWithPost, findThreadById } from "./getterService";
 
 export class DashboardService {
    public static async getDashboard(ctx: IContext<IAuthState>) {
@@ -20,16 +20,7 @@ export class DashboardService {
          ctx.app.emit("error", err, ctx);
       }
    }
-   public static async getPostInDashboard(ctx: IParamContext<IAuthState, IParamIdState>) {
-      try {
-         //get thread by id and return post from dat thread
-         const response = await selectDashboardedThreadWithPost(ctx.state.user, ctx.params.id);
-         ctx.status = 200;
-         ctx.body = response;
-      } catch (err) {
-         ctx.app.emit("error", err, ctx);
-      }
-   }
+
    public static async createPostDashboard(ctx: IContext<IAuthState>) {
       try {
          //create new thread and connect pages and post from input body:

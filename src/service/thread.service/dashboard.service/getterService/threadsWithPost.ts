@@ -1,5 +1,5 @@
 import { getManager, Repository } from "typeorm";
-import { Thread, User } from "../../../../models";
+import { Thread, User } from "models";
 
 export async function selectAllDashboardedThreadsWithPost(user: User) {
    const threadRepository: Repository<Thread> = getManager().getRepository(Thread);

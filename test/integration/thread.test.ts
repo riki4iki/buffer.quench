@@ -4,6 +4,7 @@ import { app } from "../../src/app";
 import { getConnection } from "typeorm";
 import { user as createAndConnect, endpoints, invalid_uuid } from "../config";
 import { IJwtPair } from "../../src/types";
+
 let jwt: IJwtPair;
 const account = {
    email: "thread_tester@gmail.com",

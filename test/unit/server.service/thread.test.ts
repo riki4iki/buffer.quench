@@ -38,17 +38,15 @@ describe("unit test thread cruds", () => {
             await create(user, { name: "____" });
          } catch (err) {
             expect(err).toMatchObject({
-               message: "Bad Request",
                validationArray: [{ property: "name", constraints: { minLength: "Thread name is too short, min size is 6 symbols" } }],
             });
          }
       });
       test("create thread with string more then 30, should throw bad request", async () => {
          try {
-            await create(user, { name: [...Array(30)].map(i => (~~(Math.random() * 36)).toString(36)).join("") });
+            await create(user, { name: [...Array(30)].map(() => (~~(Math.random() * 36)).toString(36)).join("") });
          } catch (err) {
             expect(err).toMatchObject({
-               message: "Bad Request",
                validationArray: [{ property: "name", constraints: { minLength: "Thread name is too long, max size is 30 symbols" } }],
             });
          }
@@ -84,7 +82,7 @@ describe("unit test thread cruds", () => {
       });
       test("update thread with existing name, should return 400", async () => {
          const crossName = "cross_name";
-         const created = await create(user, { name: crossName });
+         await create(user, { name: crossName });
          try {
             await update(user, threadId, { name: crossName });
          } catch (err) {
@@ -103,17 +101,15 @@ describe("unit test thread cruds", () => {
             await update(user, threadId, { name: "____" });
          } catch (err) {
             expect(err).toMatchObject({
-               message: "Bad Request",
                validationArray: [{ property: "name", constraints: { minLength: "Thread name is too short, min size is 6 symbols" } }],
             });
          }
       });
       test("update with invalid name(more then 30), shold return bad request", async () => {
          try {
-            await update(user, threadId, { name: [...Array(30)].map(i => (~~(Math.random() * 36)).toString(36)).join("") });
+            await update(user, threadId, { name: [...Array(30)].map(() => (~~(Math.random() * 36)).toString(36)).join("") });
          } catch (err) {
             expect(err).toMatchObject({
-               message: "Bad Request",
                validationArray: [{ property: "name", constraints: { minLength: "Thread name is too long, max size is 30 symbols" } }],
             });
          }
