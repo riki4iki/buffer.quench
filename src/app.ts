@@ -6,6 +6,8 @@ import helmet from "koa-helmet";
 import logger from "koa-logger";
 import moduleAlias from "module-alias";
 
+import { setHeadersMiddleware, httpHandler } from "./lib";
+
 moduleAlias.addAliases({
    types: __dirname + "/types",
    config: __dirname + "/config",
@@ -15,8 +17,6 @@ moduleAlias.addAliases({
 });
 
 //import "module-alias/register";
-
-import { setHeadersMiddleware, httpHandler } from "./lib";
 
 const app = new Koa();
 const router = new Router();

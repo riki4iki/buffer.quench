@@ -13,7 +13,7 @@ RUN npm install
 
 COPY --chown=node:node . .
 
-RUN npm run build
+RUN npm run postinstall
 
 EXPOSE 3000
 
