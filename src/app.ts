@@ -4,19 +4,11 @@ import bodyparser from "koa-bodyparser";
 import cors from "@koa/cors";
 import helmet from "koa-helmet";
 import logger from "koa-logger";
-import moduleAlias from "module-alias";
 
-import { setHeadersMiddleware, httpHandler } from "./lib";
+import { aliases } from "./lib/moduleAliases";
+aliases(__dirname, ["types", "config", "service", "lib", "models"]);
 
-moduleAlias.addAliases({
-   types: __dirname + "/types",
-   config: __dirname + "/config",
-   service: __dirname + "/service",
-   lib: __dirname + "/lib",
-   models: __dirname + "/models",
-});
-
-//import "module-alias/register";
+import { setHeadersMiddleware, httpHandler } from "lib";
 
 const app = new Koa();
 const router = new Router();

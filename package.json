@@ -1,6 +1,6 @@
 {
    "engines": {
-      "node": ">=8.0.0 <11.0.0"
+      "node": "12.0.0"
    },
    "name": "buffer.quench",
    "version": "1.0.0",
@@ -14,7 +14,7 @@
       ".": "nodemon --watch src --watch libs ./src/server.ts",
       "lint": "tsc --noEmit && eslint \"**/*.{js,ts}\" --quiet --fix",
       "build-ts": "tsc",
-      "postinstall": "npm run lint && npm run build-ts",
+      "postinstall": "npm run build-ts",
       "start": "npm run serve",
       "serve": "node dist/server.js",
       "watch-node": "nodemon dist/server.js",
@@ -56,7 +56,6 @@
    },
    "devDependencies": {
       "@types/crypto-js": "^3.1.43",
-      "@types/dotenv": "^8.2.0",
       "@types/eslint": "^6.1.7",
       "@types/http-errors": "^1.6.3",
       "@types/jest": "^24.0.25",
@@ -84,5 +83,8 @@
       "ts-jest": "^24.3.0",
       "ts-node": "^8.5.2",
       "typescript": "^3.7.2"
+   },
+   "__moduleAliases": {
+      "config": "src/config"
    }
 }

@@ -4,12 +4,15 @@ import { config } from "dotenv";
 
 config();
 
+console.log(process.env.DATABASE_URL);
+
 const dbString = parse(process.env.DATABASE_URL);
 const isDev = () => {
    return process.env.NODE_ENV == "development";
 };
 
 const options: ConnectionOptions = {
+   port: parseInt(dbString.port),
    type: "postgres",
    host: dbString.host,
    username: dbString.user,
@@ -34,6 +37,7 @@ const testOptions: ConnectionOptions = {
 
 const connect = async (): Promise<Connection> => {
    const opt = process.env.NODE_ENV == "test" ? testOptions : options;
+   console.log(process.env.NODE_ENV);
    console.log(opt);
    return await createConnection(opt);
 };

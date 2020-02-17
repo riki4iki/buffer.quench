@@ -1,5 +1,5 @@
 
-FROM node:10-alpine
+FROM node:12-alpine
 
 RUN mkdir -p /home/source/buffer.quench/app/node_modules && chown -R node:node /home/source/buffer.quench
 
@@ -17,4 +17,4 @@ RUN npm run postinstall
 
 EXPOSE 3000
 
-CMD [ "npm", "run", "start" ]
+CMD [ "npm", "run", "." ]

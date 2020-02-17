@@ -1,5 +1,4 @@
 import request, { Options } from "request-promise";
-
 import { IFacebookPage, IFacebookUser, ILongLivedUserToken } from "types/facebook";
 
 const version = process.env.FACEBOOK_API_VERSION;
