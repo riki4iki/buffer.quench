@@ -10,6 +10,7 @@ const dbString = parse(process.env.DATABASE_URL);
 const isDev = () => {
    return process.env.NODE_ENV == "development";
 };
+const ssl = process.env.DATABASE_SSL === "true";
 
 const options: ConnectionOptions = {
    type: "postgres",
@@ -20,7 +21,7 @@ const options: ConnectionOptions = {
    synchronize: true,
    logging: false,
    entities: [...(isDev() ? ["src/models/**/*.ts"] : ["dist/models/**/*.js"])],
-   extra: { ssl: !isDev() },
+   extra: { ssl },
 };
 
 const connect = async (): Promise<Connection> => {

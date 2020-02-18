@@ -17,4 +17,4 @@ RUN npm run postinstall
 
 EXPOSE 3000
 
-CMD [ "npm", "run", "." ]
+CMD [ "npm", "run", "start" ]
