@@ -1,5 +1,5 @@
 import request from "supertest";
-import { dbConnection } from "../../src/config";
+import { connect } from "../config";
 import { getConnection } from "typeorm";
 import { app } from "../../src/app";
 import { IJwtPair } from "../../src/types";
@@ -21,7 +21,7 @@ const jwt: IJwtPair = {
 
 describe("test /user endpoints", () => {
    beforeAll(async () => {
-      await dbConnection();
+      await connect();
    });
    afterAll(async () => {
       await getConnection().close();

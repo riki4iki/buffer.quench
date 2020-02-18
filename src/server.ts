@@ -1,6 +1,6 @@
 import http from "http";
 import { app } from "./app";
-import { dbConnection } from "config";
+import { databaseConnect } from "config";
 
 import dotenv from "dotenv";
 dotenv.config({ path: ".env" });
@@ -17,7 +17,7 @@ server.on("error", err => {
    console.log(err);
 });
 
-dbConnection()
+databaseConnect()
    .then(() => {
       server.listen(port);
    })

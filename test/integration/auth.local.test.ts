@@ -1,11 +1,11 @@
 import request from "supertest";
 import { app } from "../../src/app";
-import { dbConnection } from "../../src/config";
+import { connect } from "../config/db";
 import { getConnection } from "typeorm";
 import { endpoints } from "../config";
 
 beforeAll(async () => {
-   await dbConnection();
+   await connect();
 });
 afterAll(async () => {
    await getConnection().close();

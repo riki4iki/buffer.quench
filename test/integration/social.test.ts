@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/camelcase */
 import { facebook_test_user } from "../config/facebook";
 import { invalid_uuid } from "../config/const";
-import { dbConnection } from "../../src/config";
+import { connect } from "../config/db";
 import { app } from "../../src/app";
 import { getConnection } from "typeorm";
 import request from "supertest";
@@ -16,7 +16,7 @@ const jwt = {
    expiresIn: 0,
 };
 beforeAll(async () => {
-   await dbConnection();
+   await connect();
 });
 afterAll(async () => {
    await getConnection().close();

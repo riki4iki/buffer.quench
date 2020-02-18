@@ -1,5 +1,5 @@
 module.exports = {
-   collectCoverage: true,
+   collectCoverage: false,
    moduleFileExtensions: ["js", "jsx", "json", "ts", "tsx"],
 
    collectCoverageFrom: ["**/*.{ts,js}", "!**/node_modules/**", "!**/build/**", "!**/coverage/**"],

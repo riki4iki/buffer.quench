@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/camelcase */
 import jwt from "../../../src/lib/jwt";
-import { dbConnection } from "../../../src/config";
+import { connect } from "../../config";
 import { invalid_uuid } from "../../config/const";
 import { create } from "../../../src/service/user.service/crud";
 import { User } from "../../../src/models";
@@ -16,7 +16,7 @@ let created: User;
 let pair: IJwtPair;
 
 beforeAll(async () => {
-   await dbConnection();
+   await connect();
    created = await create(user);
 });
 afterAll(async () => {

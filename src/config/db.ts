@@ -12,7 +12,6 @@ const isDev = () => {
 };
 
 const options: ConnectionOptions = {
-   port: parseInt(dbString.port),
    type: "postgres",
    host: dbString.host,
    username: dbString.user,
@@ -23,22 +22,10 @@ const options: ConnectionOptions = {
    entities: [...(isDev() ? ["src/models/**/*.ts"] : ["dist/models/**/*.js"])],
    extra: { ssl: !isDev() },
 };
-const testOptions: ConnectionOptions = {
-   type: "postgres",
-   host: dbString.host,
-   username: dbString.user,
-   password: dbString.password,
-   database: "test",
-   synchronize: true,
-   dropSchema: true,
-   logging: false,
-   entities: ["src/models/**/*.ts"],
-};
 
 const connect = async (): Promise<Connection> => {
-   const opt = process.env.NODE_ENV == "test" ? testOptions : options;
    console.log(process.env.NODE_ENV);
-   console.log(opt);
-   return await createConnection(opt);
+   console.log(options);
+   return await createConnection(options);
 };
 export { connect };

@@ -2,6 +2,7 @@ export * from "./const";
 export * from "./endpoints";
 export * from "./facebook";
 export * from "./before";
+export * from "./db";
 
 export const nextMinutes = (minutes: number): Date => {
    const now = new Date();

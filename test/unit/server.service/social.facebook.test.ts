@@ -4,13 +4,13 @@ import { insertPagesfromApi } from "../../../src/service/social.service/facebook
 import { invalid_uuid } from "../../config/const";
 import { facebook_test_user } from "../../config/facebook";
 import { create } from "../../../src/service/user.service/crud";
-import { dbConnection } from "../../../src/config";
+import { connect } from "../../config";
 import { BadRequest } from "http-errors";
 
 import { getConnection } from "typeorm";
 let user;
 beforeAll(async done => {
-   await dbConnection();
+   await connect();
    user = await create({ email: "facebook_social_unit_test_user@gmail.com", password: "123321" });
    return done();
 });
