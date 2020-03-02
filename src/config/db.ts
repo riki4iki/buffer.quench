@@ -27,6 +27,6 @@ const options: ConnectionOptions = {
 const connect = async (): Promise<Connection> => {
    console.log(process.env.NODE_ENV);
    console.log(options);
-   return await createConnection(options);
+   return createConnection(options);
 };
 export { connect };

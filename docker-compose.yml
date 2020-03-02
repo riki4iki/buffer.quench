@@ -2,15 +2,24 @@ version: "3.1"
 services:
    app:
       container_name: application
-      build: .
+      build:
+         context: .
+         args:
+            - NODE_ENV=development
+      command: npm run .
       environment:
-         NODE_ENV: production
          DATABASE_URL: postgres://user:pass@database:5432/apidb
       ports:
          - "3000:3000"
          - "9229:9229"
-      links:
-         - "db:database"
+         - "9230:9230"
+      volumes:
+         - .:/opt/node_app:delegated
+         - ./package.json:/opt/node_app/package.json
+         - ./package-lock.json:/opt/node_app/package-lock.json
+         - notused:/opt/node_app/node_modules
+      depends_on:
+         - db
    db:
       container_name: database
       image: postgres
@@ -28,3 +37,6 @@ services:
          - db
       ports:
          - 8080:8080
+
+volumes:
+   notused:

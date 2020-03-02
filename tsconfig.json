@@ -1,17 +1,22 @@
 {
    "compilerOptions": {
-      "target": "es2017",
       "module": "commonjs",
-      "lib": ["es6"],
-      "sourceMap": true,
-      "outDir": "dist",
-      "moduleResolution": "node",
-
       "esModuleInterop": true,
+      "allowSyntheticDefaultImports": true,
+
+      "target": "es6",
+
+      "noImplicitAny": true,
+      "moduleResolution": "node",
+      "rootDir": "./src",
+
+      "sourceMap": true,
+      "lib": ["es6"],
+      "outDir": "./dist",
+      "baseUrl": "./src",
       "experimentalDecorators": true,
       "emitDecoratorMetadata": true,
-      "rootDir": "./src",
-      "baseUrl": "./src",
+
       "paths": {
          "types/*": ["types/*"],
          "config/*": ["config/*"],

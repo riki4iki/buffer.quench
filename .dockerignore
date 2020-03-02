@@ -10,3 +10,5 @@ test
 docker-compose.yml
 LICENSE
 README.md
+docs
+.vscode
