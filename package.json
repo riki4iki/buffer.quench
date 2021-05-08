@@ -52,7 +52,7 @@
       "redis": "^2.8.0",
       "request": "^2.88.0",
       "request-promise": "^4.2.5",
-      "typeorm": "^0.2.20"
+      "typeorm": "^0.2.25"
    },
    "devDependencies": {
       "@types/crypto-js": "^3.1.43",
